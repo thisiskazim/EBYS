@@ -1,0 +1,6 @@
+@EBYS.WebAPI_HostAddress = http://localhost:5045
+
+GET {{EBYS.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
