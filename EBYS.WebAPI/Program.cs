@@ -1,5 +1,12 @@
+using EBYS.Persistence;
+using Microsoft.EntityFrameworkCore;
+
+
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<EBYSContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection")));
 // Add services to the container.
 
 builder.Services.AddControllers();

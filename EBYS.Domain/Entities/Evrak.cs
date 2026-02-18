@@ -12,7 +12,7 @@ namespace EBYS.Domain.Entities
         public string Icerik { get; set; } // Rich Text Editor'den gelen HTML/Text
         public string EvrakSayisi { get; set; }
         public bool IsGelenEvrak { get; set; } // True ise Gelen, False ise Giden
-        public int Durum { get; set; } // Taslak, İmzada, Tamamlandı vb.
+        public int Durum { get; set;} // Taslak, İmzada, Tamamlandı vb.
 
         // Navigation Properties (İlişkiler)
         public int OlusturanId { get; set; }
@@ -24,5 +24,13 @@ namespace EBYS.Domain.Entities
         public virtual ICollection<EvrakMuhatap> Muhataplar { get; set; } = new HashSet<EvrakMuhatap>();
         public virtual ICollection<EvrakIlgi> İlgiler { get; set; } = new HashSet<EvrakIlgi>();
         public virtual ICollection<EvrakEk> Ekler { get; set; } = new HashSet<EvrakEk>();
+    }
+
+    enum BelgeDurumEnums
+    {
+        Taslak = 0,
+        Imzada = 1,
+        Tamamlandi = 2,
+        Reddedildi = 3
     }
 }

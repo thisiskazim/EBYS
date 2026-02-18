@@ -13,7 +13,7 @@ namespace EBYS.Domain.Entities
         public string? EPosta { get; set; }
         public string Adress { get; set; }
 
-       // public virtual ICollection<EvrakMuhatap> Evraklar { get; set; } = new HashSet<EvrakMuhatap>();
+        public virtual ICollection<EvrakMuhatap> Evraklar { get; set; } = new HashSet<EvrakMuhatap>();
     }
 
 
