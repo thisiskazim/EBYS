@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EBYS.Application\EBYS.Application.csproj" />
     <ProjectReference Include="..\EBYS.Domain\EBYS.Domain.csproj" />
   </ItemGroup>
 
