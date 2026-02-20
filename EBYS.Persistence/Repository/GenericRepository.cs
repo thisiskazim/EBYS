@@ -1,7 +1,6 @@
 ﻿using EBYS.Application.Interface;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace EBYS.Persistence.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
@@ -15,6 +14,7 @@ namespace EBYS.Persistence.Repository
         public void DeleteAsync(T entity) => _context.Set<T>().Remove(entity);
         public async Task<int> SaveAsync() => await _context.SaveChangesAsync();
 
-       
+        public IQueryable<T> GetReadOnly()=> _context.Set<T>().AsNoTracking();
+
     }
 }

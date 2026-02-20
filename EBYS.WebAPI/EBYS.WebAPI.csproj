@@ -1,21 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.13">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.OpenApi" Version="2.4.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.4" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\EBYS.Persistence\EBYS.Persistence.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2026.1.212" />
+  </ItemGroup>
 </Project>

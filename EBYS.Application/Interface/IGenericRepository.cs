@@ -14,5 +14,6 @@ namespace EBYS.Application.Interface
         void UpdateAsync(T entity);
         void DeleteAsync(T entity);
         Task<int> SaveAsync();
+        IQueryable<T> GetReadOnly();
     }
 }

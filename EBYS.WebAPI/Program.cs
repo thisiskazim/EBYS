@@ -7,6 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 var builder =WebApplication.CreateBuilder(args);
 
+// Add framework services.
+builder.Services
+	.AddRazorPages().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
+// Add Kendo UI services to the services container
+builder.Services.AddKendo();
+
 builder.Services.AddDbContext<EBYSContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection")));
 // Add services to the container.
@@ -15,19 +21,33 @@ builder.Services.AddScoped<IEvrakRepository, EvrakRepository>();
 //builder.Services.AddScoped<IMuhatapRepository, MuhatapRepository>();
 
 
+builder.Services.AddKendo();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    // Kendo/Telerik sýnýflarýnýn Swagger dokümantasyonunda hata çýkarmasýný engeller
+    c.CustomSchemaIds(type => type.FullName);
+});
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson();
+//builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+//builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    //app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+
+
 
 app.UseHttpsRedirection();
 
