@@ -13,6 +13,6 @@ namespace EBYS.Application.Interface
         Task AddAsync(T entity);
         void UpdateAsync(T entity);
         void DeleteAsync(T entity);
-        Task<T> SaveAsync();
+        Task<int> SaveAsync();
     }
 }

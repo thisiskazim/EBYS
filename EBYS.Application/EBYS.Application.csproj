@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EBYS.Domain\EBYS.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
