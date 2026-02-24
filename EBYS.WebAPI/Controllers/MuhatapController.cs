@@ -20,13 +20,12 @@ namespace EBYS.WebAPI.Controllers
         }
 
         [HttpGet("GetAlicilar")]
-        public async Task<IActionResult> GetAlicilar([DataSourceRequest] DataSourceRequest request)
+        public async Task<IActionResult> GetAlicilar([FromQuery] DataSourceRequest request)
         {
             // TPH sayesinde Muhataplar tablosundaki Kurum, Birey, Tüzel hepsi tek seferde gelir
             var query = _muhatapRepository.GetReadOnly();
 
-            // ToDataSourceResultAsync: Kendo'nun gönderdiği filtreleri (Arama kelimesi vb.) 
-            // SQL'e çevirir ve sadece gereken veriyi döner.
+           
             var result = await query.ToDataSourceResultAsync(request);
 
             return Ok(result);

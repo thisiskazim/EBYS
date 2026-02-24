@@ -1,8 +1,152 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿<h4>Evrak Alıcısı Seçin</h4>
+
+@(Html.Kendo().MultiSelect()
+    .Name("muhataplar")
+    .DataTextField("adi")    // Küçük harf olduğuna emin olalım (Response'ta öyle gördük)
+    .DataValueField("id")     // Küçük harf
+    .Placeholder("Alıcı ismi giriniz (Örn: Ali)...")
+    .Filter(FilterType.Contains) // Yazmaya başladığında içinde arasın
+    .AutoBind(true) // Sayfa açılır açılmaz veriyi bir kez çeksin
+    .DataSource(source =>
+    {
+        source.Read(read =>
+        {
+            read.Url("https://localhost:7060/api/Muhatap/GetAlicilar")
+                .Type(HttpVerbs.Get);
+        })
+        .ServerFiltering(false); // API'den tüm listeyi bir kere alır, aramayı tarayıcıda yapar
+    })
+)
+
+
+
+<hr />
+
+<h3>Evraklar - Yeni Evrak Ekle / Düzenle</h3>
+
+<div id="evrakGrid"></div>
+
+<script id="evrak-popup-template" type="text/x-kendo-template">
+    <form>
+        <div class="k-edit-label"><label for="Konu">Konu</label></div>
+        <div class="k-edit-field"><input name="Konu" class="k-input k-textbox" /></div>
+
+        <div class="k-edit-label"><label for="Icerik">İçerik</label></div>
+        <div class="k-edit-field"><textarea name="Icerik"></textarea></div>
+
+        <div class="k-edit-label"><label for="EvrakSayisi">Evrak Sayısı</label></div>
+        <div class="k-edit-field"><input name="EvrakSayisi" class="k-input k-textbox" /></div>
+
+        <div class="k-edit-label"><label for="IsGelenEvrak">Gelen Evrak mi?</label></div>
+        <div class="k-edit-field"><input type="checkbox" name="IsGelenEvrak" /></div>
+
+        <div class="k-edit-label"><label for="Durum">Durum</label></div>
+        <div class="k-edit-field"><input name="Durum" /></div>
+
+        <div class="k-edit-label"><label for="BekleyenRoleId">Bekleyen Rol</label></div>
+        <div class="k-edit-field"><input name="BekleyenRolId" /></div>
+    </form>
+</script>
+
+@section scripts {
+    <script>
+        // Demo roles and durum list (replace with API calls if you have endpoints)
+        var durumList = [
+            { text: "Taslak", value: 0 },
+            { text: "İmzada", value: 1 },
+            { text: "Tamamlandı", value: 2 },
+            { text: "Reddedildi", value: 3 }
+        ];
+
+        var roleList = [
+            { text: "Seçiniz", value: null },
+            { text: "Yönetici", value: 1 },
+            { text: "Personel", value: 2 }
+        ];
+
+        // Local client-side data store; you can switch to Ajax transport later
+        var evrakData = [];
+
+        var dataSource = new kendo.data.DataSource({
+            data: evrakData,
+            schema: {
+                model: {
+                    id: "Id",
+                    fields: {
+                        Id: { type: "number", editable: false, nullable: true },
+                        Konu: { type: "string", validation: { required: true } },
+                        Icerik: { type: "string" },
+                        EvrakSayisi: { type: "string" },
+                        IsGelenEvrak: { type: "boolean" },
+                        Durum: { type: "number" },
+                        BekleyenRolId: { type: "number" }
+                    }
+                }
+            }
+        });
+
+        $(document).ready(function () {
+            $("#evrakGrid").kendoGrid({
+                dataSource: dataSource,
+                toolbar: ["create"],
+                pageable: false,
+                sortable: true,
+                editable: {
+                    mode: "popup",
+                    template: kendo.template($("#evrak-popup-template").html())
+                },
+                columns: [
+                    { field: "Konu", title: "Konu" },
+                    { field: "EvrakSayisi", title: "Evrak Sayısı" },
+                    { field: "IsGelenEvrak", title: "Gelen Mi", template: "#= IsGelenEvrak ? 'Evet' : 'Hayır' #", width: 80 },
+                    { field: "Durum", title: "Durum", template: function(dataItem){ var d = durumList.find(x=>x.value===dataItem.Durum); return d ? d.text : ''; } },
+                    { field: "BekleyenRolId", title: "Bekleyen Rol", template: function(dataItem){ var r = roleList.find(x=>x.value===dataItem.BekleyenRolId); return r ? r.text : ''; } },
+                    { command: ["edit", "destroy"], title: "İşlemler", width: 200 }
+                ],
+                edit: function(e) {
+                    // Initialize Kendo Editor for Icerik
+                    var icerikEl = e.container.find("textarea[name='Icerik']");
+                    if (icerikEl.length) {
+                        icerikEl.kendoEditor({
+                            tools: [
+                                "bold", "italic", "underline", "strikethrough",
+                                "justifyLeft", "justifyCenter", "justifyRight",
+                                "insertUnorderedList", "insertOrderedList", "createLink", "unlink"
+                            ]
+                        });
+                    }
+
+                    // Durum dropdown
+                    var durumEl = e.container.find("input[name='Durum']");
+                    if (durumEl.length) {
+                        durumEl.kendoDropDownList({
+                            dataTextField: "text",
+                            dataValueField: "value",
+                            dataSource: durumList,
+                            optionLabel: "Durum seçiniz"
+                        });
+                    }
+
+                    // BekleyenRolId dropdown
+                    var rolEl = e.container.find("input[name='BekleyenRolId']");
+                    if (rolEl.length) {
+                        rolEl.kendoDropDownList({
+                            dataTextField: "text",
+                            dataValueField: "value",
+                            dataSource: roleList,
+                            optionLabel: "Rol seçiniz"
+                        });
+                    }
+
+                    // Convert checkbox properly for boolean
+                    var checkbox = e.container.find("input[name='IsGelenEvrak']");
+                    if (checkbox.length) {
+                        // Kendo automatically binds checkbox, nothing extra required
+                    }
+                }
+            });
+        });
+    </script>
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
