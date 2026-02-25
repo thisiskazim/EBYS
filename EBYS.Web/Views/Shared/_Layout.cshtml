@@ -1,56 +1,95 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - EBYS.Web</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Kendo theme -->
+    <link rel="stylesheet" href="https://cdn.kendostatic.com/2026.1.212/styles/kendo.default-v2.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/EBYS.Web.styles.css" asp-append-version="true" />
-	<link href="https://kendo.cdn.telerik.com/themes/13.0.0/default/default-ocean-blue.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/themes/10.0.1/default/default-main.css" />
+
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/icons/10.0.0/default/default-main.css" />
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<script src="https://unpkg.com/jszip/dist/jszip.min.js"></script>
 	<script src="https://cdn.kendostatic.com/2026.1.212/js/kendo.all.min.js"></script>
 	<script src="https://cdn.kendostatic.com/2026.1.212/js/kendo.aspnetmvc.min.js"></script>
 
+    <style>
+        /* Small inline helper to ensure body stretches full height for sidebar */
+        html, body { height: 100%; }
+    </style>
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EBYS.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+<body class="k-body">
+
+    <div class="ebys-app d-flex">
+        <!-- Left visual sidebar -->
+        <aside class="ebys-sidebar-modern bg-dark text-white">
+            <div class="sidebar-inner p-3">
+                <div class="menu-header text-uppercase small text-white-50 mb-3">Menü</div>
+  
+                <nav class="nav flex-column">
+                    <a class="nav-link menu-item d-flex align-items-start text-white mb-2" href="/">
+                        <div class="menu-icon me-3 d-flex align-items-center justify-content-center bg-white text-dark">
+                            <span class="k-icon k-i-home"></span>
+                        </div>
+                        <div class="menu-text">
+                            <div class="menu-title">Ana Sayfa</div>
+                        </div>
+                    </a>
+
+                    <div class="menu-section mb-2">
+                        <a class="nav-link menu-item d-flex align-items-start text-white" data-bs-toggle="collapse" href="#evrakCollapse" role="button" aria-expanded="false" aria-controls="evrakCollapse">
+                            <div class="menu-icon me-3 d-flex align-items-center justify-content-center bg-white text-dark">
+                                <span class="k-icon k-i-folder-open"></span>
+                            </div>
+                            <div class="menu-text">
+                                <div class="menu-title">Evrak İşlemleri</div>
+                                <div class="menu-sub small text-white-50">Yeni evrak, Gelen Evraklar</div>
+                            </div>
+                        </a>
+
+                        <div class="collapse ps-5 mt-2" id="evrakCollapse">
+                            <a class="nav-link small text-white-50 mb-1" href="/Evrak/Yeni">• Yeni evrak oluştur</a>
+                            <a class="nav-link small text-white-50 mb-1" href="/Evrak/Gelen">• Gelen Evraklar</a>
+                            <a class="nav-link small text-white-50" href="/Evrak/Tum">• Tüm Evraklar</a>
+                        </div>
+                    </div>
+
+                    <a class="nav-link menu-item d-flex align-items-start text-white mb-2" href="/Muhatap">
+                        <div class="menu-icon me-3 d-flex align-items-center justify-content-center bg-white text-dark">
+                            <span class="k-icon k-i-people"></span>
+                        </div>
+                        <div class="menu-text">
+                            <div class="menu-title">Muhatap Yönetimi</div>
+                            <div class="menu-sub small text-white-50">Kurum ve kişiler</div>
+                        </div>
+                    </a>
+
+                   
+                </nav>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+        </aside>
+
+        <!-- Main content area -->
+        <main class="ebys-main flex-fill">
+            <div class="container-fluid p-4">
             @RenderBody()
+            </div>
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - EBYS.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+    <!-- Bootstrap JS for collapse; site script -->
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 
 </html>
+@* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script> *@
+@* @await RenderSectionAsync("Scripts", required: false) *@
