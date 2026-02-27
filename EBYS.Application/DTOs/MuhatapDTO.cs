@@ -4,37 +4,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EBYS.Domain.Entities
+namespace EBYS.Application.DTOs
 {
-    public class Muhatap:BaseEntity
+    public class MuhatapDTO
     {
-        public string Adi { get; set; } // Örn: Bilgi İşlem Dairesi Bşk.
+        public int Id { get; set; }
+        public string Adi { get; set; }
         public string Telefon { get; set; }
         public string? EPosta { get; set; }
         public string Adress { get; set; }
-            
-        public virtual ICollection<EvrakMuhatap> Evraklar { get; set; } = new HashSet<EvrakMuhatap>();
+       
     }
 
-
-    public class KurumMuhatap : Muhatap
+    public class KurumMuhatapDTO : MuhatapDTO
     {
         public string KepAdresi { get; set; }
-        public string? TesisNo { get; set; }
-        public string DetsisNo { get; set; } // Devlet Teşkilat No
+        public string DetsisNo { get; set; }
         public string KurumKodu { get; set; }
     }
-    public class TuzelKisiMuhatap : Muhatap
+
+
+    public class TuzelKisiMuhatapDTO : MuhatapDTO
     {
         public string? VergiNo { get; set; }
         public string? VergiDairesi { get; set; }
         public string? MersisNo { get; set; }
     }
 
-    public class BireyselMuhatap : Muhatap
+    public class BireyselMuhatapDTO : MuhatapDTO
     {
         public string? KimlikNo { get; set; }
     }
-
 
 }

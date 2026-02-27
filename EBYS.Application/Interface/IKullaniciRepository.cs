@@ -7,7 +7,7 @@ using EBYS.Domain.Entities;
 
 namespace EBYS.Application.Interface
 {
-    public interface IKullanici:IGenericRepository<Kullanici>
+    public interface IKullaniciRepository:IGenericRepository<Kullanici>
     {
     }
 }

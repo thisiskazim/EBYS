@@ -28,7 +28,7 @@
     <div class="ebys-app d-flex">
         <!-- Left visual sidebar -->
         <aside class="ebys-sidebar-modern bg-dark text-white">
-            <div class="sidebar-inner p-3">
+            < class="sidebar-inner p-3">
                 <div class="menu-header text-uppercase small text-white-50 mb-3">Menü</div>
   
                 <nav class="nav flex-column">
@@ -59,19 +59,29 @@
                         </div>
                     </div>
 
-                    <a class="nav-link menu-item d-flex align-items-start text-white mb-2" href="/Muhatap">
-                        <div class="menu-icon me-3 d-flex align-items-center justify-content-center bg-white text-dark">
-                            <span class="k-icon k-i-people"></span>
-                        </div>
-                        <div class="menu-text">
-                            <div class="menu-title">Muhatap Yönetimi</div>
-                            <div class="menu-sub small text-white-50">Kurum ve kişiler</div>
-                        </div>
-                    </a>
 
+
+                    <div class="menu-section mb-2">
+                        <a class="nav-link menu-item d-flex align-items-start text-white" data-bs-toggle="collapse" href="#geneltanimlar" role="button" aria-expanded="false" aria-controls="evrakCollapse">
+                            <div class="menu-icon me-3 d-flex align-items-center justify-content-center bg-white text-dark">
+                                <span class="k-icon k-i-folder-open"></span>
+                            </div>
+                            <div class="menu-text">
+                                <div class="menu-title">Genel Tanımlar</div>
+                                <div class="menu-sub small text-white-50">İmza Rota,Kurumlar,Vatandaş,Tüzel Kişi</div>
+                            </div>
+                        </a>
+                    <div class="collapse ps-5 mt-2" id="geneltanimlar">
+                            <a class="nav-link small text-white-50 mb-1" href="/Muhatap/EkleKurum">• Kurum Ekle ve Listele</a>
+                            @* <a class="nav-link small text-white-50 mb-1" href="/Evrak/Gelen">• Gelen Evraklar</a>
+                            <a class="nav-link small text-white-50" href="/Evrak/Tum">• Tüm Evraklar</a> *@
+                        </div>
+                    </div>
+
+                    
                    
                 </nav>
-            </div>
+            
         </aside>
 
         <!-- Main content area -->

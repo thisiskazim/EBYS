@@ -1,9 +1,13 @@
-﻿using EBYS.Application.Interface;
+﻿using EBYS.Application.DTOs;
+using EBYS.Application.Interface;
+using EBYS.Domain.Entities;
+using EBYS.Persistence;
+using Kendo.Mvc.Extensions;
+using Kendo.Mvc.UI; // Kendo paketini kurmuş olmalısın
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc;
-using Kendo.Mvc.UI; // Kendo paketini kurmuş olmalısın
-using Kendo.Mvc.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace EBYS.WebAPI.Controllers
 {
@@ -13,10 +17,12 @@ namespace EBYS.WebAPI.Controllers
     {
 
         private readonly IMuhatapRepository _muhatapRepository;
+        private readonly EBYSContext _context;
 
-        public MuhatapController(IMuhatapRepository muhatapRepository)
+        public MuhatapController(IMuhatapRepository muhatapRepository,EBYSContext context)
         {
             _muhatapRepository = muhatapRepository;
+            _context = context;
         }
 
         [HttpGet("GetAlicilar")]
@@ -32,6 +38,27 @@ namespace EBYS.WebAPI.Controllers
 
 
 
+        }
+
+
+        // YENİ KURUM KAYDEDER
+        [HttpPost("KurumEkleVeListele")]
+        public IActionResult EkleKurum(KurumMuhatapDTO dto)
+        {
+            var entity = new KurumMuhatap
+            {
+                Adi = dto.Adi,
+                DetsisNo = dto.DetsisNo,
+                KepAdresi = dto.KepAdresi,
+                KurumKodu = dto.KurumKodu,
+                Telefon = dto.Telefon,
+                Adress = dto.Adress,
+                EPosta = dto.EPosta
+            };
+
+            _context.Add(entity);
+            _context.SaveChanges();
+            return Ok();
         }
     }
 

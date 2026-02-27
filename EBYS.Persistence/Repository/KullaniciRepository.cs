@@ -8,7 +8,7 @@ using EBYS.Domain.Entities;
 
 namespace EBYS.Persistence.Repository
 {
-    public class KullaniciRepository:GenericRepository<Kullanici>, IKullanici
+    public class KullaniciRepository:GenericRepository<Kullanici>, IKullaniciRepository
     {
         public KullaniciRepository(EBYSContext context) : base(context) { }
     }

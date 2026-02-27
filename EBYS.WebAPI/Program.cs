@@ -19,6 +19,7 @@ builder.Services.AddDbContext<EBYSContext>(options =>
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IEvrakRepository, EvrakRepository>();
 builder.Services.AddScoped<IMuhatapRepository, MuhatapRepository>();
+builder.Services.AddScoped<IKullaniciRepository, KullaniciRepository>();
 
 
 builder.Services.AddKendo();

@@ -1,0 +1,132 @@
+﻿
+@model EBYS.Application.DTOs.KurumMuhatapDTO
+
+@{
+    ViewData["Title"] = "Kurum Bilgileri";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="m-0 text-danger"><span class="k-icon k-i-buildings"></span> KURUM BİLGİLERİ</h4>
+    <div>
+        <a class="btn btn-info" href="#"><span class="k-icon k-i-search"></span> Kayıtlıdan Ara</a>
+    </div>
+</div>
+
+
+    
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-3 col-form-label">Kurum Adı *</label>
+                        <div class="col-sm-9">
+                            @(Html.Kendo().TextBoxFor(m => m.Adi)
+                                .Placeholder("Örn: Türk Hava Yolları")
+                                .HtmlAttributes(new { style = "width: 100%" }))
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-3 col-form-label">Telefon</label>
+                        <div class="col-sm-9">
+                            @(Html.Kendo().TextBoxFor(m=>m.Telefon)
+                                .HtmlAttributes(new { style = "width: 100%" }))
+                        </div>
+                    </div>
+
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-3 col-form-label">Adres</label>
+                        <div class="col-sm-9">
+                            @(Html.Kendo().TextBoxFor(m=>m.Adress)
+                                .HtmlAttributes(new { style = "width: 100%" }))
+                        </div>
+                    </div>
+
+                </div>
+                
+                <div class="col-md-6">
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-3 col-form-label">Kurum Kimlik Kodu</label>
+                        <div class="col-sm-9">
+                            @(Html.Kendo().TextBoxFor(m => m.KurumKodu)
+                                .HtmlAttributes(new { style = "width: 100%" }))
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-3 col-form-label">Birim Kimlik Kodu</label>
+                        <div class="col-sm-9">
+                            @(Html.Kendo().TextBoxFor(m => m.DetsisNo)
+                                .HtmlAttributes(new { style = "width: 100%" }))
+                        </div>
+                    </div>
+
+                 
+                    <div class="mb-3 row">
+                        <label class="col-sm-3 col-form-label">Mail Adresi</label>
+                        <div class="col-sm-9">
+                            @(Html.Kendo().TextBoxFor(m => m.EPosta)
+                                .HtmlAttributes(new { style = "width: 100%" }))
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-3 col-form-label">Kep Adresi</label>
+                        <div class="col-sm-9">
+                            @(Html.Kendo().TextBoxFor(m => m.KepAdresi)
+                                .HtmlAttributes(new { style = "width: 100%" }))
+                        </div>
+                    </div>
+
+                </div>
+            
+            </div>
+
+            <div class="border-top pt-3 mt-3 d-flex justify-content-end">
+                <a class="btn btn-danger me-2" href="/Muhatap">Kurum Listesi</a>
+            <button type="submit" class="btn btn-success" onclick="kaydetKurum()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+          
+    function kaydetKurum() {
+        var formData = {
+         
+            Adi: $("#Adi").val(),
+            DetsisNo: $("#DetsisNo").val(),
+            KurumKodu: $("#KurumKodu").val(),
+            KepAdresi: $("#KepAdresi").val(),
+            Adress: $("#Adress").val(),
+            Telefon:$("#Telefon").val(),
+            EPosta:$("#EPosta").val(),
+          
+        };
+
+        $.ajax({
+            url: "https://localhost:7060/api/Muhatap/KurumEkleVeListele",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(formData),
+            success: function (response) {
+                // Başarılıysa gridi temizle
+                // $("#gridKurumlar").data("kendoGrid").dataSource.read();
+                alert("Kurum başarıyla kaydedildi.");
+            },
+            error: function (error) {
+                alert("Hata oluştu: " + error.responseText);
+            }
+        });
+    }
+
+
+
+    </script>
+
+
