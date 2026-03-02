@@ -13,7 +13,7 @@ namespace EBYS.Web.Controllers
             return View();
         }
 
-        public IActionResult EkleTüzelKisi()
+        public IActionResult EkleTuzelKisi()
         {
             return View();
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,8 @@ namespace EBYS.Application.DTOs
 
     public class KurumMuhatapDTO : MuhatapDTO
     {
+        [Required(ErrorMessage = "Kurumun KEP adresi boş bırakılamaz.")]
+        [EmailAddress(ErrorMessage = "Geçerli bir KEP adresi giriniz.")]
         public string KepAdresi { get; set; }
         public string DetsisNo { get; set; }
         public string KurumKodu { get; set; }

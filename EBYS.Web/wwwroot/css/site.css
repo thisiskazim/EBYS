@@ -23,3 +23,30 @@
   .ebys-sidebar-modern { position: relative; width: 100%; }
 }
 
+/* Bildirim kutusunu büyütüyoruz */
+.k-notification-wrap {
+    padding: 20px 30px !important;
+    font-size: 22px !important; /* Yazýlarý büyüttük */
+  
+    border-radius: 8px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
+}
+
+    /* Ýkonlarý büyütüyoruz */
+    .k-notification-wrap .k-icon {
+        font-size: 20px !important;
+        margin-right: 30px !important;
+    }
+
+/* Baþarý ve Hata renklerini belirginleþtiriyoruz */
+.k-notification-success {
+    background-color: #28a745 !important;
+    color: white !important;
+    border: none !important;
+}
+
+.k-notification-error {
+    background-color: #dc3545 !important;
+    color: white !important;
+    border: none !important;
+}

@@ -28,9 +28,9 @@
     <div class="ebys-app d-flex">
         <!-- Left visual sidebar -->
         <aside class="ebys-sidebar-modern bg-dark text-white">
-            < class="sidebar-inner p-3">
+            <div class="sidebar-inner p-3">
                 <div class="menu-header text-uppercase small text-white-50 mb-3">Menü</div>
-  
+
                 <nav class="nav flex-column">
                     <a class="nav-link menu-item d-flex align-items-start text-white mb-2" href="/">
                         <div class="menu-icon me-3 d-flex align-items-center justify-content-center bg-white text-dark">
@@ -73,15 +73,15 @@
                         </a>
                     <div class="collapse ps-5 mt-2" id="geneltanimlar">
                             <a class="nav-link small text-white-50 mb-1" href="/Muhatap/EkleKurum">• Kurum Ekle ve Listele</a>
-                            @* <a class="nav-link small text-white-50 mb-1" href="/Evrak/Gelen">• Gelen Evraklar</a>
-                            <a class="nav-link small text-white-50" href="/Evrak/Tum">• Tüm Evraklar</a> *@
+                        <a class="nav-link small text-white-50 mb-1" href="/Muhatap/EkleBireyselVatandas">• Vatandaş Ekle ve Listele</a>
+                        <a class="nav-link small text-white-50" href="/Muhatap/EkleTüzelKisi">• Tüzel Kişi Ekle ve Listele</a>
                         </div>
                     </div>
 
                     
                    
                 </nav>
-            
+           </div>
         </aside>
 
         <!-- Main content area -->
@@ -95,6 +95,24 @@
     <!-- Bootstrap JS for collapse; site script -->
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @(Html.Kendo().Notification()
+        .Name("notification")
+        .Position(p => p.Pinned(true).Bottom(30).Right(30)) // Sağ Alt
+        .Stacking(NotificationStackingSettings.Up) // Yeni gelen üstte birikir
+        .AutoHideAfter(5000) // 5 saniye görünsün
+        .Width(450) // Genişliği artırdık
+        .Templates(t => {
+            t.Add().Type("error").ClientTemplate("<div class='k-notification-error k-notification-wrap k-icon'><span class=' k-i-warning'></span> #= message #</div>");
+            t.Add().Type("success").ClientTemplate("<div class='k-notification-success k-notification-wrap'><span class='k-icon k-i-check-circle'></span> #= message #</div>");
+        })
+    )
+
+    <script>
+    function showNotification(msg, type) {
+        var notification = $("#notification").data("kendoNotification");
+        notification.show({ message: msg }, type);
+    }
+</script>
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>

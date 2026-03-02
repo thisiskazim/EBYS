@@ -81,6 +81,8 @@
                             @(Html.Kendo().TextBoxFor(m => m.KepAdresi)
                                 .HtmlAttributes(new { style = "width: 100%" }))
                         </div>
+                        @Html.ValidationMessageFor(m => m.KepAdresi)
+
                     </div>
 
                 </div>
@@ -109,6 +111,11 @@
           
         };
 
+        if (!formData.KepAdresi || formData.KepAdresi.trim() === "") {
+        showNotification("Kep adresi girmek zorunludur!", "error");
+        return;
+    }
+
         $.ajax({
             url: "https://localhost:7060/api/Muhatap/KurumEkleVeListele",
             type: "POST",
@@ -117,7 +124,12 @@
             success: function (response) {
                 // Başarılıysa gridi temizle
                 // $("#gridKurumlar").data("kendoGrid").dataSource.read();
-                alert("Kurum başarıyla kaydedildi.");
+                showNotification("Kurum başarıyla kaydedildi.", "success");
+
+                // 2 saniye bekleyip listeye yönlendir (kullanıcı mesajı okusun diye)
+            // setTimeout(function() {
+            //     window.location.href = "/Muhatap";
+            // }, 2000);
             },
             error: function (error) {
                 alert("Hata oluştu: " + error.responseText);

@@ -1,7 +1,9 @@
 using EBYS.Application.Interface;
+using EBYS.Application.Mapping;
 using EBYS.Persistence;
 using EBYS.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 
 
@@ -21,7 +23,7 @@ builder.Services.AddScoped<IEvrakRepository, EvrakRepository>();
 builder.Services.AddScoped<IMuhatapRepository, MuhatapRepository>();
 builder.Services.AddScoped<IKullaniciRepository, KullaniciRepository>();
 
-
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddKendo();
 
 builder.Services.AddSwaggerGen(c =>

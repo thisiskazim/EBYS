@@ -1,4 +1,5 @@
-﻿using EBYS.Application.DTOs;
+﻿using AutoMapper;
+using EBYS.Application.DTOs;
 using EBYS.Application.Interface;
 using EBYS.Domain.Entities;
 using EBYS.Persistence;
@@ -18,43 +19,46 @@ namespace EBYS.WebAPI.Controllers
 
         private readonly IMuhatapRepository _muhatapRepository;
         private readonly EBYSContext _context;
+        private readonly IMapper _mapper;
 
-        public MuhatapController(IMuhatapRepository muhatapRepository,EBYSContext context)
+        public MuhatapController(IMuhatapRepository muhatapRepository,EBYSContext context, IMapper mapper)
         {
             _muhatapRepository = muhatapRepository;
             _context = context;
+            _mapper = mapper;
         }
 
-        [HttpGet("GetAlicilar")]
-        public async Task<IActionResult> GetAlicilar([FromQuery] DataSourceRequest request)
-        {
-            // TPH sayesinde Muhataplar tablosundaki Kurum, Birey, Tüzel hepsi tek seferde gelir
-            var query = _muhatapRepository.GetReadOnly();
-
-           
-            var result = await query.ToDataSourceResultAsync(request);
-
-            return Ok(result);
-
-
-
-        }
 
 
         // YENİ KURUM KAYDEDER
         [HttpPost("KurumEkleVeListele")]
         public IActionResult EkleKurum(KurumMuhatapDTO dto)
         {
-            var entity = new KurumMuhatap
-            {
-                Adi = dto.Adi,
-                DetsisNo = dto.DetsisNo,
-                KepAdresi = dto.KepAdresi,
-                KurumKodu = dto.KurumKodu,
-                Telefon = dto.Telefon,
-                Adress = dto.Adress,
-                EPosta = dto.EPosta
-            };
+          var entity = _mapper.Map<KurumMuhatap>(dto);
+
+            _context.Add(entity);
+            _context.SaveChanges();
+            return Ok();
+        }
+
+
+
+       
+        [HttpPost("VatandasEkleVeListele")]
+        public IActionResult EkleBireyselVatandas(BireyselMuhatapDTO dto)
+        {
+            var entity = _mapper.Map<BireyselMuhatap>(dto);
+
+            _context.Add(entity);
+            _context.SaveChanges();
+            return Ok();
+        }
+
+
+        [HttpPost("TuzelKisiEkleVeListele")]
+        public IActionResult EkleTuzelKisi(TuzelKisiMuhatapDTO dto)
+        {
+            var entity = _mapper.Map<TuzelKisiMuhatap>(dto);
 
             _context.Add(entity);
             _context.SaveChanges();
