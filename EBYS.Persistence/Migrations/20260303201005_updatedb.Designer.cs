@@ -3,6 +3,7 @@ using System;
 using EBYS.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EBYS.Persistence.Migrations
 {
     [DbContext(typeof(EBYSContext))]
-    partial class EBYSContextModelSnapshot : ModelSnapshot
+    [Migration("20260303201005_updatedb")]
+    partial class updatedb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,20 +64,6 @@ namespace EBYS.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BaseKurums");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BaseKurumId = 1,
-                            DetsisNo = "DTS123456",
-                            IsActive = true,
-                            KurumAdi = "EBYS Genel Müdürlüğü",
-                            KurumKodu = "EGM001",
-                            VergiNo = "1234567890",
-                            creat_time = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            isDelete = false
-                        });
                 });
 
             modelBuilder.Entity("EBYS.Domain.Entities.Evrak", b =>
@@ -267,20 +256,6 @@ namespace EBYS.Persistence.Migrations
                     b.HasIndex("RolId");
 
                     b.ToTable("Kullanicilar");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Ad = "Kazim",
-                            BaseKurumId = 1,
-                            KimlikNo = "11111111111",
-                            RolId = 1,
-                            SifreHash = "123456",
-                            Soyad = "U",
-                            creat_time = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            isDelete = false
-                        });
                 });
 
             modelBuilder.Entity("EBYS.Domain.Entities.Muhatap", b =>
@@ -353,16 +328,6 @@ namespace EBYS.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roller");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BaseKurumId = 1,
-                            RolAdi = "Sistem Yöneticisi",
-                            creat_time = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            isDelete = false
-                        });
                 });
 
             modelBuilder.Entity("EBYS.Domain.Entities.BireyselMuhatap", b =>

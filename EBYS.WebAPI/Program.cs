@@ -2,6 +2,7 @@ using EBYS.Application.Interface;
 using EBYS.Application.Mapping;
 using EBYS.Persistence;
 using EBYS.Persistence.Repository;
+using EBYS.Persistence.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,7 +15,10 @@ builder.Services
 	.AddRazorPages().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 // Add Kendo UI services to the services container
 builder.Services.AddKendo();
+builder.Services.AddHttpContextAccessor();
 
+
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddDbContext<EBYSContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection")));
 // Add services to the container.

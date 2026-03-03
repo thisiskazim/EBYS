@@ -10,7 +10,8 @@ namespace EBYS.Domain.Entities
     {
         public string Ad { get; set; }
         public string Soyad { get; set; }
-        public string KimlikNo { get; set; } // E-imza için gerekecek
+        public string KimlikNo { get; set; } // E-imza için gerekecek       
+        public string SifreHash { get; set; }
         public int RolId { get; set; }
         public virtual Rol Rol { get; set; }
     }

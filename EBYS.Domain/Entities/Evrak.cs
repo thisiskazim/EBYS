@@ -10,6 +10,7 @@ namespace EBYS.Domain.Entities
     {
         public string Konu { get; set; }
         public string Icerik { get; set; } // Rich Text Editor'den gelen HTML/Text
+        public string ImzaAltindaOlanIcerik { get; set; }
         public string EvrakSayisi { get; set; }
         public bool IsGelenEvrak { get; set; } // True ise Gelen, False ise Giden
         public int Durum { get; set;} // Taslak, İmzada, Tamamlandı vb.
