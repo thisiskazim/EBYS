@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using EBYS.Application.Interface;
+using EBYS.Application.Common.Interface;
 using Microsoft.AspNetCore.Http;
 
 namespace EBYS.Persistence.Services

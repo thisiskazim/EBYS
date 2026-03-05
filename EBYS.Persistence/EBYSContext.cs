@@ -1,7 +1,7 @@
 ﻿using EBYS.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using EBYS.Application.Interface;
+using EBYS.Application.Common.Interface;
 namespace EBYS.Persistence
 {
     public class EBYSContext:DbContext
@@ -30,41 +30,7 @@ namespace EBYS.Persistence
         {
             base.OnModelCreating(modelBuilder);
 
-            // 1. Örnek Bir Kurum Oluşturuyoruz
-            modelBuilder.Entity<BaseKurum>().HasData(new BaseKurum
-            {
-                Id = 1,
-                BaseKurumId = 1, // Kurumun kendisi de bir kurum id'sine sahip olmalı (BaseEntity gereği)
-                KurumAdi = "EBYS Genel Müdürlüğü",
-                KurumKodu = "EGM001",
-                VergiNo = "1234567890",
-                DetsisNo = "DTS123456",
-                creat_time = new DateTime()
-            });
-
-            // 2. Örnek Bir Rol Oluşturuyoruz
-            modelBuilder.Entity<Rol>().HasData(new Rol
-            {
-                Id = 1,
-                BaseKurumId = 1,
-                RolAdi = "Sistem Yöneticisi",
-                creat_time = new DateTime()
-            });
-
-            // 3. Örnek Bir Kullanıcı Oluşturuyoruz
-            modelBuilder.Entity<Kullanici>().HasData(new Kullanici
-            {
-                Id = 1,
-                BaseKurumId = 1,
-                RolId = 1,
-                Ad = "Kazim",
-                Soyad = "U",
-                KimlikNo = "11111111111", // Login olurken bunu kullanacağız
-                SifreHash = "123456", // ŞİMDİLİK düz metin, Login servisini yazınca hash'e çevireceğiz
-                creat_time = new DateTime()
-            });
-
-
+          
 
             // Tüm Entity tiplerini tara
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())

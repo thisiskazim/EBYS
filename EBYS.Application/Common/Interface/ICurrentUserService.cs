@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EBYS.Application.Interface
+namespace EBYS.Application.Common.Interface
 {
     public interface ICurrentUserService
     {
