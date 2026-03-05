@@ -1,6 +1,7 @@
 ﻿using EBYS.Application.Common.Interface;
 using EBYS.Application.DTOs;
 using EBYS.Persistence;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,7 @@ namespace EBYS.WebAPI.Controllers
             _tokenService = tokenService;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginDTO loginDto)
         {

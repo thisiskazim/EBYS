@@ -1,0 +1,87 @@
+﻿@model EBYS.Application.DTOs.LoginDTO
+
+@{
+    ViewData["HideMenu"] = true;
+}
+
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+    <div class="card shadow-sm" style="max-width:920px; width:100%;">
+        <div class="row g-0">
+            <div class="col-lg-4 d-none d-lg-flex bg-white align-items-center justify-content-center p-4">
+                <img src="@Url.Content("~/images/ebys.png")" alt="EBYS" style="max-width:180px;" />
+            </div>
+            <div class="col-lg-8">
+                <div class="card-body p-5">
+                    <h3 class="mb-4">Giriş Yap</h3>
+
+                    <div class="mb-3">
+                        <label class="form-label">Kimlik No</label>
+                        @(Html.Kendo().TextBoxFor(m => m.KimlikNo)
+                            .HtmlAttributes(new { @class = "form-control", placeholder = "TC Kimlik No veya kullanıcı adı" }))
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Şifre</label>
+                        @(Html.Kendo().TextBoxFor(m => m.Sifre)
+                            .HtmlAttributes(new { @class = "form-control", type = "password", placeholder = "Şifrenizi girin" }))
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+               
+                        <div>
+                            @(Html.Kendo().Button()
+                                .Name("btnLogin")
+                                .Content("Giriş Yap")
+                                .HtmlAttributes(new { @class = "btn btn-primary", id = "btnLogin" })
+                            )
+                        </div>
+                    </div>
+
+                    <hr />
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+
+        $(function () {
+            $("#btnLogin").on('click', function (e) {
+                e.preventDefault();
+                girisYap();
+            });
+
+
+            $(document).on('keypress', function (e) {
+                if (e.which === 13) {
+                    girisYap();
+                }
+            });
+        });
+
+        function girisYap() {
+            var formData = {
+                KimlikNo: $("#KimlikNo").val(),
+                Sifre: $("#Sifre").val()
+            };
+
+            $.ajax({
+                url: "https://localhost:7060/api/Auth/Login",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    document.cookie = "AuthToken=" + response.token + "; path=/; SameSite=Strict";
+                    sessionStorage.setItem("token", response.token);
+                    window.location.href = "/Home/Index";
+                },
+                error: function (error) {
+                    var msg = error && error.responseText ? error.responseText : 'Giriş hatası';
+                    try { showNotification(msg, 'error'); } catch (e) { alert(msg); }
+                }
+            });
+        }
+    })();
+</script>
