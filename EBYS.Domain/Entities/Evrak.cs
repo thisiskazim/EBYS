@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EBYS.Domain.Enum;
 
 namespace EBYS.Domain.Entities
 {
@@ -13,11 +14,16 @@ namespace EBYS.Domain.Entities
         public string ImzaAltindaOlanIcerik { get; set; }
         public string EvrakSayisi { get; set; }
         public bool IsGelenEvrak { get; set; } // True ise Gelen, False ise Giden
-        public int Durum { get; set;} // Taslak, İmzada, Tamamlandı vb.
+        public Enums.BelgeDurum BelgeDurum { get; set;} // Taslak, İmzada, Tamamlandı vb.
+
+        public Enums.GizlilikDerecesi GizlilikDerecesi { get; set;}
+        public Enums.IvedilikDerecesi IvedilikDerecesi { get; set;}
 
         // Navigation Properties (İlişkiler)
-        public int OlusturanId { get; set; }
+        public int OlusturanId { get; private set; }
         public virtual Kullanici Olusturan { get; set; }
+
+        public void SetOlusturanId(int userId) => OlusturanId = userId;
 
         public int? BekleyenRolId { get; set; }
         public virtual Rol BekleyenRol { get; set; }
@@ -27,11 +33,5 @@ namespace EBYS.Domain.Entities
         public virtual ICollection<EvrakEk> Ekler { get; set; } = new HashSet<EvrakEk>();
     }
 
-    enum BelgeDurumEnums
-    {
-        Taslak = 0,
-        Imzada = 1,
-        Tamamlandi = 2,
-        Reddedildi = 3
-    }
+   
 }

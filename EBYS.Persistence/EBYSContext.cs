@@ -1,16 +1,19 @@
-﻿using EBYS.Domain.Entities;
+﻿using EBYS.Application.Common.Interface;
+using EBYS.Domain.Entities;
+using EBYS.Persistence.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using EBYS.Application.Common.Interface;
 namespace EBYS.Persistence
 {
     public class EBYSContext:DbContext
     {
         private readonly int _currentKurumId;
+        private readonly int _currentUserId;
 
         public EBYSContext(DbContextOptions<EBYSContext> options, ICurrentUserService userService) : base(options)
         {
             _currentKurumId = userService.GetKurumId();
+            _currentUserId = userService.GetUserId();
 
         }
 
@@ -80,10 +83,43 @@ namespace EBYS.Persistence
 
 
         }
+
+        //KurumId'yi zorunlu olarak bas
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker.Entries<BaseEntity>();
+
+            foreach (var entry in entries)
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.SetBaseKurumId(_currentKurumId);
+
+                    if (entry.Entity is Evrak evrak)
+                    {
+                        evrak.SetOlusturanId(_currentUserId);
+                    }
+
+
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    entry.Property("BaseKurumId").IsModified = false;
+
+                    if (entry.Entity is Evrak)
+                    {
+                        entry.Property("OlusturanId").IsModified = false;
+                    }
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
         private LambdaExpression CreateFilterExpression(Type type)
         {
             var parameter = Expression.Parameter(type, "e");
-            // e.KurumId == _currentKurumId sorgusunu hazırlar
+
             var body = Expression.Equal(
                 Expression.Property(parameter, "BaseKurumId"),
                 Expression.Constant(_currentKurumId)

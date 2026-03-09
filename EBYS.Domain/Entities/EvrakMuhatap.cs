@@ -11,6 +11,7 @@ namespace EBYS.Domain.Entities
         public int EvrakId { get; set; }
         public virtual Evrak Evrak { get; set; }
 
+
         public int MuhatapId { get; set; }
         public virtual Muhatap Muhatap { get; set; }
 

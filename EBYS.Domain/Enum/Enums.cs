@@ -14,5 +14,27 @@ namespace EBYS.Domain.Enum
             TuzelKisi = 2,
             Bireysel = 3
         }
+       public enum BelgeDurum
+        {
+            Taslak = 0,
+            Imzada = 1,
+            Tamamlandi = 2,
+            GeriIadeEdildi = 3
+        }
+        public enum GizlilikDerecesi
+        {
+            Normal = 0,
+            TasnifDisi = 1,
+            Gizli = 2,
+            CokGizli = 3
+        }
+        public enum IvedilikDerecesi
+        {
+            Normal = 0,
+            Ivedi = 1,
+            CokIvedi = 2,
+            Gunlu = 3
+        }
+
     }
 }

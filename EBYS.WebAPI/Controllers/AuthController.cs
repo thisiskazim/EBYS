@@ -25,7 +25,6 @@ namespace EBYS.WebAPI.Controllers
         public IActionResult Login([FromBody] LoginDTO loginDto)
         {
 
-
             // Kullanıcıyı veritabanından bul (Şimdilik düz şifre kontrolü)
             var user = _context.Kullanicilar
                 .IgnoreQueryFilters()

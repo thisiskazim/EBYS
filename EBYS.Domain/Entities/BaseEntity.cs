@@ -9,8 +9,9 @@ namespace EBYS.Domain.Entities
     public abstract class BaseEntity
     {
         public int Id { get; set; }
-        public int BaseKurumId { get; set; }
+        public int BaseKurumId { get; private set; }
         public DateTime creat_time { get; set; } = DateTime.Now;
         public bool isDelete { get; set; } = false;
+        public void SetBaseKurumId(int id) => BaseKurumId = id;
     }
 }

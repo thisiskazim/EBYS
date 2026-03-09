@@ -75,6 +75,7 @@
                 success: function (response) {
                     document.cookie = "AuthToken=" + response.token + "; path=/; SameSite=Strict";
                     sessionStorage.setItem("token", response.token);
+
                     window.location.href = "/Home/Index";
                 },
                 error: function (error) {

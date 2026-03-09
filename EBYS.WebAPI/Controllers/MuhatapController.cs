@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EBYS.Application.DTOs;
 using EBYS.Application.Interface;
+using EBYS.Application.Services;
 using EBYS.Domain.Entities;
 using EBYS.Persistence;
 using Kendo.Mvc.Extensions;
@@ -17,13 +18,13 @@ namespace EBYS.WebAPI.Controllers
     public class MuhatapController : ControllerBase
     {
 
-        private readonly IMuhatapRepository _muhatapRepository;
+        private readonly MuhatapKurumService _muhatapKurumService;
         private readonly EBYSContext _context;
         private readonly IMapper _mapper;
 
-        public MuhatapController(IMuhatapRepository muhatapRepository,EBYSContext context, IMapper mapper)
+        public MuhatapController(MuhatapKurumService muhatapKurumService, EBYSContext context, IMapper mapper)
         {
-            _muhatapRepository = muhatapRepository;
+            _muhatapKurumService = muhatapKurumService;
             _context = context;
             _mapper = mapper;
         }
@@ -32,13 +33,18 @@ namespace EBYS.WebAPI.Controllers
 
         // YENİ KURUM KAYDEDER
         [HttpPost("KurumEkleVeListele")]
-        public IActionResult EkleKurum(KurumMuhatapDTO dto)
+        public async Task<IActionResult> EkleKurum(KurumMuhatapDTO kurumDTO)
         {
-          var entity = _mapper.Map<KurumMuhatap>(dto);
+            try
+            {
+                await _muhatapKurumService.AddKurumAsync(kurumDTO);
+                return Ok("Kurum başarıyla kaydedildi");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
 
-            _context.Add(entity);
-            _context.SaveChanges();
-            return Ok();
         }
 
 
