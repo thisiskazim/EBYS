@@ -1,6 +1,5 @@
 ﻿using EBYS.Application.Common.Interface;
 using EBYS.Domain.Entities;
-using EBYS.Persistence.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 namespace EBYS.Persistence

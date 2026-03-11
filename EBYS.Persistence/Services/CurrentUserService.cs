@@ -19,7 +19,7 @@ namespace EBYS.Persistence.Services
         public int GetKurumId()
         {
             // JWT Token içindeki "KurumId" claim'ini bulur ve döner
-            var claim = _httpContextAccessor.HttpContext?.User?.FindFirst("KurumId")?.Value;
+            var claim = _httpContextAccessor.HttpContext?.User?.FindFirst("BaseKurumId")?.Value;
             return string.IsNullOrEmpty(claim) ? 0 : int.Parse(claim);
         }
 

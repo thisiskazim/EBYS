@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EBYS.Domain.Entities;
 
-namespace EBYS.Application.Interface
+namespace EBYS.Application.Interfaces.Repository
 {
     public interface IEvrakRepository:IGenericRepository<Evrak>
     {

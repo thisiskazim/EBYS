@@ -121,6 +121,9 @@
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(formData),
+    //         headers: {
+    //     "Authorization": "Bearer " + sessionStorage.getItem("token")
+    // },
             success: function (response) {
                 // Başarılıysa gridi temizle
                 // $("#gridKurumlar").data("kendoGrid").dataSource.read();

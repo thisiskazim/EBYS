@@ -5,34 +5,30 @@ using System.Text;
 using System.Threading.Tasks;
 using EBYS.Application.DTOs;
 using AutoMapper;
-using EBYS.Application.Interface;
 using EBYS.Domain.Entities;
+using EBYS.Application.Interfaces.Repository;
+using EBYS.Application.Interfaces.Service;
 
 
 
 namespace EBYS.Application.Services
 {
-    public class MuhatapKurumService
+    public class MuhatapKurumService(IMuhatapRepository kurumRepository,IMapper mapper) : IMuhatapKurumService
+
     {
-        private readonly IGenericRepository<KurumMuhatap> _kurumRepository;
-        private readonly IMapper _mapper;
-
-        public MuhatapKurumService(IGenericRepository<KurumMuhatap> kurumRepository)
-        {
-            _kurumRepository = kurumRepository;
-        }
-
+      
         public async Task AddKurumAsync(KurumMuhatapDTO kurumDTO)
         {
-            var entity = _mapper.Map<KurumMuhatap>(kurumDTO);
+            var varMi = await kurumRepository.AnyDerivedAsync<KurumMuhatap>(x => x.DetsisNo == kurumDTO.DetsisNo);
 
-            if (kurumDTO.DetsisNo == entity.DetsisNo)
+            if (varMi)
             {
                 throw new InvalidOperationException("DetsisNo değeri zaten mevcut.");
             }
+            var entity = mapper.Map<KurumMuhatap>(kurumDTO);
 
-            await _kurumRepository.AddAsync(entity);
-            await _kurumRepository.SaveAsync();
+            await kurumRepository.AddAsync(entity);
+            await kurumRepository.SaveAsync();
         }
 
 

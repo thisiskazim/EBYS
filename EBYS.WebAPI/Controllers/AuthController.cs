@@ -16,7 +16,7 @@ namespace EBYS.WebAPI.Controllers
 
         public AuthController(EBYSContext context, ITokenService tokenService)
         {
-            _context = context;
+            _context = context;     
             _tokenService = tokenService;
         }
 

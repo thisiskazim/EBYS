@@ -1,5 +1,7 @@
-﻿using EBYS.Application.Interface;
+﻿using EBYS.Application.Interfaces.Repository;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+
 
 namespace EBYS.Persistence.Repository
 {
@@ -16,5 +18,15 @@ namespace EBYS.Persistence.Repository
 
         public IQueryable<T> GetReadOnly()=> _context.Set<T>().AsNoTracking();
 
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _context.Set<T>().AsQueryable().AnyAsync(predicate);
+        }
+
+        public async Task<bool> AnyDerivedAsync<TDerived>(Expression<Func<TDerived, bool>> predicate)
+            where TDerived : class, T
+        {
+            return await _context.Set<T>().OfType<TDerived>().AnyAsync(predicate);
+        }
     }
 }

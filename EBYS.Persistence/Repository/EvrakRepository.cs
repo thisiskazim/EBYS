@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using EBYS.Application.Interface;
+using EBYS.Application.Interfaces.Repository;
 using EBYS.Domain.Entities;
 
 namespace EBYS.Persistence.Repository   

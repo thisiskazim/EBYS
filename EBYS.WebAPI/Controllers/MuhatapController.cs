@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using EBYS.Application.DTOs;
-using EBYS.Application.Interface;
+using EBYS.Application.Interfaces.Service;
 using EBYS.Application.Services;
 using EBYS.Domain.Entities;
 using EBYS.Persistence;
@@ -18,11 +18,11 @@ namespace EBYS.WebAPI.Controllers
     public class MuhatapController : ControllerBase
     {
 
-        private readonly MuhatapKurumService _muhatapKurumService;
+        private readonly IMuhatapKurumService _muhatapKurumService;
         private readonly EBYSContext _context;
         private readonly IMapper _mapper;
 
-        public MuhatapController(MuhatapKurumService muhatapKurumService, EBYSContext context, IMapper mapper)
+        public MuhatapController(IMuhatapKurumService muhatapKurumService, EBYSContext context, IMapper mapper)
         {
             _muhatapKurumService = muhatapKurumService;
             _context = context;

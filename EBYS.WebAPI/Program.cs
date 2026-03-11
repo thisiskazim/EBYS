@@ -1,6 +1,7 @@
 using EBYS.Application.Common.Interface;
-using EBYS.Application.Interface;
+using EBYS.Application.Interfaces.Repository;
 using EBYS.Application.Mapping;
+using EBYS.Application.Services;
 using EBYS.Persistence;
 using EBYS.Persistence.Repository;
 using EBYS.Persistence.Services;
@@ -8,12 +9,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using EBYS.Application.Interfaces.Service;
 
-
-
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var builder =WebApplication.CreateBuilder(args);
 
 // Add framework services.
@@ -33,7 +34,7 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped<IEvrakRepository, EvrakRepository>();
 builder.Services.AddScoped<IMuhatapRepository, MuhatapRepository>();
 builder.Services.AddScoped<IKullaniciRepository, KullaniciRepository>();
-
+builder.Services.AddScoped<IMuhatapKurumService,MuhatapKurumService>();
 
 
 
@@ -98,7 +99,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 
 app.UseCors("AllowAll");
 

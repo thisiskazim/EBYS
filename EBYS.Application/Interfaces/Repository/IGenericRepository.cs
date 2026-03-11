@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EBYS.Application.Interface
+namespace EBYS.Application.Interfaces.Repository
 {
     public interface IGenericRepository<T> where T : class
     {
@@ -15,5 +16,9 @@ namespace EBYS.Application.Interface
         void DeleteAsync(T entity);
         Task<int> SaveAsync();
         IQueryable<T> GetReadOnly();
+        
+        Task<bool> AnyDerivedAsync<TDerived>(Expression<Func<TDerived, bool>> predicate)
+            where TDerived : class, T;  //TÜRETİLMİŞ SINIFLAR İÇİN ANY METODU;  MUHATAP TABLOSUNDA GENERİC REPOSITORYDE HER TÜRÜNÜN AYRI BİR TABLOSU OLMADIĞI İÇİN TÜRETİLMİŞ SINIFLARIN VARLIĞINI KONTROL ETMEK İÇİN KULLANILIR.
+
     }
 }
