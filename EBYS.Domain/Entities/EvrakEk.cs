@@ -9,6 +9,7 @@ namespace EBYS.Domain.Entities
     public class EvrakEk:BaseEntity
     {
         public int? EvrakId { get; set; }
+        public virtual Evrak? Evrak { get; set; }
         public string? EkAdi { get; set; }
         public string? DosyaYolu { get; set; } // Fiziksel dosya yolu veya GUID
     }

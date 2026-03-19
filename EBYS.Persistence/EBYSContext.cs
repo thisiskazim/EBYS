@@ -27,6 +27,9 @@ namespace EBYS.Persistence
         public DbSet<EvrakMuhatap> EvrakMuhataplari { get; set; }
         public DbSet<Kullanici> Kullanicilar { get; set; }
         public DbSet<Rol> Roller { get; set; }
+        public DbSet<ImzaRota> ImzaRotalar { get; set; }
+        public DbSet<ImzaRotaAdimi> ImzaRotaAdimlari { get; set; }
+        public DbSet<EvrakAkis> EvrakAkislari { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -80,7 +83,21 @@ namespace EBYS.Persistence
                 .Property(e => e.ImzaAltindaOlanIcerik)
                 .HasColumnType("text");
 
+            modelBuilder.Entity<EvrakAkis>(entity =>
+            {
+                // Bir evrak silinirse, o evraka ait akış adımları da silinsin (Cascade)
+                entity.HasOne(d => d.Evrak)
+                    .WithMany(p => p.AkisAdimlari)
+                    .HasForeignKey(d => d.EvrakId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
+                // Bir kullanıcı silinirse, akış kayıtları silinmesin (Restrict) 
+                // Çünkü o imza geçmişi bir belgedir, kullanıcı gitse de imza kalmalı.
+                entity.HasOne(d => d.Kullanici)
+                    .WithMany()
+                    .HasForeignKey(d => d.KullaniciId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
         }
 
         //KurumId'yi zorunlu olarak bas

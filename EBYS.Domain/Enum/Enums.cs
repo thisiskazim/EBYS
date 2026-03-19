@@ -19,7 +19,9 @@ namespace EBYS.Domain.Enum
             Taslak = 0,
             Imzada = 1,
             Tamamlandi = 2,
-            GeriIadeEdildi = 3
+            GeriIadeEdildi =3,
+            HazirSablonOlarakKaydet = 4
+            
         }
         public enum GizlilikDerecesi
         {
@@ -36,5 +38,16 @@ namespace EBYS.Domain.Enum
             Gunlu = 3
         }
 
+        public enum ImzaTipi
+        {
+           Paraf=0,
+           Imza=1
+        }
+        public enum  AkisAdimDurumu
+        {
+            Reddedildi = 0,
+            Onaylandi = 1,
+            Bekliyor = 2
+        }
     }
 }

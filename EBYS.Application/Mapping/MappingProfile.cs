@@ -2,6 +2,7 @@
 
 using EBYS.Application.DTOs;
 using EBYS.Domain.Entities;
+using static EBYS.Domain.Enum.Enums;
 
 namespace EBYS.Application.Mapping
 {
@@ -14,6 +15,31 @@ namespace EBYS.Application.Mapping
             CreateMap<BireyselMuhatapDTO, BireyselMuhatap>().ReverseMap();
             CreateMap<TuzelKisiMuhatapDTO, TuzelKisiMuhatap>().ReverseMap();
 
+     
+
+            CreateMap<GidenEvrakCreateDTO, Evrak>()
+                // Zaten private set ama niyetimizi belli etmek için ignore ediyoruz
+                .ForMember(dest => dest.OlusturanId, opt => opt.Ignore())
+                .ForMember(dest => dest.BaseKurumId, opt => opt.Ignore())
+                .ForMember(dest => dest.BelgeDurum, opt => opt.Ignore())
+
+                // Bunlar Service katmanında manuel doldurulacak (İlişkili tablolar)
+                .ForMember(dest => dest.Muhataplar, opt => opt.Ignore())
+                .ForMember(dest => dest.İlgiler, opt => opt.Ignore())
+                .ForMember(dest => dest.Ekler, opt => opt.Ignore())
+                .ForMember(dest => dest.AkisAdimlari, opt => opt.Ignore());
+
+
+            CreateMap<GidenEvrakUpdateDTO, Evrak>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.OlusturanId, opt => opt.Ignore())
+                .ForMember(dest => dest.BaseKurumId, opt => opt.Ignore())
+                .ForMember(dest => dest.BelgeDurum, opt => opt.Ignore())
+                    // KOLEKSİYONLAR: Bunlar bizim "dokunulmaz" alanlarımız.
+                .ForMember(dest => dest.Muhataplar, opt => opt.Ignore())
+                .ForMember(dest => dest.AkisAdimlari, opt => opt.Ignore())
+                .ForMember(dest => dest.Ekler, opt => opt.Ignore())
+                .ForMember(dest => dest.İlgiler, opt => opt.Ignore());
         }
     }
 }

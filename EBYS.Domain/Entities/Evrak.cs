@@ -11,8 +11,8 @@ namespace EBYS.Domain.Entities
     {
         public string Konu { get; set; }
         public string Icerik { get; set; } // Rich Text Editor'den gelen HTML/Text
-        public string ImzaAltindaOlanIcerik { get; set; }
-        public string EvrakSayisi { get; set; }
+        public string? ImzaAltindaOlanIcerik { get; set; }
+        public string EvrakSayisi { get; set; }//bu belge durumu tamamlandı olduğunda oluşacak bir property
         public bool IsGelenEvrak { get; set; } // True ise Gelen, False ise Giden
         public Enums.BelgeDurum BelgeDurum { get; set;} // Taslak, İmzada, Tamamlandı vb.
 
@@ -25,12 +25,13 @@ namespace EBYS.Domain.Entities
 
         public void SetOlusturanId(int userId) => OlusturanId = userId;
 
-        public int? BekleyenRolId { get; set; }
-        public virtual Rol BekleyenRol { get; set; }
+        public int ImzaRotaId { get; set; }
+        public virtual ImzaRota ImzaRota { get; set; }
 
         public virtual ICollection<EvrakMuhatap> Muhataplar { get; set; } = new HashSet<EvrakMuhatap>();
         public virtual ICollection<EvrakIlgi> İlgiler { get; set; } = new HashSet<EvrakIlgi>();
         public virtual ICollection<EvrakEk> Ekler { get; set; } = new HashSet<EvrakEk>();
+        public virtual ICollection<EvrakAkis> AkisAdimlari { get; set; } = new HashSet<EvrakAkis>();
     }
 
    

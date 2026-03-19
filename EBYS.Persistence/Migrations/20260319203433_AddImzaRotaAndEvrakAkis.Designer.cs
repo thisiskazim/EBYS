@@ -3,6 +3,7 @@ using System;
 using EBYS.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EBYS.Persistence.Migrations
 {
     [DbContext(typeof(EBYSContext))]
-    partial class EBYSContextModelSnapshot : ModelSnapshot
+    [Migration("20260319203433_AddImzaRotaAndEvrakAkis")]
+    partial class AddImzaRotaAndEvrakAkis
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,7 +170,7 @@ namespace EBYS.Persistence.Migrations
 
                     b.HasIndex("KullaniciId");
 
-                    b.ToTable("EvrakAkislari");
+                    b.ToTable("EvrakAkis");
                 });
 
             modelBuilder.Entity("EBYS.Domain.Entities.EvrakEk", b =>
@@ -286,10 +289,10 @@ namespace EBYS.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ImzaRotalar");
+                    b.ToTable("ImzaRota");
                 });
 
-            modelBuilder.Entity("EBYS.Domain.Entities.ImzaRotaAdimi", b =>
+            modelBuilder.Entity("EBYS.Domain.Entities.ImzaRotaAdimlari", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -300,17 +303,17 @@ namespace EBYS.Persistence.Migrations
                     b.Property<int>("BaseKurumId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ImzaRotaId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("KullaniciId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ParafMiImzaMi")
+                    b.Property<int>("RotaId")
                         .HasColumnType("integer");
 
                     b.Property<int>("SiraNo")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("SonImzaciMi")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime>("creat_time")
                         .HasColumnType("timestamp without time zone");
@@ -320,9 +323,7 @@ namespace EBYS.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ImzaRotaId");
-
-                    b.HasIndex("KullaniciId");
+                    b.HasIndex("RotaId");
 
                     b.ToTable("ImzaRotaAdimlari");
                 });
@@ -567,21 +568,13 @@ namespace EBYS.Persistence.Migrations
                     b.Navigation("Muhatap");
                 });
 
-            modelBuilder.Entity("EBYS.Domain.Entities.ImzaRotaAdimi", b =>
+            modelBuilder.Entity("EBYS.Domain.Entities.ImzaRotaAdimlari", b =>
                 {
                     b.HasOne("EBYS.Domain.Entities.ImzaRota", "Rota")
                         .WithMany("ImzaRotaAdimlari")
-                        .HasForeignKey("ImzaRotaId")
+                        .HasForeignKey("RotaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("EBYS.Domain.Entities.Kullanici", "Kullanici")
-                        .WithMany()
-                        .HasForeignKey("KullaniciId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Kullanici");
 
                     b.Navigation("Rota");
                 });
