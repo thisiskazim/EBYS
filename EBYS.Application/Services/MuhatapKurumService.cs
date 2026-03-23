@@ -5,9 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using EBYS.Application.DTOs;
 using AutoMapper;
+using EBYS.Application.Interfaces.IService;
 using EBYS.Domain.Entities;
 using EBYS.Application.Interfaces.Repository;
-using EBYS.Application.Interfaces.Service;
+
 
 
 

@@ -40,6 +40,10 @@ namespace EBYS.Application.Mapping
                 .ForMember(dest => dest.AkisAdimlari, opt => opt.Ignore())
                 .ForMember(dest => dest.Ekler, opt => opt.Ignore())
                 .ForMember(dest => dest.İlgiler, opt => opt.Ignore());
+
+            CreateMap<Kullanici, KullaniciListDTO>()
+                .ForMember(dest => dest.AdSoyad, opt => opt.MapFrom(src => $"{src.Ad} {src.Soyad}"))
+                .ForMember(dest => dest.RolAdi, opt => opt.MapFrom(src => src.Rol.RolAdi));
         }
     }
 }

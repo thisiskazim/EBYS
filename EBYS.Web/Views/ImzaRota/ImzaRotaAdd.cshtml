@@ -1,0 +1,150 @@
+﻿@{
+    ViewData["Title"] = "İmza Rota";
+}
+
+<div class="modal-dialog modal-xl mx-auto">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">İmza Rota Oluştur</h5>
+        </div>
+        <hr />
+        <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-6">
+                            <label class="form-label">Rota Adı</label>
+                            @(Html.Kendo().TextBox().Name("RotaAdi").HtmlAttributes(new { @class = "form-control", id = "RotaAdi" }))
+                        </div>
+                    
+
+                        <div class="col-md-6">
+                            <label class="form-label">Personel</label>
+                            @(Html.Kendo().DropDownList()
+                                .Name("Personel")
+                                .HtmlAttributes(new { style = "width:100%", id = "Personel" })
+                                .OptionLabel("Seçiniz")
+                                .DataTextField("adSoyad")
+                                .DataValueField("id")
+                                                .DataSource(ds => ds.Read(r => r.Url("https://localhost:7060/api/Kullanici/KullanicilariListele").Type(HttpVerbs.Get)))
+                            )
+                        </div>
+                    </div>
+
+                    <div class="row mt-3 g-3 align-items-center">
+
+                        <div class="col-md-6">
+                            <div class="form-label">İmza Türü</div>
+                            <label class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="ImzaTuru" value="0" checked />
+                                <span class="form-check-label">Paraf</span>
+                            </label>
+                            <label class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="ImzaTuru" value="1" />
+                                <span class="form-check-label">İmza</span>
+                            </label>
+                        </div>
+
+                        <div class="col-md-6 d-flex align-items-end justify-content-end gap-2">
+                            <button id="btnEkle" type="button" class="btn btn-warning"><span class="k-icon k-i-plus"></span> Ekle</button>
+                            <button id="btnTemizle" type="button" class="btn btn-info text-white">Temizle</button>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div id="rotaGrid" class="imza-rota-grid"></div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+            <button id="btnKaydet" type="button" class="btn btn-primary">Kaydet</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var tempId = 0;
+
+        var grid = $("#rotaGrid").kendoGrid({
+            columns: [
+                { field: "AdSoyad", title: "Ad Soyad" },
+                { field: "RolAdi", title: "Rol", width: 200 },
+                { field: "ImzaTuruLabel", title: "İmza Türü", width: 120 },
+                { command: [{ text: "Sil", click: function(e){ e.preventDefault(); var tr = $(e.currentTarget).closest("tr"); var data = grid.dataItem(tr); if (data) { grid.dataSource.remove(data); } }}], title: "İşlem", width: 100 }
+            ],
+            editable: false,
+            dataSource: {
+                data: [],
+                schema: { model: { id: "TempId" } }
+            },
+            dataBound: function() {
+                var tbody = this.tbody;
+                if (!tbody.data('kendoSortable')) {
+                    tbody.kendoSortable({
+                        filter: ">tr",
+                        placeholder: function(element){ return element.clone().addClass('k-state-selected'); },
+                        cursor: 'move',
+                        change: function(e){
+                            var ds = grid.dataSource;
+                            var item = ds.at(e.oldIndex);
+                            ds.remove(item);
+                            ds.insert(e.newIndex, item);
+                        }
+                    });
+                }
+            }
+        }).data('kendoGrid');
+
+        // Ekle
+        $("#btnEkle").on('click', function(){
+            var pers = $("#Personel").data('kendoDropDownList');
+            var kullaniciId = pers ? pers.value() : null;
+            var adSoyad = pers ? pers.text() : "";
+            var dataItem = pers ? pers.dataItem() : null;
+            var roleName = '';
+            if (dataItem) {
+                roleName = dataItem.RolAdi || dataItem.rolAdi || (dataItem.Rol && (dataItem.Rol.RolAdi || dataItem.Rol.rolAdi)) || '';
+            }
+            //if (!kullaniciId) { showNotification('Personel seçiniz','error'); return; }
+            tempId++;
+            var imza = $("input[name='ImzaTuru']:checked").val();
+            var imzaLabel = imza == '1' ? 'İmza' : 'Paraf';
+            grid.dataSource.add({ TempId: tempId, KullaniciId: parseInt(kullaniciId), AdSoyad: adSoyad, RolAdi: roleName, ImzaTuru: parseInt(imza), ImzaTuruLabel: imzaLabel });
+            if (pers) pers.value("");
+        });
+
+        // Temizle
+        $("#btnTemizle").on('click', function(){
+            if (confirm('Formu temizlemek istiyor musunuz?')){
+                if ($("#Personel").data('kendoDropDownList')) $("#Personel").data('kendoDropDownList').value("");
+                // any other inputs to clear can be added here
+                grid.dataSource.data([]);
+            }
+        });
+
+        // Kaydet
+        $("#btnKaydet").on('click', function(){
+            var rotaAdi = $("#RotaAdi").val();
+            if (!rotaAdi || rotaAdi.trim() === '') { showNotification('Rota adı gerekli','error'); return; }
+            var items = grid.dataSource.data();
+            if (!items || items.length === 0) { showNotification('En az bir kişi ekleyin','error'); return; }
+            var payload = { RotaAdi: rotaAdi, ImzaRotaAdimlari: [] };
+            for (var i=0;i<items.length;i++){
+                payload.ImzaRotaAdimlari.push({ KullaniciId: items[i].KullaniciId, ParafMiImzaMi: items[i].ImzaTuru, SiraNo: i+1 });
+            }
+
+            $.ajax({
+                url: '/api/ImzaRota',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(payload),
+                success: function(resp){ showNotification('İmza rotası kaydedildi','success'); },
+                error: function(err){ var msg = err && err.responseText ? err.responseText : 'Hata'; showNotification(msg,'error'); }
+            });
+        });
+    });
+</script>
+

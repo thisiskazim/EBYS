@@ -9,7 +9,6 @@ namespace EBYS.Persistence.Repository
     {
         protected readonly EBYSContext _context;
         public GenericRepository(EBYSContext context) => _context = context;
-        public async Task<T> GetByIdAsync(int id) => await _context.Set<T>().FindAsync(id);
         public async Task<List<T>> GetAllAsync() => await _context.Set<T>().ToListAsync();
         public async Task AddAsync(T entity) => await _context.Set<T>().AddAsync(entity);
         public void UpdateAsync(T entity) => _context.Set<T>().Update(entity);
@@ -27,6 +26,22 @@ namespace EBYS.Persistence.Repository
             where TDerived : class, T
         {
             return await _context.Set<T>().OfType<TDerived>().AnyAsync(predicate);
+        }
+
+        //ilişkili tablolarun bulunduğu bir yerde güncelleme yapılacaksa bu uygun 
+        public async Task<T?> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _context.Set<T>();
+
+            
+            if (includes != null && includes.Length > 0)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+            return await query.FirstOrDefaultAsync(x => EF.Property<int>(x, "Id") == id);
         }
     }
 }

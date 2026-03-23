@@ -52,6 +52,10 @@
 }
 
 /*Login*/
+
+/* Imza Rota modal customizations */
+.imza-rota-grid { height: 300px; }
+.imza-rota-actions { display: flex; justify-content: flex-end; gap: .5rem; }
 .rounded-t-5 {
     border-top-left-radius: 0.5rem;
     border-top-right-radius: 0.5rem;

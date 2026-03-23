@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using EBYS.Application.DTOs;
-using EBYS.Application.Interfaces.Service;
+using EBYS.Application.Interfaces.IService;
 using EBYS.Application.Services;
 using EBYS.Domain.Entities;
 using EBYS.Persistence;

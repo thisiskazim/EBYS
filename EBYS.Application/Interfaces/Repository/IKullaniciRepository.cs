@@ -9,5 +9,6 @@ namespace EBYS.Application.Interfaces.Repository
 {
     public interface IKullaniciRepository:IGenericRepository<Kullanici>
     {
+        Task<List<Kullanici>> AsyncKullanicilarVeRolleriniGetir();
     }
 }

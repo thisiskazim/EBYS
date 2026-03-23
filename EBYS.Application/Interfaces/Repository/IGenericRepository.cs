@@ -9,7 +9,7 @@ namespace EBYS.Application.Interfaces.Repository
 {
     public interface IGenericRepository<T> where T : class
     {
-        Task<T> GetByIdAsync(int id);
+        Task<T?> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes);
         Task<List<T>> GetAllAsync();
         Task AddAsync(T entity);
         void UpdateAsync(T entity);
@@ -19,6 +19,6 @@ namespace EBYS.Application.Interfaces.Repository
         
         Task<bool> AnyDerivedAsync<TDerived>(Expression<Func<TDerived, bool>> predicate)
             where TDerived : class, T;  //TÜRETİLMİŞ SINIFLAR İÇİN ANY METODU;  MUHATAP TABLOSUNDA GENERİC REPOSITORYDE HER TÜRÜNÜN AYRI BİR TABLOSU OLMADIĞI İÇİN TÜRETİLMİŞ SINIFLARIN VARLIĞINI KONTROL ETMEK İÇİN KULLANILIR.
-
+        
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EBYS.Application.DTOs;
 
-namespace EBYS.Application.Interfaces.Service
+namespace EBYS.Application.Interfaces.IService
 {
     public interface IMuhatapKurumService
     {
