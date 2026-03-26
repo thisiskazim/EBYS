@@ -37,6 +37,10 @@ builder.Services.AddScoped<IKullaniciRepository, KullaniciRepository>();
 builder.Services.AddScoped<IKullaniciService, KullaniciService>();
 builder.Services.AddScoped<IMuhatapKurumService,MuhatapKurumService>();
 
+builder.Services.AddScoped<IImzaRotaRepository, ImzaRotaRepository>();
+builder.Services.AddScoped<IImzaRotaService, ImzaRotaService>();
+
+
 
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));

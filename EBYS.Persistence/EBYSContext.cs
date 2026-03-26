@@ -1,6 +1,7 @@
 ﻿using EBYS.Application.Common.Interface;
 using EBYS.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq.Expressions;
 namespace EBYS.Persistence
 {
@@ -35,20 +36,36 @@ namespace EBYS.Persistence
         {
             base.OnModelCreating(modelBuilder);
 
-          
-
-            // Tüm Entity tiplerini tara
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                // Eğer bu entity BaseEntity'den türetilmişse
+                // 1. KONTROL: Entity, BaseEntity'den türemiş olmalı
+                // 2. KONTROL: Kalıtım varsa (Muhatap örneğindeki gibi), filtre sadece en üst (Root) sınıfa yazılır
                 if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType)
                     && entityType.BaseType == null)
                 {
+                    // Lambda parametresi: (e => ...)
                     var parameter = Expression.Parameter(entityType.ClrType, "e");
+
+                    // e.BaseKurumId mülküne erişim
                     var property = Expression.Property(parameter, "BaseKurumId");
-                    var condition = Expression.Equal(property, Expression.Constant(_currentKurumId));
+
+                    // --- DİNAMİK BAĞLANTI ---
+                    // DbContext içindeki private readonly int _currentKurumId alanına referans alıyoruz
+                    var contextExpression = Expression.Constant(this);
+                    var fieldInfo = typeof(EBYSContext).GetField("_currentKurumId",
+                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+                    if (fieldInfo == null) continue; // Alan bulunamazsa atla
+
+                    var currentKurumIdAccess = Expression.Field(contextExpression, fieldInfo);
+
+                    // e.BaseKurumId == this._currentKurumId karşılaştırması
+                    // property.Type kullanarak int veya int? uyumunu sağlar
+                    var condition = Expression.Equal(property, Expression.Convert(currentKurumIdAccess, property.Type));
+
                     var lambda = Expression.Lambda(condition, parameter);
 
+                    // Filtreyi Model'e uygula
                     modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
                 }
             }

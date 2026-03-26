@@ -49,7 +49,7 @@ namespace EBYS.WebAPI.Controllers
 
 
 
-       
+        //düzenleme yapılacak
         [HttpPost("VatandasEkleVeListele")]
         public IActionResult EkleBireyselVatandas(BireyselMuhatapDTO dto)
         {
@@ -60,7 +60,7 @@ namespace EBYS.WebAPI.Controllers
             return Ok();
         }
 
-
+        //düzenleme yapılacak
         [HttpPost("TuzelKisiEkleVeListele")]
         public IActionResult EkleTuzelKisi(TuzelKisiMuhatapDTO dto)
         {

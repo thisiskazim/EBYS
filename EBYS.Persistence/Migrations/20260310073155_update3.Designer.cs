@@ -3,6 +3,7 @@ using System;
 using EBYS.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EBYS.Persistence.Migrations
 {
     [DbContext(typeof(EBYSContext))]
-    partial class EBYSContextModelSnapshot : ModelSnapshot
+    [Migration("20260310073155_update3")]
+    partial class update3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +56,7 @@ namespace EBYS.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("creat_time")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("isDelete")
                         .HasColumnType("boolean");
@@ -74,6 +77,9 @@ namespace EBYS.Persistence.Migrations
                     b.Property<int>("BaseKurumId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("BekleyenRolId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("BelgeDurum")
                         .HasColumnType("integer");
 
@@ -89,10 +95,8 @@ namespace EBYS.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("ImzaAltindaOlanIcerik")
+                        .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("ImzaRotaId")
-                        .HasColumnType("integer");
 
                     b.Property<bool>("IsGelenEvrak")
                         .HasColumnType("boolean");
@@ -108,65 +112,18 @@ namespace EBYS.Persistence.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("creat_time")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("isDelete")
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ImzaRotaId");
+                    b.HasIndex("BekleyenRolId");
 
                     b.HasIndex("OlusturanId");
 
                     b.ToTable("Evraklar");
-                });
-
-            modelBuilder.Entity("EBYS.Domain.Entities.EvrakAkis", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AdimDurumu")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("BaseKurumId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("EvrakId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("KullaniciId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Not")
-                        .HasColumnType("text");
-
-                    b.Property<int>("ParafMiImzaMi")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SiraNo")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("SiradakiMi")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("creat_time")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<bool>("isDelete")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EvrakId");
-
-                    b.HasIndex("KullaniciId");
-
-                    b.ToTable("EvrakAkislari");
                 });
 
             modelBuilder.Entity("EBYS.Domain.Entities.EvrakEk", b =>
@@ -190,7 +147,7 @@ namespace EBYS.Persistence.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("creat_time")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("isDelete")
                         .HasColumnType("boolean");
@@ -220,7 +177,7 @@ namespace EBYS.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("creat_time")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("isDelete")
                         .HasColumnType("boolean");
@@ -250,7 +207,7 @@ namespace EBYS.Persistence.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<DateTime>("creat_time")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("isDelete")
                         .HasColumnType("boolean");
@@ -260,70 +217,6 @@ namespace EBYS.Persistence.Migrations
                     b.HasIndex("MuhatapId");
 
                     b.ToTable("EvrakMuhataplari");
-                });
-
-            modelBuilder.Entity("EBYS.Domain.Entities.ImzaRota", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BaseKurumId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("RotaAdi")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("creat_time")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<bool>("isDelete")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ImzaRotalar");
-                });
-
-            modelBuilder.Entity("EBYS.Domain.Entities.ImzaRotaAdimi", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BaseKurumId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ImzaRotaId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("KullaniciId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ParafMiImzaMi")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SiraNo")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("creat_time")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<bool>("isDelete")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ImzaRotaId");
-
-                    b.HasIndex("KullaniciId");
-
-                    b.ToTable("ImzaRotaAdimlari");
                 });
 
             modelBuilder.Entity("EBYS.Domain.Entities.Kullanici", b =>
@@ -357,7 +250,7 @@ namespace EBYS.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("creat_time")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("isDelete")
                         .HasColumnType("boolean");
@@ -403,7 +296,7 @@ namespace EBYS.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("creat_time")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("isDelete")
                         .HasColumnType("boolean");
@@ -433,7 +326,7 @@ namespace EBYS.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("creat_time")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("isDelete")
                         .HasColumnType("boolean");
@@ -493,11 +386,9 @@ namespace EBYS.Persistence.Migrations
 
             modelBuilder.Entity("EBYS.Domain.Entities.Evrak", b =>
                 {
-                    b.HasOne("EBYS.Domain.Entities.ImzaRota", "ImzaRota")
+                    b.HasOne("EBYS.Domain.Entities.Rol", "BekleyenRol")
                         .WithMany()
-                        .HasForeignKey("ImzaRotaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BekleyenRolId");
 
                     b.HasOne("EBYS.Domain.Entities.Kullanici", "Olusturan")
                         .WithMany()
@@ -505,46 +396,23 @@ namespace EBYS.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ImzaRota");
+                    b.Navigation("BekleyenRol");
 
                     b.Navigation("Olusturan");
                 });
 
-            modelBuilder.Entity("EBYS.Domain.Entities.EvrakAkis", b =>
-                {
-                    b.HasOne("EBYS.Domain.Entities.Evrak", "Evrak")
-                        .WithMany("AkisAdimlari")
-                        .HasForeignKey("EvrakId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EBYS.Domain.Entities.Kullanici", "Kullanici")
-                        .WithMany()
-                        .HasForeignKey("KullaniciId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Evrak");
-
-                    b.Navigation("Kullanici");
-                });
-
             modelBuilder.Entity("EBYS.Domain.Entities.EvrakEk", b =>
                 {
-                    b.HasOne("EBYS.Domain.Entities.Evrak", "Evrak")
+                    b.HasOne("EBYS.Domain.Entities.Evrak", null)
                         .WithMany("Ekler")
                         .HasForeignKey("EvrakId");
-
-                    b.Navigation("Evrak");
                 });
 
             modelBuilder.Entity("EBYS.Domain.Entities.EvrakIlgi", b =>
                 {
-                    b.HasOne("EBYS.Domain.Entities.Evrak", "Evrak")
+                    b.HasOne("EBYS.Domain.Entities.Evrak", null)
                         .WithMany("İlgiler")
                         .HasForeignKey("EvrakId");
-
-                    b.Navigation("Evrak");
                 });
 
             modelBuilder.Entity("EBYS.Domain.Entities.EvrakMuhatap", b =>
@@ -564,25 +432,6 @@ namespace EBYS.Persistence.Migrations
                     b.Navigation("Evrak");
 
                     b.Navigation("Muhatap");
-                });
-
-            modelBuilder.Entity("EBYS.Domain.Entities.ImzaRotaAdimi", b =>
-                {
-                    b.HasOne("EBYS.Domain.Entities.ImzaRota", "Rota")
-                        .WithMany("ImzaRotaAdimlari")
-                        .HasForeignKey("ImzaRotaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EBYS.Domain.Entities.Kullanici", "Kullanici")
-                        .WithMany()
-                        .HasForeignKey("KullaniciId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Kullanici");
-
-                    b.Navigation("Rota");
                 });
 
             modelBuilder.Entity("EBYS.Domain.Entities.Kullanici", b =>
@@ -609,18 +458,11 @@ namespace EBYS.Persistence.Migrations
 
             modelBuilder.Entity("EBYS.Domain.Entities.Evrak", b =>
                 {
-                    b.Navigation("AkisAdimlari");
-
                     b.Navigation("Ekler");
 
                     b.Navigation("Muhataplar");
 
                     b.Navigation("İlgiler");
-                });
-
-            modelBuilder.Entity("EBYS.Domain.Entities.ImzaRota", b =>
-                {
-                    b.Navigation("ImzaRotaAdimlari");
                 });
 
             modelBuilder.Entity("EBYS.Domain.Entities.Muhatap", b =>

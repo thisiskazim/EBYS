@@ -15,7 +15,22 @@ namespace EBYS.Application.Mapping
             CreateMap<BireyselMuhatapDTO, BireyselMuhatap>().ReverseMap();
             CreateMap<TuzelKisiMuhatapDTO, TuzelKisiMuhatap>().ReverseMap();
 
-     
+            // Create senaryosu için
+            CreateMap<ImzaRotaCreateDTO, ImzaRota>()
+                .ForMember(dest => dest.ImzaRotaAdimlari, opt => opt.MapFrom(src => src.RotaAdimlari))
+                .ReverseMap();
+
+            // Update senaryosu için
+            CreateMap<ImzaRotaUpdateDTO, ImzaRota>()
+                .ForMember(dest => dest.ImzaRotaAdimlari, opt => opt.MapFrom(src => src.RotaAdimlari))
+                .ReverseMap();
+
+            // Alt adımlar için (İsimler aynıysa ReverseMap yeterli)
+            CreateMap<ImzaRotaAdimlariCreateDTO, ImzaRotaAdimi>().ReverseMap();
+            CreateMap<ImzaRotaAdimlariUpdateDTO, ImzaRotaAdimi>().ReverseMap();
+
+
+
 
             CreateMap<GidenEvrakCreateDTO, Evrak>()
                 // Zaten private set ama niyetimizi belli etmek için ignore ediyoruz

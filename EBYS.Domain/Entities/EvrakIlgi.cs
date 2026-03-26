@@ -10,6 +10,11 @@ namespace EBYS.Domain.Entities
     {
         public int? EvrakId { get; set; }
         public virtual Evrak? Evrak { get; set; }
-        public string? IlgiMetni { get; set; } // Örn: 12.01.2024 tarihli ve 123 sayılı yazı.
+        public string? IlgiMetni { get; set; } 
+
+        // fiziksel dosya ekleme ihtiyacı olabilir diye ekledim, ama şimdilik kullanmayacağız
+        // public int? ReferansEvrakId { get; set; } 
+        // public string? DosyaYolu { get; set; } 
     }
 }
+

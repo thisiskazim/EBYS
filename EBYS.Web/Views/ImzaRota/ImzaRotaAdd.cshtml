@@ -108,7 +108,7 @@
             if (dataItem) {
                 roleName = dataItem.RolAdi || dataItem.rolAdi || (dataItem.Rol && (dataItem.Rol.RolAdi || dataItem.Rol.rolAdi)) || '';
             }
-            //if (!kullaniciId) { showNotification('Personel seçiniz','error'); return; }
+            if (!kullaniciId) { showNotification('Personel seçiniz','error'); return; }
             tempId++;
             var imza = $("input[name='ImzaTuru']:checked").val();
             var imzaLabel = imza == '1' ? 'İmza' : 'Paraf';
@@ -128,16 +128,29 @@
         // Kaydet
         $("#btnKaydet").on('click', function(){
             var rotaAdi = $("#RotaAdi").val();
-            if (!rotaAdi || rotaAdi.trim() === '') { showNotification('Rota adı gerekli','error'); return; }
+            if (!rotaAdi || rotaAdi.trim() === '') { showNotification('Rota adı boş olamaz','error'); return; }
             var items = grid.dataSource.data();
             if (!items || items.length === 0) { showNotification('En az bir kişi ekleyin','error'); return; }
-            var payload = { RotaAdi: rotaAdi, ImzaRotaAdimlari: [] };
+            if (items.length > 5) { showNotification('En fazla 5 adım ekleyebilirsiniz','error'); return; }
+            var sonIndex = items.length - 1;
+            if (parseInt(items[sonIndex].ImzaTuru === 1) {showNotification('Rotanın son adımı "Paraf" olamaz. Son kişiyi "İmza" olarak güncelleyin.', 'error');return;}
+
+            var payload = { RotaAdi: rotaAdi, RotaAdimlari: [] };
+            var kullaniciIds = [];
+            
             for (var i=0;i<items.length;i++){
-                payload.ImzaRotaAdimlari.push({ KullaniciId: items[i].KullaniciId, ParafMiImzaMi: items[i].ImzaTuru, SiraNo: i+1 });
+
+                var currentKullaniciId = items[i].KullaniciId;
+
+                 if (kullaniciIds.indexOf(currentKullaniciId) !== -1) {showNotification('Aynı kullanıcıyı birden fazla kez ekleyemezsiniz: ' + items[i].KullaniciAdi, 'error'); return;}
+                    
+                 kullaniciIds.push(currentKullaniciId);
+
+                 payload.RotaAdimlari.push({ KullaniciId: items[i].KullaniciId, ParafMiImzaMi: items[i].ImzaTuru, SiraNo: i+1 });
             }
 
             $.ajax({
-                url: '/api/ImzaRota',
+                url: 'https://localhost:7060/api/ImzaRota/ImzaRotaEkle',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(payload),
