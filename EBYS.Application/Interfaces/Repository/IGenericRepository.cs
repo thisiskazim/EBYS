@@ -18,7 +18,7 @@ namespace EBYS.Application.Interfaces.Repository
         IQueryable<T> GetReadOnly();
         
         Task<bool> AnyDerivedAsync<TDerived>(Expression<Func<TDerived, bool>> predicate)
-            where TDerived : class, T;  //TÜRETİLMİŞ SINIFLAR İÇİN ANY METODU;  MUHATAP TABLOSUNDA GENERİC REPOSITORYDE HER TÜRÜNÜN AYRI BİR TABLOSU OLMADIĞI İÇİN TÜRETİLMİŞ SINIFLARIN VARLIĞINI KONTROL ETMEK İÇİN KULLANILIR.
+            where TDerived : class, T;  //TÜRETİLMİŞ SINIFLAR İÇİN ANY METODU;  MUHATAP TABLOSUNDA Inheritance GENERİC REPOSITORYDE HER TÜRÜNÜN AYRI BİR TABLOSU OLMADIĞI İÇİN TÜRETİLMİŞ SINIFLARIN VARLIĞINI KONTROL ETMEK İÇİN KULLANILIR.
         
     }
 }
