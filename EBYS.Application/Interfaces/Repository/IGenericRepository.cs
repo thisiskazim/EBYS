@@ -9,7 +9,7 @@ namespace EBYS.Application.Interfaces.Repository
 {
     public interface IGenericRepository<T> where T : class
     {
-        Task<T?> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes);
+        Task<T?> GetByIdAsync(int id, Func<IQueryable<T>, IQueryable<T>> include = null);
         Task<List<T>> GetAllAsync();
         Task AddAsync(T entity);
         void UpdateAsync(T entity);

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace EBYS.Persistence.Repository
 {
@@ -12,18 +13,13 @@ namespace EBYS.Persistence.Repository
     {
         public ImzaRotaRepository(EBYSContext context) : base(context) { }
 
-        public Task<List<ImzaRota>> SilinecekImzaRotaAdimlari()
+        public async Task<ImzaRota> GetImzaRotaVeAdimlariDetay(int id)
         {
-           
-        }
-
-        public async Task<List<ImzaRota>> SilinecekImzaRotaAdimlari(int id, ImzaRota t)
-        {
-            var getRota = await GetByIdAsync(id, t => t.ImzaRotaAdimlari);
-
-         return getRota.ImzaRotaAdimlari
-              .Where(dbAdim => !t.ImzaRotaAdimlari.Any(dtoAdim => dtoAdim.Id == dbAdim.Id))
-              .ToList();
+            return await _context.ImzaRotalar
+                .Include(x => x.ImzaRotaAdimlari)
+                .ThenInclude(a => a.Kullanici)
+                .ThenInclude(k => k.Rol)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }

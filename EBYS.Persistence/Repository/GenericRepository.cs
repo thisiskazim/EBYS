@@ -29,18 +29,17 @@ namespace EBYS.Persistence.Repository
         }
 
         //ilişkili tablolarun bulunduğu bir yerde güncelleme yapılacaksa bu uygun 
-        public async Task<T?> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes)
+        public async Task<T> GetByIdAsync(int id, Func<IQueryable<T>, IQueryable<T>> include = null)
         {
             IQueryable<T> query = _context.Set<T>();
 
-            
-            if (includes != null && includes.Length > 0)
+            // Eğer include delegesi doluysa, sorguya uygula
+            if (include != null)
             {
-                foreach (var include in includes)
-                {
-                    query = query.Include(include);
-                }
+                query = include(query);
             }
+
+            // ID'ye göre filtrele (Primary Key isminin 'Id' olduğunu varsayıyoruz)
             return await query.FirstOrDefaultAsync(x => EF.Property<int>(x, "Id") == id);
         }
     }

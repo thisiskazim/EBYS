@@ -29,7 +29,7 @@ namespace EBYS.Application.Mapping
             CreateMap<ImzaRotaAdimlariCreateDTO, ImzaRotaAdimi>().ReverseMap();
             CreateMap<ImzaRotaAdimlariUpdateDTO, ImzaRotaAdimi>().ReverseMap();
 
-
+            CreateMap<ImzaRota, ImzaRotaListDTO>();
 
 
             CreateMap<GidenEvrakCreateDTO, Evrak>()
@@ -59,6 +59,13 @@ namespace EBYS.Application.Mapping
             CreateMap<Kullanici, KullaniciListDTO>()
                 .ForMember(dest => dest.AdSoyad, opt => opt.MapFrom(src => $"{src.Ad} {src.Soyad}"))
                 .ForMember(dest => dest.RolAdi, opt => opt.MapFrom(src => src.Rol.RolAdi));
+
+            // ImzaRotaAdimi'ndan DTO'ya dönüşürken kuralları tanımlıyoruz
+            CreateMap<ImzaRotaAdimi, ImzaRotaAdimlariUpdateDTO>()
+                .ForMember(dest => dest.AdSoyad, opt => opt.MapFrom(src => $"{src.Kullanici.Ad} {src.Kullanici.Soyad}"))
+                .ForMember(dest => dest.RolAdi, opt => opt.MapFrom(src => src.Kullanici.Rol.RolAdi))
+                .ForMember(dest => dest.ImzaTuruLabel, opt => opt.MapFrom(src => (int)src.ParafMiImzaMi == 1 ? "İmza" : "Paraf"));
+
         }
     }
 }

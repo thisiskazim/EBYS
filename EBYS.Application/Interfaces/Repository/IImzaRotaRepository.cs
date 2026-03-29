@@ -9,6 +9,6 @@ namespace EBYS.Application.Interfaces.Repository
 {
     public interface IImzaRotaRepository:IGenericRepository<ImzaRota>
     {
-        Task<List<ImzaRota>> SilinecekImzaRotaAdimlari(int id,ImzaRota t);
+        Task<ImzaRota> GetImzaRotaVeAdimlariDetay(int id);
     }
 }

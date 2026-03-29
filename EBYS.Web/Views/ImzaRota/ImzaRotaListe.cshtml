@@ -1,0 +1,316 @@
+﻿@* @{
+    ViewData["Title"] = "İmza Rota Listesi";
+}
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 d-flex align-items-center justify-content-end gap-2 mb-3">
+            <a href="/ImzaRota/ImzaRotaAdd" class="btn btn-success"><span class="k-icon k-i-plus"></span> Yeni Rota</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div id="rotaListGrid" class="imza-rota-grid">
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<script>
+/**
+ * IMZA ROTA LISTELEME MODULU
+ */
+var ImzaRotaListModule = (function () {
+    // --- Özel Değişkenler ---
+    var _grid = null;
+    var _apiBaseUrl = "https://localhost:7060/api/ImzaRota/";
+
+    // --- Özel Metotlar (Ajax ve Veri İşleme) ---
+    var _ajaxCall = function (url, type, data) {
+        return $.ajax({
+            url: _apiBaseUrl + url,
+            type: type,
+            contentType: "application/json",
+            data: data ? JSON.stringify(data) : null,
+            error: function (err) {
+                var msg = err && err.responseText ? err.responseText : "İşlem sırasında bir hata oluştu.";
+                showNotification(msg, "error");
+            }
+        });
+    };
+
+    // Grid'i Besleyen Fonksiyon
+    var _fillGrid = function (response) {
+        // API'den dönen veri direkt liste mi yoksa bir objenin içinde mi kontrolü
+        var rawData = Array.isArray(response) ? response : (response.data || response.rota || []);
+
+        // Veriyi Kendo'nun beklediği PascalCase formatına güvenli mapliyoruz
+        var mappedData = rawData.map(function (x) {
+            return {
+                Id: x.id || x.Id,
+                RotaAdi: x.rotaAdi || x.RotaAdi || "İsimsiz Rota"
+            };
+        });
+
+        if (_grid) {
+            _grid.dataSource.data(mappedData);
+        }
+    };
+
+    // --- Kamuoyuna Açık Metotlar ---
+    return {
+        init: function () {
+            this.initGrid();
+            this.loadData();
+        },
+
+        initGrid: function () {
+            _grid = $("#rotaListGrid").kendoGrid({
+                noRecords: {
+                    template: "<div class='p-4 text-center text-muted'>Kayıtlı rota bulunamadı.</div>"
+                },
+                columns: [
+                    {
+                        field: "RotaAdi",
+                        title: "Rota Adı",
+                        template: "<strong>#: RotaAdi #</strong>" // Görsel bir dokunuş
+                    },
+                    {
+                        title: "İşlemler",
+                        width: "220px",
+                        command: [
+                            {
+                                name: "customEdit",
+                                text: " Güncelle",
+                                iconClass: "k-icon k-i-edit", // Kendo ikon ekleme
+                                click: function (e) {
+                                    e.preventDefault();
+                                    var tr = $(e.currentTarget).closest("tr");
+                                    var dataItem = this.dataItem(tr);
+                                    if (dataItem && dataItem.Id) {
+                                        // Senin Add/Update sayfana yönlendirme
+                                        window.location.href = '/ImzaRota/ImzaRotaAdd?id=' + dataItem.Id;
+                                    }
+                                }
+                            },
+                            {
+                                name: "customDelete",
+                                text: " Sil",
+                                iconClass: "k-icon k-i-delete",
+                                click: function (e) {
+                                    e.preventDefault();
+                                    var tr = $(e.currentTarget).closest("tr");
+                                    var dataItem = this.dataItem(tr);
+
+                                    if (!dataItem || !dataItem.Id) return;
+
+                                    // Kurumsal onay kutusu
+                                    if (confirm(dataItem.RotaAdi + " isimli rotayı tamamen silmek istediğinize emin misiniz?")) {
+                                        _ajaxCall("ImzaRotaSil/" + dataItem.Id, "DELETE").done(function () {
+                                            _grid.dataSource.remove(dataItem);
+                                            showNotification("Rota başarıyla silindi.", "success");
+                                        });
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ],
+                sortable: true,
+                filterable: true,
+                dataSource: {
+                    data: [],
+                    schema: {
+                        model: { id: "Id" }
+                    }
+                }
+            }).data("kendoGrid");
+        },
+
+        loadData: function () {
+            // Sayfa açıldığında tüm listeyi çeken çağrı
+           _ajaxCall('ImzaRotaListesi', 'GET').done(function (response) {
+                    _fillGrid(response || response);
+                });
+        }
+    };
+})();
+
+// Başlatıcı
+$(document).ready(function () {
+        ImzaRotaListModule.init();
+});
+</script>
+ *@
+
+
+
+
+
+@{
+    ViewData["Title"] = "İmza Rotaları";
+}
+
+<div class="container-fluid py-4">
+    <div class="row align-items-center mb-4">
+        <div class="col-md-6">
+            <h3 class="fw-bold text-dark mb-0">
+                <i class="k-icon k-i-list-bulleted text-primary me-2" style="font-size: 24px;"></i>İmza Rotaları
+            </h3>
+           
+        </div>
+        <div class="col-md-6 text-md-end mt-3 mt-md-0">
+            <a href="/ImzaRota/ImzaRotaAdd" class="btn btn-primary btn-lg shadow-sm rounded-3 px-4">
+                <i class="k-icon k-i-plus me-2"></i>Yeni Rota Oluştur
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body p-0">
+            <div id="rotaListGrid"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Grid'i Bootstrap Kartına Uydurma Stilleri */
+    #rotaListGrid {
+        border: none !important;
+    }
+
+    .k-grid-header {
+        background-color: #f8f9fa !important;
+        border-bottom: 1px solid #dee2e6 !important;
+    }
+
+        .k-grid-header th.k-header {
+            font-weight: 700 !important;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            color: #6c757d !important;
+            padding: 15px !important;
+        }
+
+    .k-grid td {
+        padding: 15px !important;
+        border-bottom: 1px solid #f1f1f1 !important;
+        vertical-align: middle;
+    }
+
+    .k-grid tr:hover {
+        background-color: #f8faff !important;
+        transition: background 0.2s;
+    }
+    /* Butonları güzelleştirelim */
+    .btn-grid-action {
+        padding: 6px 16px !important;
+        font-size: 13px !important;
+        border-radius: 20px !important;
+        font-weight: 600 !important;
+    }
+</style>
+
+<script>
+    var ImzaRotaListModule = (function () {
+        var _grid = null;
+        var _apiBaseUrl = "https://localhost:7060/api/ImzaRota/";
+
+        var _ajaxCall = function (url, type, data) {
+            return $.ajax({
+                url: _apiBaseUrl + url,
+                type: type,
+                contentType: "application/json",
+                data: data ? JSON.stringify(data) : null,
+                error: function (err) {
+                    var msg = err && err.responseText ? err.responseText : "Hata oluştu.";
+                    showNotification(msg, "error");
+                }
+            });
+        };
+
+        return {
+            init: function () {
+                this.initGrid();
+                this.loadData();
+            },
+
+            initGrid: function () {
+                _grid = $("#rotaListGrid").kendoGrid({
+                    noRecords: { template: "<div class='p-5 text-center text-muted'>Kayıt bulunamadı.</div>" },
+                    columns: [
+                        {
+                            field: "RotaAdi",
+                            title: "Rota Tanımı",
+                            template: "<span class='fw-bold text-dark'>#: RotaAdi #</span>"
+                        },
+                        {
+                            title: "İşlemler",
+                            width: "250px",
+                            headerAttributes: { style: "text-align: center" },
+                            attributes: { style: "text-align: center" },
+                            command: [
+                                {
+                                    name: "customEdit",
+                                    text: " Düzenle",
+                                    className: "btn-grid-action btn btn-outline-primary",
+                                    iconClass: "k-icon k-i-edit",
+                                    click: function (e) {  
+                                        e.preventDefault();
+                                        var grid = $("#rotaListGrid").data("kendoGrid");
+                                        var tr = $(e.currentTarget).closest("tr");
+                                        var dataItem = grid.dataItem(tr);    
+                                        if (dataItem && dataItem.Id) {
+                                            window.location.href = 'ImzaRota/ImzaRotaAdd?id=' + dataItem.Id;
+                                        } else {
+                                            showNotification("Seçili satırın ID bilgisi alınamadı.", "error");
+                                        }
+                                    }
+                                },
+                                {
+                                    name: "customDelete",
+                                    text: " Sil",
+                                    className: "btn-grid-action btn btn-outline-danger ms-2",
+                                    iconClass: "k-icon k-i-delete",
+                                    click: function (e) {
+                                        e.preventDefault();
+                                        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                                        if (confirm(dataItem.RotaAdi + " silinecek. Emin misiniz?")) {
+                                            _ajaxCall("ImzaRotaSil/" + dataItem.Id, "DELETE").done(function () {
+                                                _grid.dataSource.remove(dataItem);
+                                                showNotification("Başarıyla silindi.", "success");
+                                            });
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    sortable: true,
+                    dataSource: { data: [] }
+                }).data("kendoGrid");
+            },
+
+            loadData: function () {
+                _ajaxCall('ImzaRotaListesi', 'GET').done(function (res) {
+                    var list = Array.isArray(res) ? res : (res.data || res.rota || []);
+                    _grid.dataSource.data(list.map(x => ({ Id: x.id || x.Id, RotaAdi: x.rotaAdi || x.RotaAdi })));
+                });
+            }
+        };
+    })();
+
+    $(document).ready(function () {
+        ImzaRotaListModule.init();
+    });
+</script>

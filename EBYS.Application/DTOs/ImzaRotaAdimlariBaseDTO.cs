@@ -22,6 +22,10 @@ namespace EBYS.Application.DTOs
     public class ImzaRotaAdimlariUpdateDTO : ImzaRotaAdimlariBaseDTO
     {
        public int Id { get; set; }
+
+       public string? AdSoyad { get; set; }
+       public string? RolAdi { get; set; }
+       public string? ImzaTuruLabel { get; set; }
     }
 
 }
