@@ -1,4 +1,4 @@
-﻿@using EBYS.Application.DTOs.MuhatapDTO
+﻿
 
 @model KurumMuhatapCreateDTO
 
@@ -91,7 +91,7 @@
             </div>
 
             <div class="border-top pt-3 mt-3 d-flex justify-content-end">
-                <a class="btn btn-danger me-2" href="/Muhatap">Kurum Listesi</a>
+                <a class="btn btn-danger me-2" href="/Muhatap/KurumListele">Kurum Listesi</a>
             <button type="submit" class="btn btn-success" onclick="kaydetKurum()">Kaydet</button>
             </div>
         </div>
@@ -118,17 +118,17 @@
     }
 
         $.ajax({
-            url: "https://localhost:7060/api/Muhatap/KurumEkleVeListele",
+            url: "https://localhost:7060/api/Muhatap/KurumEkle",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(formData),
-    //         headers: {
-    //     "Authorization": "Bearer " + sessionStorage.getItem("token")
-    // },
+            
+
             success: function (response) {
                 // Başarılıysa gridi temizle
                 // $("#gridKurumlar").data("kendoGrid").dataSource.read();
                 showNotification("Kurum başarıyla kaydedildi.", "success");
+                
 
                 // 2 saniye bekleyip listeye yönlendir (kullanıcı mesajı okusun diye)
             // setTimeout(function() {

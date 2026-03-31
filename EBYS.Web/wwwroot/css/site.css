@@ -71,3 +71,42 @@
     }
 }
 /*Login*/
+
+
+
+/* Grid'i Bootstrap Kartýna Uydurma Stilleri */
+#rotaListGrid {
+    border: none !important;
+}
+
+.k-grid-header {
+    background-color: #f8f9fa !important;
+    border-bottom: 30px solid #dee2e6 !important;
+}
+
+    .k-grid-header th.k-header {
+        font-weight: 700 !important;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+        color: #6c757d !important;
+        padding: 3px !important;
+    }
+
+.k-grid td {
+    padding: 15px !important;
+    border-bottom: 1px solid #f1f1f1 !important;
+    vertical-align: middle;
+}
+
+.k-grid tr:hover {
+    background-color: #f8faff !important;
+    transition: background 0.2s;
+}
+/* Butonlarý güzelleþtirelim */
+.btn-grid-action {
+    padding: 6px 16px !important;
+    font-size: 13px !important;
+    border-radius: 20px !important;
+    font-weight: 600 !important;
+}

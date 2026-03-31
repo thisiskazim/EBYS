@@ -16,6 +16,10 @@ namespace EBYS.Web.Controllers
         public IActionResult EkleTuzelKisi()
         {
             return View();
+        } 
+        public IActionResult KurumListele() 
+        {
+            return View();
         }
 
 

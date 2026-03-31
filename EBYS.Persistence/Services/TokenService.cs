@@ -26,7 +26,6 @@ namespace EBYS.Persistence.Services
             var secretKey = _config["JwtSettings:Secret"];
             var issuer = _config["JwtSettings:Issuer"];
             var audience = _config["JwtSettings:Audience"];
-            var expiryMinutes = Convert.ToDouble(_config["JwtSettings:ExpiryMinutes"]);
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -46,7 +45,7 @@ namespace EBYS.Persistence.Services
                 issuer: issuer,
                 audience: audience,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(expiryMinutes),
+                expires: DateTime.UtcNow.AddDays(1),
                 signingCredentials: creds
             );
 

@@ -72,14 +72,23 @@ namespace EBYS.Application.Services
         public async Task<List<ImzaRotaListDTO>> GetAllAsync()
         {
             var getList = await imzaRotaRepository.GetAllAsync();
+            if (getList == null)
+            {
+                throw new InvalidOperationException("İmza Rota Listesi Boş");
+            }
+
             return mapper.Map<List<ImzaRotaListDTO>>(getList);
         }
 
         public async Task DeleteAsync(int id)
         {
-            var entity = await imzaRotaRepository.GetByIdAsync(id);
-            if (entity == null) throw new Exception("Rota bulunamadı");
-            imzaRotaRepository.DeleteAsync(entity);
+            var getVeri = await imzaRotaRepository.GetByIdAsync(id);
+            if (getVeri == null)
+            {
+                throw new Exception("Rota bulunamadı");
+
+            }
+            imzaRotaRepository.DeleteAsync(getVeri);
             await imzaRotaRepository.SaveAsync();
         }
 
@@ -87,13 +96,13 @@ namespace EBYS.Application.Services
 
         public async Task<ImzaRotaUpdateDTO> GetByIdAsync(int id)
         {
-            var veriGetir =await imzaRotaRepository.GetImzaRotaVeAdimlariDetay(id);
+            var getVeri = await imzaRotaRepository.GetImzaRotaVeAdimlariDetay(id);
 
-            if (veriGetir is null)
+            if (getVeri is null)
             {
                 throw new Exception("Rota Bulunamadı");
             }
-            var dto = mapper.Map<ImzaRotaUpdateDTO>(veriGetir);
+            var dto = mapper.Map<ImzaRotaUpdateDTO>(getVeri);
 
             return dto;
 

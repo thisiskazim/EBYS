@@ -18,11 +18,32 @@ namespace EBYS.WebAPI.Controllers
     public class MuhatapController(IMuhatapKurumService muhatapKurumService, IMapper mapper) : ControllerBase
     {
 
+        [HttpGet("KurumListele")]
+        public async Task<IActionResult> KurumListele()
+        {
+            try
+            {
+                var getVeri = await muhatapKurumService.GetAllAsync();
+
+                if (getVeri == null || !getVeri.Any())
+                {
+                    return NotFound("Kurum bulunamadı.");
+                }
+
+                return Ok(getVeri);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+
+        }
 
 
         // YENİ KURUM KAYDEDER
-        [HttpPost("KurumEkleVeListele")]
-        public async Task<IActionResult> EkleKurum(KurumMuhatapCreateDTO dto)
+        [HttpPost("KurumEkle")]
+        public async Task<IActionResult> KurumEkle(KurumMuhatapCreateDTO dto)
         {
             try
             {
@@ -38,14 +59,13 @@ namespace EBYS.WebAPI.Controllers
 
 
 
-        //düzenleme yapılacak
-        [HttpPost("VatandasEkleVeListele")]
-        public async IActionResult EkleBireyselVatandas(BireyselMuhatapCreateDTO dto)
+        [HttpDelete("KurumSil/{id}")]
+        public async Task<IActionResult> KurumSil(int id)
         {
             try
             {
-                await muhatapKurumService.AddAsync(dto);
-                return Ok("Kurum başarıyla kaydedildi");
+                await muhatapKurumService.DeleteAsync(id);
+                return Ok("Rota silindi");
             }
             catch (Exception e)
             {
@@ -53,20 +73,28 @@ namespace EBYS.WebAPI.Controllers
             }
         }
 
-        //düzenleme yapılacak
-        [HttpPost("TuzelKisiEkleVeListele")]
-        public async IActionResult EkleTuzelKisi(TuzelKisiMuhatapCreateDTO dto)
+        [HttpGet("KurumGetir/{id}")]
+        public async Task<IActionResult> KurumGetir(int id)
         {
             try
             {
-                await muhatapKurumService.AddAsync(dto);
-                return Ok("Kurum başarıyla kaydedildi");
+                var gelenVeri = await muhatapKurumService.GetByIdAsync(id);
+                if (gelenVeri == null)
+                {
+                    return NotFound("Böyle bir kurum bulunamadı.");
+                }
+
+                return Ok(gelenVeri);
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
+
+
+
         }
+
     }
 
 }

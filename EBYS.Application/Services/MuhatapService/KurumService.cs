@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using EBYS.Application.Interfaces.IService;
-using EBYS.Domain.Entities;
-using EBYS.Application.Interfaces.Repository;
+﻿using AutoMapper;
 using EBYS.Application.DTOs.MuhatapDTO;
+using EBYS.Application.Interfaces.IService;
+using EBYS.Application.Interfaces.Repository;
+using EBYS.Domain.Entities;
 
 
 
@@ -31,19 +26,44 @@ namespace EBYS.Application.Services.MuhatapService
             await kurumRepository.SaveAsync();
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var getVeri = await kurumRepository.GetByIdAsync(id);
+            if (getVeri == null)
+            {
+                throw new InvalidOperationException("Kurum Muhatap bulunamadı.");
+            }
+            kurumRepository.DeleteAsync(getVeri);
+            await kurumRepository.SaveAsync();
+
         }
 
-        public Task<List<KurumMuhatapListDTO>> GetAllAsync()
+        public async Task<List<KurumMuhatapListDTO>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var getVeri = await kurumRepository.GetAllAsync();
+            if (getVeri ==null)
+            {
+                throw new InvalidOperationException("Kurum Listesi Boş");
+            }
+
+
+            var listDto = mapper.Map<List<KurumMuhatapListDTO>>(getVeri);
+            return listDto;
+
+
         }
 
-        public Task<KurumMuhatapUpdateDTO> GetByIdAsync(int id)
+        public async Task<KurumMuhatapUpdateDTO> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var getVeri = await kurumRepository.GetByIdAsync(id);
+
+            if (getVeri is null)
+            {
+                throw new Exception("Rota Bulunamadı");
+            }
+            var dto = mapper.Map<KurumMuhatapUpdateDTO>(getVeri);
+
+            return dto;
         }
 
         public Task UpdateAsync(KurumMuhatapUpdateDTO updateDto)
