@@ -166,7 +166,7 @@ $(document).ready(function () {
             <h3 class="fw-bold text-dark mb-0">
                 <i class="k-icon k-i-list-bulleted text-primary me-2" style="font-size: 24px;"></i>İmza Rotaları
             </h3>
-           
+            <hr/>
         </div>
         <div class="col-md-6 text-md-end mt-3 mt-md-0">
             <a href="/ImzaRota/ImzaRotaAdd" class="btn btn-primary btn-lg shadow-sm rounded-3 px-4">
@@ -190,7 +190,7 @@ $(document).ready(function () {
 
     .k-grid-header {
         background-color: #f8f9fa !important;
-        border-bottom: 1px solid #dee2e6 !important;
+        border-bottom: 30px solid #dee2e6 !important;
     }
 
         .k-grid-header th.k-header {
@@ -199,7 +199,7 @@ $(document).ready(function () {
             font-size: 12px;
             letter-spacing: 0.5px;
             color: #6c757d !important;
-            padding: 15px !important;
+            padding: 3px !important;
         }
 
     .k-grid td {
@@ -271,7 +271,7 @@ $(document).ready(function () {
                                         var tr = $(e.currentTarget).closest("tr");
                                         var dataItem = grid.dataItem(tr);    
                                         if (dataItem && dataItem.Id) {
-                                            window.location.href = 'ImzaRota/ImzaRotaAdd?id=' + dataItem.Id;
+                                            window.location.href = 'ImzaRotaAdd?id=' + dataItem.Id;
                                         } else {
                                             showNotification("Seçili satırın ID bilgisi alınamadı.", "error");
                                         }

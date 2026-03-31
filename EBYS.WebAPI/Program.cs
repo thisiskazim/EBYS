@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using EBYS.Application.Interfaces.IService;
+using EBYS.Application.Services.MuhatapService;
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var builder =WebApplication.CreateBuilder(args);
@@ -35,7 +36,7 @@ builder.Services.AddScoped<IEvrakRepository, EvrakRepository>();
 builder.Services.AddScoped<IMuhatapRepository, MuhatapRepository>();
 builder.Services.AddScoped<IKullaniciRepository, KullaniciRepository>();
 builder.Services.AddScoped<IKullaniciService, KullaniciService>();
-builder.Services.AddScoped<IMuhatapKurumService,MuhatapKurumService>();
+builder.Services.AddScoped<IMuhatapKurumService,KurumService>();
 
 builder.Services.AddScoped<IImzaRotaRepository, ImzaRotaRepository>();
 builder.Services.AddScoped<IImzaRotaService, ImzaRotaService>();

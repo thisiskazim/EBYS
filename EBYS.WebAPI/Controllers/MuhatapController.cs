@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using EBYS.Application.DTOs;
+using EBYS.Application.DTOs.MuhatapDTO;
 using EBYS.Application.Interfaces.IService;
 using EBYS.Application.Services;
 using EBYS.Domain.Entities;
@@ -15,29 +15,18 @@ namespace EBYS.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MuhatapController : ControllerBase
+    public class MuhatapController(IMuhatapKurumService muhatapKurumService, IMapper mapper) : ControllerBase
     {
-
-        private readonly IMuhatapKurumService _muhatapKurumService;
-        private readonly EBYSContext _context;
-        private readonly IMapper _mapper;
-
-        public MuhatapController(IMuhatapKurumService muhatapKurumService, EBYSContext context, IMapper mapper)
-        {
-            _muhatapKurumService = muhatapKurumService;
-            _context = context;
-            _mapper = mapper;
-        }
 
 
 
         // YENİ KURUM KAYDEDER
         [HttpPost("KurumEkleVeListele")]
-        public async Task<IActionResult> EkleKurum(KurumMuhatapDTO kurumDTO)
+        public async Task<IActionResult> EkleKurum(KurumMuhatapCreateDTO dto)
         {
             try
             {
-                await _muhatapKurumService.AddKurumAsync(kurumDTO);
+                await muhatapKurumService.AddAsync(dto);
                 return Ok("Kurum başarıyla kaydedildi");
             }
             catch (Exception e)
@@ -51,24 +40,32 @@ namespace EBYS.WebAPI.Controllers
 
         //düzenleme yapılacak
         [HttpPost("VatandasEkleVeListele")]
-        public IActionResult EkleBireyselVatandas(BireyselMuhatapDTO dto)
+        public async IActionResult EkleBireyselVatandas(BireyselMuhatapCreateDTO dto)
         {
-            var entity = _mapper.Map<BireyselMuhatap>(dto);
-
-            _context.Add(entity);
-            _context.SaveChanges();
-            return Ok();
+            try
+            {
+                await muhatapKurumService.AddAsync(dto);
+                return Ok("Kurum başarıyla kaydedildi");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         //düzenleme yapılacak
         [HttpPost("TuzelKisiEkleVeListele")]
-        public IActionResult EkleTuzelKisi(TuzelKisiMuhatapDTO dto)
+        public async IActionResult EkleTuzelKisi(TuzelKisiMuhatapCreateDTO dto)
         {
-            var entity = _mapper.Map<TuzelKisiMuhatap>(dto);
-
-            _context.Add(entity);
-            _context.SaveChanges();
-            return Ok();
+            try
+            {
+                await muhatapKurumService.AddAsync(dto);
+                return Ok("Kurum başarıyla kaydedildi");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 

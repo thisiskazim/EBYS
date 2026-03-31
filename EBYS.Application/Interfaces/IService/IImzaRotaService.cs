@@ -8,15 +8,9 @@ using System.Threading.Tasks;
 
 namespace EBYS.Application.Interfaces.IService
 {
-    public interface IImzaRotaService
+    public interface IImzaRotaService:IGenericService<ImzaRotaCreateDTO, ImzaRotaUpdateDTO, ImzaRotaListDTO>
     {
-        Task AddImzaRotaAsync(ImzaRotaCreateDTO imzaRotaDto);
-        Task UpdateImzaRotaAsync(ImzaRotaUpdateDTO imzaRotaDto);
-        Task DeleteImzaRotaAsync(int id);
-
-        Task<ImzaRotaUpdateDTO> ImzaRotaGetByIdAsycn(int id);
-
-        Task<List<ImzaRotaListDTO>> ImzaRotaListAsync();
+      
 
     }
 }

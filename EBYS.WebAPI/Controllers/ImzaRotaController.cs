@@ -19,7 +19,7 @@ namespace EBYS.WebAPI.Controllers
 
             try
             {
-                await imzaRotaService.AddImzaRotaAsync(ımzaRotaCreateDTO);
+                await imzaRotaService.AddAsync(ımzaRotaCreateDTO);
                 return Ok("Imza Rota başarıyla kaydedildi");
             }
             catch (Exception e)
@@ -37,7 +37,7 @@ namespace EBYS.WebAPI.Controllers
 
             try
             {
-                await imzaRotaService.UpdateImzaRotaAsync(ımzaRotaCreateDTO);
+                await imzaRotaService.UpdateAsync(ımzaRotaCreateDTO);
                 return Ok("Imza Rota başarıyla kaydedildi");
             }
             catch (Exception e)
@@ -55,7 +55,7 @@ namespace EBYS.WebAPI.Controllers
 
             try
             {
-                var gelenVeri = await imzaRotaService.ImzaRotaGetByIdAsycn(id);
+                var gelenVeri = await imzaRotaService.GetByIdAsync(id);
 
                 if (gelenVeri == null)
                 {
@@ -78,7 +78,7 @@ namespace EBYS.WebAPI.Controllers
         {
             try
             {
-                var getList = await imzaRotaService.ImzaRotaListAsync();
+                var getList = await imzaRotaService.GetAllAsync();
                 if (getList == null)
                 {
                     return NotFound("Imza Rota Listesi Boş");
@@ -100,7 +100,7 @@ namespace EBYS.WebAPI.Controllers
         {
             try
             {
-                await imzaRotaService.DeleteImzaRotaAsync(id);
+                await imzaRotaService.DeleteAsync(id);
                 return Ok("Rota silindi");
             }
             catch (Exception e)

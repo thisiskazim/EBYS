@@ -10,7 +10,7 @@ namespace EBYS.Application.Services
 {
     public class ImzaRotaService(IImzaRotaRepository imzaRotaRepository, IMapper mapper) : IImzaRotaService
     {
-        public async Task AddImzaRotaAsync(ImzaRotaCreateDTO dto)
+        public async Task AddAsync(ImzaRotaCreateDTO dto)
         {
             
             RotaValidasyonalari(dto,
@@ -23,7 +23,7 @@ namespace EBYS.Application.Services
             await imzaRotaRepository.AddAsync(entity);
             await imzaRotaRepository.SaveAsync();
         }
-        public async Task UpdateImzaRotaAsync(ImzaRotaUpdateDTO dto)
+        public async Task UpdateAsync(ImzaRotaUpdateDTO dto)
         {
             var getRota = await imzaRotaRepository.GetImzaRotaVeAdimlariDetay(dto.Id);
 
@@ -69,13 +69,13 @@ namespace EBYS.Application.Services
 
         }
 
-        public async Task<List<ImzaRotaListDTO>> ImzaRotaListAsync()
+        public async Task<List<ImzaRotaListDTO>> GetAllAsync()
         {
             var getList = await imzaRotaRepository.GetAllAsync();
             return mapper.Map<List<ImzaRotaListDTO>>(getList);
         }
 
-        public async Task DeleteImzaRotaAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var entity = await imzaRotaRepository.GetByIdAsync(id);
             if (entity == null) throw new Exception("Rota bulunamadı");
@@ -85,7 +85,7 @@ namespace EBYS.Application.Services
 
 
 
-        public async Task<ImzaRotaUpdateDTO> ImzaRotaGetByIdAsycn(int id)
+        public async Task<ImzaRotaUpdateDTO> GetByIdAsync(int id)
         {
             var veriGetir =await imzaRotaRepository.GetImzaRotaVeAdimlariDetay(id);
 
@@ -100,13 +100,6 @@ namespace EBYS.Application.Services
         }
 
        
-       
-
-
-
-
-
-
         private void RotaValidasyonalari(ImzaRotaBaseDTO dto, List<int> kullaniciIdleri, int adimSayisi, bool sonAdimImzaMi)
         {
 

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 
 using EBYS.Application.DTOs;
+using EBYS.Application.DTOs.MuhatapDTO;
 using EBYS.Domain.Entities;
 using static EBYS.Domain.Enum.Enums;
 
@@ -11,9 +12,19 @@ namespace EBYS.Application.Mapping
         public MappingProfile()
         {
         
-            CreateMap<KurumMuhatapDTO, KurumMuhatap>().ReverseMap();
-            CreateMap<BireyselMuhatapDTO, BireyselMuhatap>().ReverseMap();
-            CreateMap<TuzelKisiMuhatapDTO, TuzelKisiMuhatap>().ReverseMap();
+            CreateMap<KurumMuhatapCreateDTO, KurumMuhatap>().ReverseMap();
+            CreateMap<KurumMuhatapListDTO, KurumMuhatap>().ReverseMap();
+            CreateMap<KurumMuhatapUpdateDTO, KurumMuhatap>().ReverseMap();
+
+
+            CreateMap<BireyselMuhatapCreateDTO, BireyselMuhatap>().ReverseMap();
+            CreateMap<BireyselMuhatapUpdateDTO, BireyselMuhatap>().ReverseMap();
+            CreateMap<BireyselMuhatapListDTO, BireyselMuhatap>().ReverseMap();
+
+
+            CreateMap<TuzelKisiMuhatapCreateDTO, TuzelKisiMuhatap>().ReverseMap();
+            CreateMap<TuzelKisiMuhatapUpdateDTO, TuzelKisiMuhatap>().ReverseMap();
+            CreateMap<TuzelKisiMuhatapListDTO, TuzelKisiMuhatap>().ReverseMap();
 
             // Create senaryosu için
             CreateMap<ImzaRotaCreateDTO, ImzaRota>()
@@ -27,7 +38,7 @@ namespace EBYS.Application.Mapping
 
             // Alt adımlar için (İsimler aynıysa ReverseMap yeterli)
             CreateMap<ImzaRotaAdimlariCreateDTO, ImzaRotaAdimi>().ReverseMap();
-            CreateMap<ImzaRotaAdimlariUpdateDTO, ImzaRotaAdimi>().ReverseMap();
+            CreateMap<ImzaRotaAdimlariUpdateDTO, ImzaRotaAdimi>().ForMember(dest => dest.Id, opt => opt.Ignore());
 
             CreateMap<ImzaRota, ImzaRotaListDTO>();
 

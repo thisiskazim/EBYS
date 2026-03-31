@@ -5,11 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EBYS.Application.DTOs
+namespace EBYS.Application.DTOs.MuhatapDTO
 {
-    public class MuhatapDTO
+    public class MuhatapBaseDTO
     {
-        public int Id { get; set; }
         public string Adi { get; set; }
         public string Telefon { get; set; }
         public string? EPosta { get; set; }
@@ -17,24 +16,22 @@ namespace EBYS.Application.DTOs
        
     }
 
-    public class KurumMuhatapDTO : MuhatapDTO
+    public class KurumMuhatapBaseDTO : MuhatapBaseDTO
     {
-        [Required(ErrorMessage = "Kurumun KEP adresi boş bırakılamaz.")]
-        [EmailAddress(ErrorMessage = "Geçerli bir KEP adresi giriniz.")]
         public string KepAdresi { get; set; }
         public string DetsisNo { get; set; }
         public string KurumKodu { get; set; }
     }
 
 
-    public class TuzelKisiMuhatapDTO : MuhatapDTO
+    public class TuzelKisiMuhatapBaseDTO : MuhatapBaseDTO
     {
         public string? VergiNo { get; set; }
         public string? VergiDairesi { get; set; }
         public string? MersisNo { get; set; }
     }
 
-    public class BireyselMuhatapDTO : MuhatapDTO
+    public class BireyselMuhatapBaseDTO : MuhatapBaseDTO
     {
         public string? KimlikNo { get; set; }
     }

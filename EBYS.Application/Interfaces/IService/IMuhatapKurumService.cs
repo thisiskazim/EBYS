@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using EBYS.Application.DTOs;
+using EBYS.Application.DTOs.MuhatapDTO;
 
 namespace EBYS.Application.Interfaces.IService
 {
-    public interface IMuhatapKurumService
+    public interface IMuhatapKurumService:IGenericService<KurumMuhatapCreateDTO, KurumMuhatapUpdateDTO, KurumMuhatapListDTO>
     {
-        Task AddKurumAsync(KurumMuhatapDTO kurumDTO);
+       
+       
+        
     }
 }
