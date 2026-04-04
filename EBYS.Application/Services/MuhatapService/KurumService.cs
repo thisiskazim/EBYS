@@ -66,9 +66,23 @@ namespace EBYS.Application.Services.MuhatapService
             return dto;
         }
 
-        public Task UpdateAsync(KurumMuhatapUpdateDTO updateDto)
+        public async Task UpdateAsync(KurumMuhatapUpdateDTO updateDto)
         {
-            throw new NotImplementedException();
+
+            var getVeri = await kurumRepository.GetByIdAsync(updateDto.Id);
+
+                if (getVeri == null)
+                {
+                    throw new Exception("Veri Yok");
+                }
+
+                mapper.Map(updateDto, getVeri);
+       
+
+                 kurumRepository.UpdateAsync(getVeri);
+                await kurumRepository.SaveAsync();
+            
+           
         }
     }
 }

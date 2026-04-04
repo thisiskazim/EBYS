@@ -4,8 +4,9 @@ namespace EBYS.Web.Controllers
 {
     public class MuhatapController : Controller
     {
-        public IActionResult EkleKurum()
+        public IActionResult EkleKurum(int? id)
         {
+            ViewBag.KurumId = id ?? 0;
             return View();
         }
         public IActionResult EkleBireyselVatandas()
@@ -17,9 +18,9 @@ namespace EBYS.Web.Controllers
         {
             return View();
         } 
-        public IActionResult KurumListele() 
+        public IActionResult KurumListele(int id) 
         {
-            return View();
+            return View(id);
         }
 
 

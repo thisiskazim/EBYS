@@ -57,6 +57,20 @@ namespace EBYS.WebAPI.Controllers
 
         }
 
+        [HttpPost("KurumGuncelle")]
+        public async Task<IActionResult> KurumGuncelle(KurumMuhatapUpdateDTO dto)
+        {
+            try
+            {
+                await muhatapKurumService.UpdateAsync(dto);
+                return Ok("Kurum başarıyla güncellendi");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
 
 
         [HttpDelete("KurumSil/{id}")]
