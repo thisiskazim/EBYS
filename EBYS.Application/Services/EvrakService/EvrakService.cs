@@ -2,15 +2,54 @@
 using EBYS.Application.DTOs.EvtakDTO;
 using EBYS.Application.Interfaces.IService.IEvrakService;
 using EBYS.Application.Interfaces.Repository;
+using EBYS.Domain.Entities;
+using EBYS.Domain.Enum;
 
 namespace EBYS.Application.Services.EvrakService
 {
-    public class EvrakService(IEvrakRepository evrakRepository,IMapper mapper) : IEvrakService
+    public class EvrakService(IEvrakRepository evrakRepository,IMapper mapper,IImzaRotaRepository imzaRotaRepository) : IEvrakService
 
     {
-        public Task AddAsync(GidenEvrakCreateDTO createDto)
+        public async Task AddAsync(GidenEvrakCreateDTO createDto)
         {
-            throw new NotImplementedException();
+            var evrak = mapper.Map<Evrak>(createDto);
+            evrak.BelgeDurum = Enums.BelgeDurum.Taslak;
+            evrak.IsGelenEvrak = false;
+
+
+            if (createDto.Muhataplar != null)
+            {
+                foreach(var mId in createDto.Muhataplar)
+                {
+                    evrak.Muhataplar.Add(new EvrakMuhatap
+                    {
+                        MuhatapId = mId.MuhatapId,
+                        IsBilgi = mId.IsBilgi
+                    });
+                }
+            }
+
+            var rota = await imzaRotaRepository.GetImzaRotaVeAdimlariDetay(createDto.ImzaRotaId);
+
+            if (rota != null)
+            {
+                foreach (var adim in rota.ImzaRotaAdimlari.OrderBy(x=>x.SiraNo))
+                {
+                    evrak.AkisAdimlari.Add(new EvrakAkis
+                    {
+                        KullaniciId = adim.KullaniciId,
+                        ParafMiImzaMi = adim.ParafMiImzaMi,
+                        SiraNo = adim.SiraNo,
+                        AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
+                        SiradakiMi = (adim.SiraNo == 1)
+
+                    });
+                }
+            }
+
+            await evrakRepository.AddAsync(evrak);
+            await evrakRepository.SaveAsync();
+
         }
 
         public Task DeleteAsync(int id)
