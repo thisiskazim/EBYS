@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using EBYS.Application.DTOs.MuhatapDTO;
-using EBYS.Application.Interfaces.IService;
+using EBYS.Application.Interfaces.IService.IMuhatapService;
 using EBYS.Application.Interfaces.Repository;
 using EBYS.Domain.Entities;
 
@@ -28,7 +28,7 @@ namespace EBYS.Application.Services.MuhatapService
 
         public async Task DeleteAsync(int id)
         {
-            var getVeri = await kurumRepository.GetByIdAsync(id);
+            var getVeri = await kurumRepository.GetByIdAsync(id);   
             if (getVeri == null)
             {
                 throw new InvalidOperationException("Kurum Muhatap bulunamadı.");
@@ -40,7 +40,7 @@ namespace EBYS.Application.Services.MuhatapService
 
         public async Task<List<KurumMuhatapListDTO>> GetAllAsync()
         {
-            var getVeri = await kurumRepository.GetAllAsync();
+            var getVeri = await kurumRepository.GetAllDerivedAsync<KurumMuhatap>();
             if (getVeri ==null)
             {
                 throw new InvalidOperationException("Kurum Listesi Boş");

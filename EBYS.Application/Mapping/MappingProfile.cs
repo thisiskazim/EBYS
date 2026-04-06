@@ -1,30 +1,44 @@
 ﻿using AutoMapper;
 
 using EBYS.Application.DTOs;
+using EBYS.Application.DTOs.EvtakDTO;
 using EBYS.Application.DTOs.MuhatapDTO;
 using EBYS.Domain.Entities;
-using static EBYS.Domain.Enum.Enums;
-
 namespace EBYS.Application.Mapping
 {
     public class MappingProfile: Profile
     {
         public MappingProfile()
         {
-        
+
+            //1. LİSTELEME (Polimorfizm/Kalıtım Yönetimi)
+            CreateMap<Muhatap, MuhatapBaseDTO>()
+                .Include<KurumMuhatap, KurumMuhatapListDTO>()
+                .Include<BireyselMuhatap, BireyselMuhatapListDTO>()
+                .Include<TuzelKisiMuhatap, TuzelKisiMuhatapListDTO>();
+
+            CreateMap<KurumMuhatap, KurumMuhatapListDTO>().ReverseMap();
+            CreateMap<BireyselMuhatap, BireyselMuhatapListDTO>().ReverseMap();
+            CreateMap<TuzelKisiMuhatap, TuzelKisiMuhatapListDTO>().ReverseMap();
+
+            //EKLEME
             CreateMap<KurumMuhatapCreateDTO, KurumMuhatap>().ReverseMap();
-            CreateMap<KurumMuhatapListDTO, KurumMuhatap>().ReverseMap();
-            CreateMap<KurumMuhatapUpdateDTO, KurumMuhatap>().ReverseMap();
-
-
             CreateMap<BireyselMuhatapCreateDTO, BireyselMuhatap>().ReverseMap();
-            CreateMap<BireyselMuhatapUpdateDTO, BireyselMuhatap>().ReverseMap();
-            CreateMap<BireyselMuhatapListDTO, BireyselMuhatap>().ReverseMap();
-
-
             CreateMap<TuzelKisiMuhatapCreateDTO, TuzelKisiMuhatap>().ReverseMap();
-            CreateMap<TuzelKisiMuhatapUpdateDTO, TuzelKisiMuhatap>().ReverseMap();
-            CreateMap<TuzelKisiMuhatapListDTO, TuzelKisiMuhatap>().ReverseMap();
+
+            // GÜNCELLEME
+            CreateMap<KurumMuhatapUpdateDTO, KurumMuhatap>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore()).ReverseMap();
+
+            CreateMap<BireyselMuhatapUpdateDTO, BireyselMuhatap>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore()).ReverseMap();
+
+            CreateMap<TuzelKisiMuhatapUpdateDTO, TuzelKisiMuhatap>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore()).ReverseMap();
+
+
+
+
 
             // Create senaryosu için
             CreateMap<ImzaRotaCreateDTO, ImzaRota>()

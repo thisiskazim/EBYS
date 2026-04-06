@@ -89,7 +89,7 @@
             </div>
 
             <div class="border-top pt-3 mt-3 d-flex justify-content-end">
-                <a class="btn btn-danger me-2" href="/Muhatap/KurumListele">Kurum Listesi</a>
+            <a class="btn btn-danger me-2" href="/KurumMuhatap/Listele">Kurum Listesi</a>
             <button id="btnKaydet" type="button" class="btn btn-success" onclick="module.kaydet()">Kaydet/Güncelle</button>
             </div>
         </div>
@@ -99,7 +99,7 @@
 
 <script>
     var module = (function () {
-        var _apiBaseUrl = "https://localhost:7060/api/Muhatap/";
+        var _apiBaseUrl = "https://localhost:7060/api/KurumMuhatap/";
 
         var _ajaxCall = function (url, type, data) {
             return $.ajax({
@@ -139,7 +139,7 @@
                 var id = $("#Id").val();
                 if (id && id !== "0") {
                     $("#btnKaydet").text("Güncelle");
-                    _ajaxCall("KurumGetir/" + id, "GET").done(function (response) {
+                    _ajaxCall("Getir/" + id, "GET").done(function (response) {
                         _fillForm(response);
                     });
                 } else {
@@ -166,11 +166,11 @@
                     return;
                 }
 
-                var url = formData.Id > 0 ? "KurumGuncelle" : "KurumEkle";
+                var url = formData.Id > 0 ? "Guncelle" : "Ekle";
 
                 _ajaxCall(url, "POST", formData).done(function (res) {
                     showNotification("Başarıyla kaydedildi.", "success");
-                    setTimeout(function(){ window.location.href="/Muhatap/KurumListele"; }, 1500);
+                    setTimeout(function(){ window.location.href="/KurumMuhatap/Listele"; }, 1500);
                 });
             }
         };

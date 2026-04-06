@@ -16,9 +16,13 @@ namespace EBYS.Application.Interfaces.Repository
         void DeleteAsync(T entity);
         Task<int> SaveAsync();
         IQueryable<T> GetReadOnly();
-        
+
+
+        //Derived olanları kalıtım olan sınıflarda kullanırız. GetAll() Base sınıfı tüm verileri getirir. bu ise alt sınıflarda hangisini istersek getirir
         Task<bool> AnyDerivedAsync<TDerived>(Expression<Func<TDerived, bool>> predicate)
-            where TDerived : class, T;  //TÜRETİLMİŞ SINIFLAR İÇİN ANY METODU;  MUHATAP TABLOSUNDA Inheritance GENERİC REPOSITORYDE HER TÜRÜNÜN AYRI BİR TABLOSU OLMADIĞI İÇİN TÜRETİLMİŞ SINIFLARIN VARLIĞINI KONTROL ETMEK İÇİN KULLANILIR.
-        
+            where TDerived : class, T;  
+        Task<List<TDerived>> GetAllDerivedAsync<TDerived>() where TDerived : class, T;
+    
+
     }
 }

@@ -13,7 +13,7 @@
             <hr/>
         </div>
         <div class="col-md-6 text-md-end mt-3 mt-md-0">
-            <a href="/Muhatap/EkleKurum" class="btn btn-primary btn-lg shadow-sm rounded-3 px-4">
+            <a href="/KurumMuhatap/Ekle" class="btn btn-primary btn-lg shadow-sm rounded-3 px-4">
                 <i class="k-icon k-i-plus me-2"></i>Yeni Kurum Ekle
             </a>
         </div>
@@ -34,7 +34,7 @@
 <script>
     var ImzaRotaListModule = (function () {
         var _grid = null;
-        var _apiBaseUrl = "https://localhost:7060/api/Muhatap/";
+        var _apiBaseUrl = "https://localhost:7060/api/KurumMuhatap/";
 
         var _ajaxCall = function (url, type, data) {
             return $.ajax({
@@ -87,7 +87,7 @@
                                         var tr = $(e.currentTarget).closest("tr");
                                         var dataItem = grid.dataItem(tr);
                                         if (dataItem && dataItem.Id) {
-                                            window.location.href = 'EkleKurum?id=' + dataItem.Id;
+                                            window.location.href = 'Ekle?id=' + dataItem.Id;
                                         } else {
                                             showNotification("Seçili satırın ID bilgisi alınamadı.", "error");
                                         }
@@ -102,7 +102,7 @@
                                         e.preventDefault();
                                         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
                                         if (confirm(dataItem.Adi + " silinecek. Emin misiniz?")) {
-                                            _ajaxCall("KurumSil/" + dataItem.Id, "DELETE").done(function () {
+                                            _ajaxCall("Sil/" + dataItem.Id, "DELETE").done(function () {
                                                 _grid.dataSource.remove(dataItem);
                                                 showNotification("Başarıyla silindi.", "success");
                                             });
@@ -118,7 +118,7 @@
             },
 
             loadData: function () {
-                _ajaxCall('KurumListele', 'GET').done(function (res) {
+                _ajaxCall('Listele', 'GET').done(function (res) {
                     var list = Array.isArray(res) ? res : (res.data || res.muhatap || []);
                     _grid.dataSource.data(list.map(x => ({ Id: x.id || x.Id, Adi: x.Adi || x.adi,Adress: x.adress })));
                 });

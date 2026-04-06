@@ -28,6 +28,11 @@ namespace EBYS.Persistence.Repository
             return await _context.Set<T>().OfType<TDerived>().AnyAsync(predicate);
         }
 
+        public async Task<List<TDerived>> GetAllDerivedAsync<TDerived>() where TDerived : class, T
+        {
+            return await _context.Set<T>().OfType<TDerived>().ToListAsync();
+        }
+
         //ilişkili tablolarun bulunduğu bir yerde güncelleme yapılacaksa bu uygun 
         public async Task<T> GetByIdAsync(int id, Func<IQueryable<T>, IQueryable<T>> include = null)
         {
@@ -42,5 +47,7 @@ namespace EBYS.Persistence.Repository
             // ID'ye göre filtrele (Primary Key isminin 'Id' olduğunu varsayıyoruz)
             return await query.FirstOrDefaultAsync(x => EF.Property<int>(x, "Id") == id);
         }
+
+
     }
 }

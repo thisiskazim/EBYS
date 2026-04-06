@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using EBYS.Application.DTOs.MuhatapDTO;
-using EBYS.Application.Interfaces.IService;
+using EBYS.Application.Interfaces.IService.IMuhatapService;
 using EBYS.Application.Services;
 using EBYS.Domain.Entities;
 using EBYS.Persistence;
@@ -8,17 +8,15 @@ using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI; // Kendo paketini kurmuş olmalısın
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-namespace EBYS.WebAPI.Controllers
+namespace EBYS.WebAPI.Controllers.Muhatap
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MuhatapController(IMuhatapKurumService muhatapKurumService, IMapper mapper) : ControllerBase
+    public class KurumMuhatapController(IMuhatapKurumService muhatapKurumService, IMapper mapper) : ControllerBase
     {
 
-        [HttpGet("KurumListele")]
+        [HttpGet("Listele")]
         public async Task<IActionResult> KurumListele()
         {
             try
@@ -40,9 +38,7 @@ namespace EBYS.WebAPI.Controllers
 
         }
 
-
-        // YENİ KURUM KAYDEDER
-        [HttpPost("KurumEkle")]
+        [HttpPost("Ekle")]
         public async Task<IActionResult> KurumEkle(KurumMuhatapCreateDTO dto)
         {
             try
@@ -57,7 +53,7 @@ namespace EBYS.WebAPI.Controllers
 
         }
 
-        [HttpPost("KurumGuncelle")]
+        [HttpPost("Guncelle")]
         public async Task<IActionResult> KurumGuncelle(KurumMuhatapUpdateDTO dto)
         {
             try
@@ -71,9 +67,7 @@ namespace EBYS.WebAPI.Controllers
             }
         }
 
-
-
-        [HttpDelete("KurumSil/{id}")]
+        [HttpDelete("Sil/{id}")]
         public async Task<IActionResult> KurumSil(int id)
         {
             try
@@ -87,7 +81,7 @@ namespace EBYS.WebAPI.Controllers
             }
         }
 
-        [HttpGet("KurumGetir/{id}")]
+        [HttpGet("Getir/{id}")]
         public async Task<IActionResult> KurumGetir(int id)
         {
             try
@@ -108,6 +102,14 @@ namespace EBYS.WebAPI.Controllers
 
 
         }
+
+
+
+
+
+
+
+
 
     }
 
