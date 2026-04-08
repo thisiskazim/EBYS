@@ -27,9 +27,11 @@
 
 <script>
     var AliciModule = (function () {
+
+        var _grid = null;
         return {
             init: function () {
-                $("#muhatapGrid").kendoGrid({
+               _grid = $("#muhatapGrid").kendoGrid({
                     columns: [
                         { field: "MuhatapAdi", title: "Alıcı Adı" },
                         { field: "IsBilgi", title: "Türü", template: "#= IsBilgi ? '<span class=\"badge bg-info\">Bilgi</span>' : '<span class=\"badge bg-primary\">Gereği</span>' #" },
@@ -41,7 +43,7 @@
             },
             aliciEkle: function (isBilgi) {
                 var multiSelect = $("#muhatapSecici").data("kendoMultiSelect");
-                var grid = $("#muhatapGrid").data("kendoGrid");
+                var grid = _grid || $("#muhatapGrid").data("kendoGrid");
                 var selectedDataItems = multiSelect.dataItems();
 
                 if (selectedDataItems.length === 0) {
@@ -49,14 +51,17 @@
                     return;
                 }
 
-                selectedDataItems.forEach(function (item) {
-                    var exists = grid.dataSource.data().some(x => x.MuhatapId === item.id);
-                    if (!exists) {
-                        grid.dataSource.add({
-                            MuhatapId: item.id,
-                            MuhatapAdi: item.adi,
-                            IsBilgi: isBilgi
-                        });
+               selectedDataItems.forEach(function (item) {
+                    // grid.dataSource'un varlığını burada da kontrol ediyoruz
+                    if (grid.dataSource) {
+                        var exists = grid.dataSource.data().some(x => x.MuhatapId === item.id);
+                        if (!exists) {
+                            grid.dataSource.add({
+                                MuhatapId: item.id,
+                                MuhatapAdi: item.adi,
+                                IsBilgi: isBilgi
+                            });
+                        }
                     }
                 });
                 multiSelect.value([]);

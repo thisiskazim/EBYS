@@ -7,7 +7,7 @@
 
     <div>
         <button class="btn btn-warning me-2"><span class="k-icon k-i-save"></span> Taslak Olarak Kaydet</button>
-        <button class="btn btn-primary"><span class="k-icon k-i-file"></span> Evrak Oluştur</button>
+        <button id="evrakKaydet" class="btn btn-primary"><span class="k-icon k-i-file"></span> Evrak Oluştur</button>
     </div>
 </div>
 
@@ -45,7 +45,7 @@
                 @await Html.PartialAsync("Components/Evrak/_EklerPartial")
             </div>
 
-            <div class="tab-pane fade" id="ilgiler">
+            <div class="tab-pane fade" id="ilgili">
                 @await Html.PartialAsync("Components/Evrak/_IlgilerPartial")
             </div>
             
@@ -64,25 +64,56 @@
 
 
 <script>
-    $(document).ready(function () {
-        // Her modülü kendi init fonksiyonuyla başlatıyoruz
-        if (typeof EvrakBilgiModule !== "undefined") EvrakBilgiModule.init();
-        if (typeof AliciModule !== "undefined") AliciModule.init();
-        // Diğerleri...
+    var EvrakOlustur=(function(){
+        var _apiBaseUrl="https://localhost:7060/api/Evrak/";
+        var _ajaxCall=function(url,type,data){
+            return $.ajax({
+                url:_apiBaseUrl+url,
+                type:type,
+                contentType:"application/json",
+                data:data?JSON.stringify(data):null,
+                error:function(err){
+                    var msg=err&&err.responseText?err.responseText:"Hata oluştu.";
+                    showNotification(msg,"error");
+                }
+            });
+        };
+
+        return{
+            kaydet: function(){
+                // Her modülün kendi verisini topluyoruz
+                var alicilar=AliciModule.getData();
+                var bilgiler=EvrakBilgiModule.getData();
+             //   var ekler=EklerModule.getData();
+                var ilgiler=IlgilerModule.getData();
+                // Payload oluşturup AJAX ile gönderiyoruz
+                var payload={...bilgiler,Muhataplar:alicilar,Ilgiler:ilgiler};
+                console.log("Gönderilecek Veri:",payload);
+
+                if (!payload.Konu) {
+                showNotification("Lütfen evrak konusunu giriniz.", "warning");
+                return;
+                }
+                _ajaxCall("EvrakOlustur","POST",payload).done(function(response){
+                    showNotification("Evrak başarıyla oluşturuldu.","success");
+                    // İsterseniz formu temizleyebilir veya başka bir sayfaya yönlendirebilirsiniz
+                });
+            }
+
+        }
+    })();
+
+
+       $(document).ready(function () {
+         if (typeof AliciModule !== "undefined") AliciModule.init();
+         if (typeof EvrakBilgiModule !== "undefined") EvrakBilgiModule.init();
+        // if (typeof EklerModule !== "undefined") EklerModule.init();
+         if (typeof IlgilerModule !== "undefined") IlgilerModule.init();
+        $("#evrakKaydet").on("click", function () {
+            EvrakOlustur.kaydet();
+        });
+     
     });
-
-    function evrakKaydet() {
-        // Her modülün kendi verisini topluyoruz
-        var alicilar = AliciModule.getData();
-        var bilgiler = EvrakBilgiModule.getData();
-        var ekler=EklerModule.getData();
-        var ilgiler=IlgilerModule.getData();
-        var evrakGorunum=EvrakGorunumModule.getData();
-
-        // Payload oluşturup AJAX ile gönderiyoruz
-        var payload = { ...bilgiler, Muhataplar: alicilar };
-        console.log("Gönderilecek Veri:", payload);
-    }
 </script>
 
 

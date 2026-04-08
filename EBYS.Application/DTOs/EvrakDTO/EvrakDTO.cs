@@ -1,12 +1,9 @@
-﻿using EBYS.Domain.Entities;
+﻿
 using EBYS.Domain.Enum;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace EBYS.Application.DTOs.EvtakDTO
+using EBYS.Application.DTOs.EvtakDTO;
+
+namespace EBYS.Application.DTOs.EvrakDTO
 {
     public class GidenEvrakBaseDTO
     {
@@ -22,14 +19,14 @@ namespace EBYS.Application.DTOs.EvtakDTO
 
     public class GidenEvrakCreateDTO : GidenEvrakBaseDTO
     {
-        public List<EvrakIlgiCreateDTO> Ilgiler { get; set; } = new();
-        public List<EvrakEkCreateDTO> Ekler { get; set; } = new();
+        public List<EvrakIlgiCreateDTO>? Ilgiler { get; set; } = new();
+        public List<EvrakEkCreateDTO>? Ekler { get; set; } = new();
     }
     public class GidenEvrakUpdateDTO : GidenEvrakBaseDTO
     {
         public int Id { get; set; }
-        public List<EvrakIlgiUpdateDTO> Ilgiler { get; set; } = new();
-        public List<EvrakEkUpdateDTO> Ekler { get; set; } = new();
+        public List<EvrakIlgiUpdateDTO>? Ilgiler { get; set; } = new();
+        public List<EvrakEkUpdateDTO>? Ekler { get; set; } = new();
     }
 
     public class GidenEvrakListDTO : GidenEvrakBaseDTO

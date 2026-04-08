@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using EBYS.Application.DTOs.EvtakDTO;
+using EBYS.Application.DTOs.EvrakDTO;
+
 using EBYS.Application.Interfaces.IService.IEvrakService;
 using EBYS.Application.Interfaces.Repository;
 using EBYS.Domain.Entities;
@@ -14,6 +15,7 @@ namespace EBYS.Application.Services.EvrakService
         {
             var evrak = mapper.Map<Evrak>(createDto);
             evrak.BelgeDurum = Enums.BelgeDurum.Taslak;
+            evrak.EvrakSayisi= "E.-1";
             evrak.IsGelenEvrak = false;
 
 
@@ -44,6 +46,24 @@ namespace EBYS.Application.Services.EvrakService
                         SiradakiMi = (adim.SiraNo == 1)
 
                     });
+                }
+            }
+
+            if (createDto.Ilgiler != null)
+            {
+                foreach (var i in createDto.Ilgiler)
+                {
+                    evrak.İlgiler.Add(new EvrakIlgi { IlgiMetni = i.IlgiMetni });
+
+                }
+            }
+
+            if (createDto.Ekler != null)
+            {
+                foreach (var i in createDto.Ekler)
+                {
+                    evrak.Ekler.Add(new EvrakEk { EkAdi = i.EkAdi });
+
                 }
             }
 

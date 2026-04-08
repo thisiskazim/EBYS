@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 
 using EBYS.Application.DTOs;
+using EBYS.Application.DTOs.EvrakDTO;
 using EBYS.Application.DTOs.EvtakDTO;
 using EBYS.Application.DTOs.MuhatapDTO;
 using EBYS.Domain.Entities;

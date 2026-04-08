@@ -37,6 +37,8 @@ namespace EBYS.Application.Services
                 dto.RotaAdimlari.Count,
                 dto.RotaAdimlari.OrderBy(x => x.SiraNo).LastOrDefault()?.ParafMiImzaMi == Enums.ImzaTipi.Paraf);
 
+            
+            getRota.RotaAdi = dto.RotaAdi;//bunu sorhulayalım
 
             var silinecekAdimlar = getRota.ImzaRotaAdimlari
                 .Where(dbAdim => !dto.RotaAdimlari.Any(dtoAdim => dtoAdim.Id == dbAdim.Id))
@@ -46,6 +48,8 @@ namespace EBYS.Application.Services
             {
                 getRota.ImzaRotaAdimlari.Remove(adim);
             }
+
+           
 
 
             foreach (var dtoAdim in dto.RotaAdimlari)

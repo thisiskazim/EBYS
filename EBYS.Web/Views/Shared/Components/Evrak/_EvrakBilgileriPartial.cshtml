@@ -1,7 +1,7 @@
 ﻿<div class="tab-pane fade show active" id="bilgiler" role="tabpanel">
     <div class="row">
         <div class="col-md-5">
-            <div class="mb-3">
+           @*  <div class="mb-3">
                 <label class="form-label">Konu Kodu *</label>
                 @(Html.Kendo().ComboBox()
                                 .Name("konuKodu")
@@ -10,7 +10,7 @@
                                 .DataValueField("value")
                                 .DataSource(ds => ds.Read(r => r.Url("/api/Kod/GetKonuKodlari").Type(HttpVerbs.Get)))
                                 )
-            </div>
+            </div> *@
 
             <div class="mb-3">
                 <label class="form-label text-danger">Konu Tırnak İşareti kullanmayınız! *</label>
@@ -95,3 +95,38 @@
     </div>
 
 </div>
+
+
+<script>
+    var EvrakBilgiModule = (function () {
+        return {
+            init: function () {
+              
+            },
+
+            getData: function () {
+                // 1. Kendo DropDownList değerlerini alıyoruz
+               var ddlImzaRota = $("#ImzaRota").data("kendoDropDownList"); // ID'nin büyük/küçük harf duyarlılığına dikkat!
+               var ddlGizlilik = $("#gizlilik").data("kendoDropDownList");
+               var ddlIvedilik = $("#ivedilik").data("kendoDropDownList");
+
+                // 2. Kendo Editor içeriklerini (HTML formatında) alıyoruz
+                var editorGövde = $("#EvrakEditor").data("kendoEditor");
+                var editorAlt = $("#AltMetinEditor").data("kendoEditor");
+
+                // 3. Standart Input değerini alıyoruz
+                var konu = $("#konu").val();
+
+                // API'nin beklediği DTO yapısına uygun nesne döndürüyoruz
+                return {
+                Konu: $("#konu").val(),
+                Icerik: editorGövde.value(),
+                ImzaAltindaOlanIcerik: editorAlt ? editorAlt.value() : "",
+                ImzaRotaId: ddlImzaRota.value() ? parseInt(ddlImzaRota.value()) : 0,
+                GizlilikDerecesi: ddlGizlilik ? parseInt(ddlGizlilik.value()) : 0,
+                Ivedilik: ddlIvedilik ? parseInt(ddlIvedilik.value()) : 0
+                };
+            }
+        };
+    })();
+</script>
