@@ -56,7 +56,7 @@ namespace EBYS.Application.Mapping
             CreateMap<ImzaRotaAdimlariCreateDTO, ImzaRotaAdimi>().ReverseMap();
             CreateMap<ImzaRotaAdimlariUpdateDTO, ImzaRotaAdimi>().ForMember(dest => dest.Id, opt => opt.Ignore());
 
-            CreateMap<ImzaRota, ImzaRotaListDTO>();
+            CreateMap<ImzaRota, ImzaRotaListDTO>().ReverseMap();
 
 
             CreateMap<GidenEvrakCreateDTO, Evrak>()

@@ -1,0 +1,97 @@
+﻿<div class="tab-pane fade show active" id="bilgiler" role="tabpanel">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="mb-3">
+                <label class="form-label">Konu Kodu *</label>
+                @(Html.Kendo().ComboBox()
+                                .Name("konuKodu")
+                                .Placeholder("Seçiniz")
+                                .DataTextField("text")
+                                .DataValueField("value")
+                                .DataSource(ds => ds.Read(r => r.Url("/api/Kod/GetKonuKodlari").Type(HttpVerbs.Get)))
+                                )
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-danger">Konu Tırnak İşareti kullanmayınız! *</label>
+                <input class="form-control" id="konu" placeholder="Konu" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">İmza Rota *</label>
+                @(Html.Kendo().DropDownList()
+                                .Name("imzaRota")
+                                .HtmlAttributes(new { style = "width:100%", id = "ImzaRota" })
+                                .OptionLabel("Seçiniz")
+                                .DataTextField("rotaAdi")
+                                .DataValueField("id")
+                                .OptionLabel("Seçiniz")
+                                .DataSource(ds => ds.Read(r => r.Url("https://localhost:7060/api/ImzaRota/ImzaRotaListesi").Type(HttpVerbs.Get)))
+                                )
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Evrak Tarihi</label>
+                <input class="form-control" value="Otomatik" disabled />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Gizlilik Derecesi</label>
+                @(Html.Kendo().DropDownList()
+                                .Name("gizlilik")
+                                .BindTo(new[] { new { text = "TASNİF DIŞI", value = "0" }, new { text = "GİZLİ", value = "1" } })
+                                .DataTextField("text")
+                                .DataValueField("value")
+                                )
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">İvedilik</label>
+                @(Html.Kendo().DropDownList()
+                                .Name("ivedilik")
+                                .BindTo(new[] { new { text = "NORMAL", value = "0" }, new { text = "ACİL", value = "1" } })
+                                .DataTextField("text")
+                                .DataValueField("value")
+                                )
+            </div>
+
+        </div>
+
+        <div class="col-md-7">
+            <div class="mb-2 d-flex justify-content-between align-items-center">
+                <div>
+                    <label class="form-label mb-0">Evrak İçeriği</label>
+                </div>
+                <div class="text-muted small">Yazı tipi, hizalama ve tablo seçenekleri kullanılabilir.</div>
+            </div>
+
+            @(Html.Kendo().Editor()
+                        .Name("EvrakEditor")
+                        .Tools(tools => tools
+                        .Formatting()
+                        .Bold().Italic().Underline()
+                        .Separator()
+                        .InsertUnorderedList().InsertOrderedList()
+                        .Separator()
+                        .FontName().FontSize()
+                        )
+                        .HtmlAttributes(new { style = "height:420px;" })
+                        )
+
+
+
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="mb-3">
+        <label class="form-label">Ek Üstünde-İmza Altında Metin Girişi</label>
+        @(Html.Kendo().Editor()
+                .Name("AltMetinEditor")
+                .Tools(t => t.Bold().Italic().Underline().Separator().FontName().FontSize())
+                .HtmlAttributes(new { style = "height:120px;" })
+                )
+    </div>
+
+</div>

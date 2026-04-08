@@ -1,0 +1,95 @@
+﻿<div class="p-3">
+    <h6 class="fw-bold"><i class="k-icon k-i-link-horizontal"></i> İlgiler</h6>
+    <p class="text-muted small">Evrakın referans gösterildiği önceki yazışmaları veya metinleri ekleyin.</p>
+
+    <div class="row g-2 mb-3 align-items-end">
+        <div class="col-md-9">
+            <label class="form-label">İlgi Metni</label>
+            @(Html.Kendo().TextBox()
+                        .Name("IlgiMetni")
+                        .Placeholder("Örn: 12.02.2024 tarihli ve 123 sayılı yazınız...")
+                        .HtmlAttributes(new { style = "width: 100%", id = "IlgiMetni" }))
+        </div>
+        <div class="col-md-3">
+            <button type="button" onclick="IlgilerModule.ekle()" class="btn btn-outline-primary w-100">
+                <i class="k-icon k-i-plus"></i> Ekle
+            </button>
+        </div>
+    </div>
+
+    <div id="ilgilerGrid"></div>
+</div>
+
+
+
+<script>
+     var IlgilerModule = (function () {
+        var _grid = null;
+
+        return {
+            init: function () {
+                _grid = $("#ilgilerGrid").kendoGrid({
+                    columns: [
+                        { field: "IlgiMetni", title: "Açıklama / İlgi Metni" },
+                        {
+                            command: [{
+                                name: "destroy",
+                                text: "Sil",
+                                iconClass: "k-icon k-i-delete"
+                            }],
+                            title: "İşlem",
+                            width: "100px"
+                        }
+                    ],
+                    dataSource: {
+                        data: [],
+                        schema: {
+                            model: {
+                                fields: {
+                                    IlgiMetni: { type: "string" }
+                                }
+                            }
+                        }
+                    },
+                    editable: false,
+                    noRecords: {
+                        template: "Henüz bir ilgi eklenmedi."
+                    }
+                }).data("kendoGrid");
+            },
+
+            ekle: function () {
+                var input = $("#IlgiMetni").val();
+
+                if (!input || input.trim() === "") {
+                    // notification fonksiyonun varsa kullanabilirsin
+                    alert("Lütfen bir ilgi metni giriniz.");
+                    return;
+                }
+
+                // Grid'e yeni satır ekle
+                _grid.dataSource.add({
+                    IlgiMetni: input.trim()
+                });
+
+                // Metin kutusunu temizle ve odağı tekrar oraya ver
+                $("#IlgiMetni").val("").focus();
+            },
+
+            // Servise gönderilecek veriyi toplamak için
+            getData: function () {
+                var data = _grid.dataSource.data();
+                return data.map(function (item) {
+                    return {
+                        IlgiMetni: item.IlgiMetni
+                    };
+                });
+            }
+        };
+    })();
+
+    // Sayfa hazır olduğunda grid'i başlat
+    $(document).ready(function () {
+        IlgilerModule.init();
+    });
+</script>

@@ -1,0 +1,69 @@
+﻿<div class="p-3">
+    <h6 class="fw-bold"><i class="k-icon k-i-user"></i> Alıcı Ekle</h6>
+    <div class="row g-2 mb-3">
+        <div class="col-md-8">
+            @(Html.Kendo().MultiSelect()
+                .Name("muhatapSecici")
+                .DataTextField("adi")
+                .DataValueField("id")
+                .Placeholder("Seçiniz...")
+                .AutoBind(false)
+                .DataSource(source => {
+                    source.Read(read => read.Url("https://localhost:7060/api/Muhatap/TumMuhataplar").Type(HttpVerbs.Get));
+                })
+            )
+        </div>
+        <div class="col-md-4 d-flex gap-2">
+            <button type="button" onclick="AliciModule.aliciEkle(false)" class="btn btn-outline-primary w-100">
+                <i class="k-icon k-i-check"></i> Gereği
+            </button>
+            <button type="button" onclick="AliciModule.aliciEkle(true)" class="btn btn-outline-info w-100">
+                <i class="k-icon k-i-info"></i> Bilgi
+            </button>
+        </div>
+    </div>
+    <div id="muhatapGrid"></div>
+</div>
+
+<script>
+    var AliciModule = (function () {
+        return {
+            init: function () {
+                $("#muhatapGrid").kendoGrid({
+                    columns: [
+                        { field: "MuhatapAdi", title: "Alıcı Adı" },
+                        { field: "IsBilgi", title: "Türü", template: "#= IsBilgi ? '<span class=\"badge bg-info\">Bilgi</span>' : '<span class=\"badge bg-primary\">Gereği</span>' #" },
+                        { command: [{ className: "btn-grid-action btn btn-outline-danger ms-2", name: "destroy", text: "Sil", iconClass: "k-icon k-i-delete" }], title: "İşlem", width: "100px" }
+                    ],
+                    dataSource: { data: [], schema: { model: { id: "MuhatapId" } } },
+                    editable: false
+                });
+            },
+            aliciEkle: function (isBilgi) {
+                var multiSelect = $("#muhatapSecici").data("kendoMultiSelect");
+                var grid = $("#muhatapGrid").data("kendoGrid");
+                var selectedDataItems = multiSelect.dataItems();
+
+                if (selectedDataItems.length === 0) {
+                    showNotification("Lütfen önce kurum seçiniz!", "warning");
+                    return;
+                }
+
+                selectedDataItems.forEach(function (item) {
+                    var exists = grid.dataSource.data().some(x => x.MuhatapId === item.id);
+                    if (!exists) {
+                        grid.dataSource.add({
+                            MuhatapId: item.id,
+                            MuhatapAdi: item.adi,
+                            IsBilgi: isBilgi
+                        });
+                    }
+                });
+                multiSelect.value([]);
+            },
+            getData: function() {
+                return $("#muhatapGrid").data("kendoGrid").dataSource.data();
+            }
+        };
+    })();
+</script>
