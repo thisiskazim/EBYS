@@ -9,6 +9,9 @@ namespace EBYS.Domain.Entities
     public class Evrak:BaseEntity
     {
         public string Konu { get; set; }
+        public int KonuKoduId { get; set; } = 1;
+        public virtual EvrakKonuKodu EvrakKonuKodu { get; set; }
+
         public string Icerik { get; set; } // Rich Text Editor'den gelen HTML/Text
         public string? ImzaAltindaOlanIcerik { get; set; }
         public string EvrakSayisi { get; set; }//int olarak değiştirelim.bu belge durumu tamamlandı olduğunda oluşacak bir property.

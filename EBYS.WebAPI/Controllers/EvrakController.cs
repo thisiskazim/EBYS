@@ -1,15 +1,13 @@
-﻿using EBYS.Application.DTOs;
+﻿
 using EBYS.Application.DTOs.EvrakDTO;
-using EBYS.Application.Interfaces.IService.IEvrakService;
-using EBYS.Application.Services;
-using Microsoft.AspNetCore.Http;
+using EBYS.Application.Interfaces.IService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EBYS.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EvrakController(IEvrakService evrakServive) : ControllerBase
+    public class EvrakController(IEvrakService evrakServive, IKonuKoduService konuKoduService) : ControllerBase
     {
 
         [HttpPost("EvrakOlustur")]
@@ -26,6 +24,39 @@ namespace EBYS.WebAPI.Controllers
                 return BadRequest(e.Message);
             }
 
+
+        }
+
+        [HttpPost("ParafımıBekleyenler")]
+        public async Task<IActionResult> ParafimiBekleyenler(GidenEvrakCreateDTO evrakCreateDTO)
+        {
+
+            try
+            {
+                await evrakServive.AddAsync(evrakCreateDTO);
+                return Ok("Evrak başarıyla kaydedildi");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+
+        }
+
+
+        [HttpGet("KonuKoduGet")]
+        public async Task<IActionResult> KonuKoduGet()
+        {
+            try
+            {
+                var konuKodlari = await konuKoduService.KonuKoduList();
+                return Ok(konuKodlari);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
 
         }
     }

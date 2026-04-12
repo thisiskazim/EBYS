@@ -41,7 +41,9 @@ namespace EBYS.Application.Mapping
             CreateMap<EvrakEkCreateDTO, EvrakEk>();
             CreateMap<GidenEvrakCreateDTO, Evrak>();
 
-
+            CreateMap<EvrakKonuKodu, EvrakKonuKoduDTO>()
+                .ForMember(dest => dest.FullKod,
+                    opt => opt.MapFrom(src => $"{src.KodNumber} - {src.KodAdi}"));
 
             // Create senaryosu için
             CreateMap<ImzaRotaCreateDTO, ImzaRota>()

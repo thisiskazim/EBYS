@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using EBYS.Application.Interfaces.IService;
-using EBYS.Application.Interfaces.IService.IEvrakService;
 using EBYS.Application.Services.MuhatapService;
 using EBYS.Application.Interfaces.IService.IMuhatapService;
 using EBYS.Application.Services.EvrakService;
@@ -37,7 +36,11 @@ builder.Services.AddDbContext<EBYSContext>(options =>
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IEvrakRepository, EvrakRepository>();
 builder.Services.AddScoped<IEvrakService, EvrakService>();
+builder.Services.AddScoped<IKonuKoduService, KonuKoduService>();
 
+
+
+builder.Services.AddScoped<IImzaRotaService, ImzaRotaService>();
 
 builder.Services.AddScoped<IKullaniciRepository, KullaniciRepository>();
 builder.Services.AddScoped<IKullaniciService, KullaniciService>();

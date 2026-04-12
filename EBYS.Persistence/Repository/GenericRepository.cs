@@ -9,7 +9,7 @@ namespace EBYS.Persistence.Repository
     {
         protected readonly EBYSContext _context;
         public GenericRepository(EBYSContext context) => _context = context;
-        public async Task<List<T>> GetAllAsync() => await _context.Set<T>().ToListAsync();
+        public async Task<List<T>> GetAllAsync() => await _context.Set<T>().AsNoTracking().ToListAsync();
         public async Task AddAsync(T entity) => await _context.Set<T>().AddAsync(entity);
         public void UpdateAsync(T entity) => _context.Set<T>().Update(entity);
         public void DeleteAsync(T entity) => _context.Set<T>().Remove(entity);
@@ -38,13 +38,11 @@ namespace EBYS.Persistence.Repository
         {
             IQueryable<T> query = _context.Set<T>();
 
-            // Eğer include delegesi doluysa, sorguya uygula
             if (include != null)
             {
                 query = include(query);
             }
 
-            // ID'ye göre filtrele (Primary Key isminin 'Id' olduğunu varsayıyoruz)
             return await query.FirstOrDefaultAsync(x => EF.Property<int>(x, "Id") == id);
         }
 

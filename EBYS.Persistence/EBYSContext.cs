@@ -1,7 +1,6 @@
 ﻿using EBYS.Application.Common.Interface;
 using EBYS.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq.Expressions;
 namespace EBYS.Persistence
 {
@@ -18,6 +17,7 @@ namespace EBYS.Persistence
         }
 
         public DbSet<Evrak> Evraklar { get; set; }
+        public DbSet<EvrakKonuKodu> EvrakKonuKodlari { get; set; }
         public DbSet<EvrakEk> EvrakEkler { get; set; }
         public DbSet<EvrakIlgi> EvrakIlgiler { get; set; }
         public DbSet<Muhatap> Muhataplar { get; set; }
@@ -86,10 +86,30 @@ namespace EBYS.Persistence
                 .WithMany(e => e.Muhataplar)
                 .HasForeignKey(em => em.EvrakId);
 
+            // Konu Kodu Koruması
+            modelBuilder.Entity<Evrak>()
+                .HasOne(e => e.EvrakKonuKodu)
+                .WithMany()
+                .HasForeignKey(e => e.KonuKoduId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // İmza Rota Koruması
+            modelBuilder.Entity<Evrak>()
+                .HasOne(e => e.ImzaRota)
+                .WithMany()
+                .HasForeignKey(e => e.ImzaRotaId)
+                .OnDelete(DeleteBehavior.Restrict); // Silinmesini engelle!
+
             modelBuilder.Entity<EvrakMuhatap>()
                 .HasOne(em => em.Muhatap)
                 .WithMany(m => m.Evraklar)
                 .HasForeignKey(em => em.MuhatapId);
+
+            modelBuilder.Entity<Evrak>()
+                .HasOne(e => e.Olusturan)
+                .WithMany()
+                .HasForeignKey(e => e.OlusturanId)
+                .OnDelete(DeleteBehavior.Restrict); // Kullanıcıyı sildirme!
 
             // 3. PostgreSQL İçin Veri Tipleri (Opsiyonel)
             modelBuilder.Entity<Evrak>()
@@ -108,6 +128,7 @@ namespace EBYS.Persistence
                     .HasForeignKey(d => d.EvrakId)
                     .OnDelete(DeleteBehavior.Cascade);
 
+         
                 // Bir kullanıcı silinirse, akış kayıtları silinmesin (Restrict) 
                 // Çünkü o imza geçmişi bir belgedir, kullanıcı gitse de imza kalmalı.
                 entity.HasOne(d => d.Kullanici)
@@ -149,16 +170,6 @@ namespace EBYS.Persistence
             return base.SaveChangesAsync(cancellationToken);
         }
 
-        private LambdaExpression CreateFilterExpression(Type type)
-        {
-            var parameter = Expression.Parameter(type, "e");
-
-            var body = Expression.Equal(
-                Expression.Property(parameter, "BaseKurumId"),
-                Expression.Constant(_currentKurumId)
-            );
-            return Expression.Lambda(body, parameter);
-        }
 
     }
 }

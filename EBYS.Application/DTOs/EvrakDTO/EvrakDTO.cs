@@ -8,6 +8,7 @@ namespace EBYS.Application.DTOs.EvrakDTO
     public class GidenEvrakBaseDTO
     {
         public string Konu { get; set; }
+        public int KonuKoduId { get; set; }
         public string Icerik { get; set; }
         public string? ImzaAltindaOlanIcerik { get; set; }
         public Enums.GizlilikDerecesi GizlilikDerecesi { get; set; }

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using EBYS.Application.DTOs.EvrakDTO;
-
-using EBYS.Application.Interfaces.IService.IEvrakService;
+using EBYS.Application.Interfaces.IService;
 using EBYS.Application.Interfaces.Repository;
 using EBYS.Domain.Entities;
 using EBYS.Domain.Enum;

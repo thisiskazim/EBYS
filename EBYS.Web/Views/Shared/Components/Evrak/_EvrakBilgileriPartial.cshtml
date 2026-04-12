@@ -1,16 +1,22 @@
 ﻿<div class="tab-pane fade show active" id="bilgiler" role="tabpanel">
     <div class="row">
         <div class="col-md-5">
-           @*  <div class="mb-3">
+            <div class="mb-3">
                 <label class="form-label">Konu Kodu *</label>
                 @(Html.Kendo().ComboBox()
-                                .Name("konuKodu")
-                                .Placeholder("Seçiniz")
-                                .DataTextField("text")
-                                .DataValueField("value")
-                                .DataSource(ds => ds.Read(r => r.Url("/api/Kod/GetKonuKodlari").Type(HttpVerbs.Get)))
+                                .Name("KonuKoduId") // Bu ID üzerinden veriyi çekeceğiz
+                                .Placeholder("Kod veya konu adı ile arayın...")
+                                .DataTextField("fullKod")
+                                .DataValueField("id")
+                                .Filter(FilterType.Contains)
+                                .AutoBind(true)
+                                .Suggest(true)
+                                .DataSource(ds => ds
+                                .Read(r => r.Url("https://localhost:7060/api/Evrak/KonuKoduGet").Type(HttpVerbs.Get))
                                 )
-            </div> *@
+                                .HtmlAttributes(new { style = "width:100%", @class = "form-control" })
+                                )
+            </div>
 
             <div class="mb-3">
                 <label class="form-label text-danger">Konu Tırnak İşareti kullanmayınız! *</label>
@@ -21,7 +27,7 @@
                 <label class="form-label">İmza Rota *</label>
                 @(Html.Kendo().DropDownList()
                                 .Name("imzaRota")
-                                .HtmlAttributes(new { style = "width:100%", id = "ImzaRota" })
+                                .HtmlAttributes(new { style = "width:100%", @class = "form-control", id = "ImzaRota" })
                                 .OptionLabel("Seçiniz")
                                 .DataTextField("rotaAdi")
                                 .DataValueField("id")
@@ -42,6 +48,7 @@
                                 .BindTo(new[] { new { text = "TASNİF DIŞI", value = "0" }, new { text = "GİZLİ", value = "1" } })
                                 .DataTextField("text")
                                 .DataValueField("value")
+                                .HtmlAttributes(new { @class = "form-control" })
                                 )
             </div>
 
@@ -52,6 +59,7 @@
                                 .BindTo(new[] { new { text = "NORMAL", value = "0" }, new { text = "ACİL", value = "1" } })
                                 .DataTextField("text")
                                 .DataValueField("value")
+                                .HtmlAttributes(new { @class = "form-control" })
                                 )
             </div>
 
@@ -78,8 +86,6 @@
                         .HtmlAttributes(new { style = "height:420px;" })
                         )
 
-
-
         </div>
     </div>
 
@@ -96,37 +102,4 @@
 
 </div>
 
-
-<script>
-    var EvrakBilgiModule = (function () {
-        return {
-            init: function () {
-              
-            },
-
-            getData: function () {
-                // 1. Kendo DropDownList değerlerini alıyoruz
-               var ddlImzaRota = $("#ImzaRota").data("kendoDropDownList"); // ID'nin büyük/küçük harf duyarlılığına dikkat!
-               var ddlGizlilik = $("#gizlilik").data("kendoDropDownList");
-               var ddlIvedilik = $("#ivedilik").data("kendoDropDownList");
-
-                // 2. Kendo Editor içeriklerini (HTML formatında) alıyoruz
-                var editorGövde = $("#EvrakEditor").data("kendoEditor");
-                var editorAlt = $("#AltMetinEditor").data("kendoEditor");
-
-                // 3. Standart Input değerini alıyoruz
-                var konu = $("#konu").val();
-
-                // API'nin beklediği DTO yapısına uygun nesne döndürüyoruz
-                return {
-                Konu: $("#konu").val(),
-                Icerik: editorGövde.value(),
-                ImzaAltindaOlanIcerik: editorAlt ? editorAlt.value() : "",
-                ImzaRotaId: ddlImzaRota.value() ? parseInt(ddlImzaRota.value()) : 0,
-                GizlilikDerecesi: ddlGizlilik ? parseInt(ddlGizlilik.value()) : 0,
-                Ivedilik: ddlIvedilik ? parseInt(ddlIvedilik.value()) : 0
-                };
-            }
-        };
-    })();
-</script>
+<script src="~/js/evrak/evrak-bilgileri.js"></script>

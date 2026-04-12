@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace EBYS.Application.DTOs.EvrakDTO
 {
-    public class EvrakMuhatapSecimDTO
+    public class EvrakKonuKoduDTO
     {
-        public int MuhatapId { get; set; }
-        public bool IsBilgi { get; set; } //bilgi mi gereği mi
+        public int Id { get; set; }
+        public string FullKod { get; set; } // "622.01 - Bilgi Belge Talepleri"
+
     }
 }

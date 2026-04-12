@@ -1,15 +1,12 @@
 ﻿using EBYS.Application.DTOs;
 using EBYS.Application.Interfaces.IService;
-using EBYS.Application.Interfaces.Repository;
-using EBYS.Application.Services;
-using EBYS.Persistence.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EBYS.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ImzaRotaController(IImzaRotaService imzaRotaService, IImzaRotaRepository imzaRotaRepository)
+    public class ImzaRotaController(IImzaRotaService imzaRotaService)
         : ControllerBase
     {
 
