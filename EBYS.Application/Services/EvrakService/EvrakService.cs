@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EBYS.Application.DTOs;
 using EBYS.Application.DTOs.EvrakDTO;
 using EBYS.Application.Interfaces.IService;
 using EBYS.Application.Interfaces.Repository;
@@ -10,6 +11,8 @@ namespace EBYS.Application.Services.EvrakService
     public class EvrakService(IEvrakRepository evrakRepository,IMapper mapper,IImzaRotaRepository imzaRotaRepository) : IEvrakService
 
     {
+
+
         public async Task AddAsync(GidenEvrakCreateDTO createDto)
         {
             var evrak = mapper.Map<Evrak>(createDto);
@@ -81,14 +84,108 @@ namespace EBYS.Application.Services.EvrakService
             throw new NotImplementedException();
         }
 
-        public Task<GidenEvrakUpdateDTO> GetByIdAsync(int id)
+        public async Task<GidenEvrakUpdateDTO> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var getVeri = await evrakRepository.DetayliGetirAsync(id);
+
+            if (getVeri is null)
+            {
+                throw new Exception("Rota Bulunamadı");
+            }
+            var dto = mapper.Map<GidenEvrakUpdateDTO>(getVeri);
+
+            return dto;
         }
 
-        public Task UpdateAsync(GidenEvrakUpdateDTO updateDto)
+        public async Task<List<EvrakListeDTO>> ImzaBekleyenListe()
         {
-            throw new NotImplementedException();
+            var userId = evrakRepository.GetContextUserId();
+
+            // 1. Veriyi Repository'den Entity olarak çekiyoruz
+            var entities = await evrakRepository.ImzaBekleyenlenKullaniciSorgu(userId);
+
+            // 2. AutoMapper ile Entity -> DTO dönüşümü (MAPPING)
+            var dtoList = mapper.Map<List<EvrakListeDTO>>(entities);
+
+            // 3. Özel iş kuralını (CanEdit) döngüyle veya mapping sırasında set edebiliriz
+            foreach (var dto in dtoList)
+            {
+                dto.EditYapabilirMi = dto.OlusturanKullaniciId == userId;
+            }
+
+            return dtoList;
+        }
+
+        public async Task UpdateAsync(GidenEvrakUpdateDTO updateDto)
+        {
+            // 1. Evrakı tüm detaylarıyla (Muhatap, Ek, Akış vb.) çekiyoruz
+            var mevcutEvrak = await evrakRepository.DetayliGetirAsync(updateDto.Id);
+
+            if (mevcutEvrak == null)
+                throw new Exception("Güncellenecek evrak sistemde bulunamadı.");
+
+            // 2. Temel alanları DTO'dan Entity'ye aktar (Mapping)
+            mapper.Map(updateDto, mevcutEvrak);
+
+            // 3. Muhatapları Güncelle (Eskileri temizle, yenileri ekle)
+            mevcutEvrak.Muhataplar.Clear();
+            if (updateDto.Muhataplar != null)
+            {
+                foreach (var m in updateDto.Muhataplar)
+                {
+                    mevcutEvrak.Muhataplar.Add(new EvrakMuhatap
+                    {
+                        MuhatapId = m.MuhatapId,
+                        IsBilgi = m.IsBilgi
+                    });
+                }
+            }
+
+            // 4. İlgileri Güncelle
+            mevcutEvrak.İlgiler.Clear();
+            if (updateDto.Ilgiler != null)
+            {
+                foreach (var i in updateDto.Ilgiler)
+                {
+                    mevcutEvrak.İlgiler.Add(new EvrakIlgi { IlgiMetni = i.IlgiMetni });
+                }
+            }
+
+            // 5. Ekleri Güncelle
+            mevcutEvrak.Ekler.Clear();
+            if (updateDto.Ekler != null)
+            {
+                foreach (var e in updateDto.Ekler)
+                {
+                    mevcutEvrak.Ekler.Add(new EvrakEk { EkAdi = e.EkAdi });
+                }
+            }
+
+            // 6. Rota/Akış Değişikliği Kontrolü
+            if (mevcutEvrak.ImzaRotaId != updateDto.ImzaRotaId)
+            {
+                mevcutEvrak.AkisAdimlari.Clear();
+                var yeniRota = await imzaRotaRepository.GetImzaRotaVeAdimlariDetay(updateDto.ImzaRotaId);
+
+                if (yeniRota != null)
+                {
+                    foreach (var adim in yeniRota.ImzaRotaAdimlari.OrderBy(x => x.SiraNo))
+                    {
+                        mevcutEvrak.AkisAdimlari.Add(new EvrakAkis
+                        {
+                            KullaniciId = adim.KullaniciId,
+                            ParafMiImzaMi = adim.ParafMiImzaMi,
+                            SiraNo = adim.SiraNo,
+                            AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
+                            SiradakiMi = (adim.SiraNo == 1)
+                        });
+                    }
+                }
+            }
+
+            // 7. Veritabanına Yansıt
+             evrakRepository.UpdateAsync(mevcutEvrak);
+            await evrakRepository.SaveAsync();
         }
     }
 }

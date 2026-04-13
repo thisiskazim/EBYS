@@ -27,6 +27,24 @@ namespace EBYS.WebAPI.Controllers
 
         }
 
+
+        [HttpPost("Duzenle")]
+        public async Task<IActionResult> EvrakDuzenle(GidenEvrakUpdateDTO evrakCreateDTO)
+        {
+
+            try
+            {
+                await evrakServive.UpdateAsync(evrakCreateDTO);
+                return Ok("Evrak başarıyla güncellendi");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+
+        }
+
         [HttpPost("ParafımıBekleyenler")]
         public async Task<IActionResult> ParafimiBekleyenler(GidenEvrakCreateDTO evrakCreateDTO)
         {

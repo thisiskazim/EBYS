@@ -46,6 +46,9 @@ namespace EBYS.Persistence.Repository
             return await query.FirstOrDefaultAsync(x => EF.Property<int>(x, "Id") == id);
         }
 
-
+        public int GetContextUserId()
+        {
+            return _context.CurrentUserId;
+        }
     }
 }

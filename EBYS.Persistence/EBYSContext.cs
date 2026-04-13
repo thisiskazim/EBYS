@@ -7,6 +7,7 @@ namespace EBYS.Persistence
     public class EBYSContext:DbContext
     {
         private readonly int _currentKurumId;
+        public int CurrentUserId => _currentUserId;
         private readonly int _currentUserId;
 
         public EBYSContext(DbContextOptions<EBYSContext> options, ICurrentUserService userService) : base(options)

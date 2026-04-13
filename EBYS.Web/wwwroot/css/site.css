@@ -110,3 +110,26 @@
     border-radius: 20px !important;
     font-weight: 600 !important;
 }
+
+
+// Write your JavaScript code.
+/* Grid hücrelerinin menüyü kesmesini engelle */
+.k - grid td {
+    overflow: visible !important;
+    white - space: nowrap; /* Ýçeriðin kaymasýný önler */
+}
+
+.k - grid - content {
+    overflow: visible !important;
+}
+
+/* Bootstrap dropdown'ýn Kendo üzerinde görünmesini garantile */
+.dropdown - menu {
+    z - index: 999999 !important;
+}
+
+/* Eðer menü hala çok garip duruyorsa, butona basýldýðýnda kapsayýcýyý öne çýkar */
+.dropdown.show {
+    position: relative;
+    z - index: 1000;
+}

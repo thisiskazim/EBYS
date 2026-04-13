@@ -7,8 +7,12 @@ namespace EBYS.Web.Controllers
     public class HomeController : Controller
     {
 
-        public IActionResult Index()
+        public IActionResult Index(int? id)
         {
+            if (id.HasValue)
+            {
+                ViewBag.EvrakId = id.Value;
+            }
             return View();
         }
 

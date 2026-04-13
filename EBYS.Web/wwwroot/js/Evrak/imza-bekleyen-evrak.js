@@ -23,7 +23,7 @@
         },
 
         initGrid: function () {
-            _grid = $("#evrakBekleyenGrid").kendoGrid({
+            _grid = $("#gridImzaBekleyenler").kendoGrid({
                 noRecords: { template: "<div class='p-5 text-center text-muted'>İmza bekleyen evrak bulunamadı.</div>" },
                 sortable: true,
                 pageable: { pageSize: 10 },
@@ -34,36 +34,45 @@
                         headerAttributes: { style: "text-align: center" },
                         attributes: { style: "text-align: center" },
                         template: function (dataItem) {
+                             var editHtml = dataItem.CanEdit
+                             ? `<li><a class='dropdown-item' href='#' onclick='EvrakBekleyenListModule.edit("${dataItem.Id}")'><i class='fas fa-edit text-warning me-2'></i>Düzenle</a></li>`
+                             : `<li><a class='dropdown-item disabled text-muted' href='#'><i class='fas fa-edit me-2'></i>Düzenle (Yetki Yok)</a></li>`;
                             return `
-                                <div class='dropdown'>
-                                    <button class='btn btn-sm btn-outline-secondary dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
-                                        <i class='fas fa-cog'></i>
-                                    </button>
-                                    <ul class='dropdown-menu shadow-sm'>
-                                        <li><a class='dropdown-item' href='#' onclick='EvrakBekleyenListModule.sign("${dataItem.Id}")'><i class='fas fa-pen-nib text-success me-2'></i>İmzala</a></li>
-                                        <li><a class='dropdown-item' href='#' onclick='EvrakBekleyenListModule.edit("${dataItem.Id}")'><i class='fas fa-edit text-warning me-2'></i>Düzenle</a></li>
-                                        <li><hr class='dropdown-divider'></li>
-                                        <li><a class='dropdown-item text-danger' href='#' onclick='EvrakBekleyenListModule.cancel("${dataItem.Id}")'><i class='fas fa-trash-alt me-2'></i>İptal Et</a></li>
-                                    </ul>
-                                </div>`;
+
+                            <div class='dropdown'>
+                                <button class='btn btn-sm btn-outline-secondary dropdown-toggle' 
+                                        type='button' 
+                                        data-bs-toggle='dropdown' 
+                                        data-bs-popper-config='{"strategy":"fixed"}' 
+                                        aria-expanded='false'>
+                                    <i class='fas fa-cog'></i>
+                                </button>
+                                <ul class='dropdown-menu dropdown-menu-end shadow border-0'>
+                                    <li><a class='dropdown-item' href='#' onclick='EvrakBekleyenListModule.sign("${dataItem.Id}")'><i class='fas fa-pen-nib text-success me-2'></i>İmzala</a></li>
+                                    ${editHtml} 
+                                    <li><hr class='dropdown-divider'></li>
+                                    <li><a class='dropdown-item text-danger' href='#' onclick='EvrakBekleyenListModule.cancel("${dataItem.Id}")'><i class='fas fa-trash-alt me-2'></i>İptal Et</a></li>
+                                </ul>
+                            </div>`;
                         }
                     },
                     {
                         field: "OlusturanKullanici",
                         title: "Oluşturan",
-                        template: "<div class='d-flex align-items-center'><i class='fas fa-user-circle me-2 text-secondary'></i>#: OlusturanKullanici #</div>"
+                        template: "<div class='d-flex align-items-center'><i class='fas fa-user-circle me-2 text-secondary'></i>#: OlusturanKullanici #</div>",
+                        width: "120px"
                     },
-                    { field: "EvrakKonu", title: "Konu" },
+                    { field: "Konu", title: "Konu", width: "200px" },
                     {
                         field: "FullKonuKodu",
                         title: "Konu Kodu",
-                        width: "140px",
-                        template: "<span class='badge bg-light text-dark border'>#: KonuKodu #</span>"
+                        width: "200px",
+                        template: "<span class='badge bg-light text-dark border'>#: FullKonuKodu #</span>"
                     },
                     {
                         field: "CreatTime",
                         title: "Oluşturma Zamanı",
-                        width: "180px",
+                        width: "250px",
                         template: "#= kendo.toString(kendo.parseDate(CreatTime), 'dd.MM.yyyy HH:mm') #"
                     }
                 ],
@@ -79,9 +88,10 @@
                 var mappedList = list.map(x => ({
                     Id: x.id || x.Id,
                     OlusturanKullanici: x.olusturanKullanici ,
-                    EvrakKonu: x.konu ,
+                    Konu: x.konu ,
                     FullKonuKodu: x.fullKonuKodu ,
-                    CreatTime: x.creat_time
+                    CreatTime: x.creat_time,
+                    CanEdit: x.editYapabilirMi
                 }));
                 _grid.dataSource.data(mappedList);
             });
@@ -93,7 +103,7 @@
         },
 
         edit: function (id) {
-            window.location.href = '/Evrak/Ekle?id=' + id;
+            window.location.href = '/Home/Index?id=' + id;
         },
 
         cancel: function (id) {

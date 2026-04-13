@@ -62,6 +62,16 @@ namespace EBYS.Application.Mapping
             CreateMap<ImzaRota, ImzaRotaListDTO>().ReverseMap();
 
 
+            CreateMap<Evrak, EvrakListeDTO>()
+             .ForMember(dest => dest.OlusturanKullanici,
+                        opt => opt.MapFrom(src => $"{src.Olusturan.Ad} - {src.Olusturan.Soyad}"))
+             .ForMember(dest => dest.FullKonuKodu,
+                        opt => opt.MapFrom(src => $"{src.EvrakKonuKodu.KodNumber} - {src.EvrakKonuKodu.KodAdi}"))
+             .ForMember(dest => dest.OlusturanKullaniciId,
+                        opt => opt.MapFrom(src => src.OlusturanId))
+             .ForMember(dest => dest.creat_time,
+                        opt => opt.MapFrom(src => src.creat_time));
+
             CreateMap<GidenEvrakCreateDTO, Evrak>()
                 // Zaten private set ama niyetimizi belli etmek için ignore ediyoruz
                 .ForMember(dest => dest.OlusturanId, opt => opt.Ignore())
