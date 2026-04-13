@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EBYS.Application.DTOs.EvtakDTO
+namespace EBYS.Application.DTOs.EvrakDTO
 {
     public class EvrakEkBaseDTO
     {

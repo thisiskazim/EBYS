@@ -1,6 +1,7 @@
 ﻿
 using EBYS.Application.DTOs.EvrakDTO;
 using EBYS.Application.Interfaces.IService;
+using EBYS.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EBYS.WebAPI.Controllers
@@ -28,8 +29,8 @@ namespace EBYS.WebAPI.Controllers
         }
 
 
-        [HttpPost("Duzenle")]
-        public async Task<IActionResult> EvrakDuzenle(GidenEvrakUpdateDTO evrakCreateDTO)
+        [HttpPost("EvrakGuncelle")]
+        public async Task<IActionResult> EvrakGuncelle(GidenEvrakUpdateDTO evrakCreateDTO)
         {
 
             try
@@ -70,6 +71,30 @@ namespace EBYS.WebAPI.Controllers
             {
                 var konuKodlari = await konuKoduService.KonuKoduList();
                 return Ok(konuKodlari);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+        }
+
+
+
+        [HttpGet("EvrakGetir/{id}")]
+        public async Task<IActionResult> EvrakGetirGetById(int id)
+        {
+
+            try
+            {
+                var gelenVeri = await evrakServive.GetByIdAsync(id);
+
+                if (gelenVeri == null)
+                {
+                    return NotFound("Böyle bir rota bulunamadı.");
+                }
+
+                return Ok(gelenVeri);
             }
             catch (Exception e)
             {

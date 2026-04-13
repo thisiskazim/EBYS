@@ -5,8 +5,6 @@ var AliciModule = (function () {
     return {
         init: function () {
             if (_grid) return;
-
-
             var gridElement = $("#muhatapGrid");
             if (gridElement.length > 0) {
                 _grid = gridElement.kendoGrid({
@@ -56,6 +54,22 @@ var AliciModule = (function () {
             });
             multiSelect.value([]);
         },
+
+        setData: function (muhataplar) {
+            var grid = _grid || $("#muhatapGrid").data("kendoGrid");
+            if (grid && Array.isArray(muhataplar)) {
+                // Mevcut veriyi temizleyip yenisini ekliyoruz
+                var mappedData = muhataplar.map(function (item) {
+                    return {
+                        MuhatapId: item.muhatapId || item.MuhatapId,
+                        MuhatapAdi: item.muhatapAdi || item.MuhatapAdi || item.adi,
+                        IsBilgi: item.isBilgi
+                    };
+                });
+                grid.dataSource.data(mappedData);
+            }
+        },
+
         getData: function () {
             var grid = _grid || $("#muhatapGrid").data("kendoGrid");
             return grid ? grid.dataSource.data().toJSON() : [];

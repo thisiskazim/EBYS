@@ -14,13 +14,17 @@
     };
 
     return {
+        init: function () {
+            this.loadInitialData();
+        },  
+
         kaydet: function () {
             // Her modülün kendi verisini topluyoruz
             var alicilar = AliciModule.getData();
             var bilgiler = EvrakBilgiModule.getData();
             //   var ekler=EklerModule.getData();
             var ilgiler = IlgilerModule.getData();
-            // Payload oluşturup AJAX ile gönderiyoruz
+         
             var payload = { ...bilgiler, Muhataplar: alicilar, Ilgiler: ilgiler };
             console.log("Gönderilecek Veri:", payload);
 
@@ -28,11 +32,29 @@
                 showNotification("Lütfen evrak konusunu giriniz.", "warning");
                 return;
             }
-            _ajaxCall("EvrakOlustur", "POST", payload).done(function (response) {
-                showNotification("Evrak başarıyla oluşturuldu.", "success");
+
+            var action = payload.Id > 0 ? "EvrakGuncelle" : "EvrakOlustur";
+
+            _ajaxCall(action, "POST", payload).done(function (response) {
+                showNotification("Evrak başarıyla kaydedildi.", "success");
                 // İsterseniz formu temizleyebilir veya başka bir sayfaya yönlendirebilirsiniz
             });
+        },
+
+        loadInitialData: function () {
+            var urlParams = new URLSearchParams(window.location.search);
+            var id = urlParams.get('id') || $("#EvrakId").val();
+
+            if (id && id !== "0" && id !== "") {
+                _ajaxCall("EvrakGetir/" + id, "GET").done(function (response) {
+                    EvrakBilgiModule.setData(response);
+                    AliciModule.setData(response.muhataplar);
+                    IlgilerModule.setData(response.ilgiler);
+                });
+            }
         }
+
+
 
     }
 })();
@@ -44,8 +66,12 @@ $(document).ready(function () {
     // if (typeof EklerModule !== "undefined") EklerModule.init();
     if (typeof IlgilerModule !== "undefined") IlgilerModule.init();
 
-    $("#evrakKaydet").on("click", function () {
-        EvrakOlustur.kaydet();
+    EvrakOlustur.init();
+
+    // 3. KAYDET BUTONU TIKLANDIĞINDA ÇALIŞTIR
+    $("#evrakKaydet").on("click", function (e) {
+        EvrakOlustur.kaydet(); // Sadece tıklanınca kaydet
     });
+  
 
 });

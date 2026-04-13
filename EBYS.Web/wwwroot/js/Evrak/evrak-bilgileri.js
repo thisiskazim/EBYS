@@ -3,7 +3,34 @@
         init: function () {
 
         },
+        setData: function (data) {
+            if (!data) return;
 
+            // 1. Normal Inputlar
+            $("#konu").val(data.konu || data.Konu);
+            $("#EvrakId").val(data.id || data.Id); // Hidden ID alanı varsa
+
+            // 2. Kendo ComboBox (Konu Kodu)
+            var ddlKonuKodu = $("#KonuKoduId").data("kendoComboBox");
+            if (ddlKonuKodu) ddlKonuKodu.value(data.konuKoduId || data.KonuKoduId);
+
+            // 3. Kendo DropDownLists
+            var ddlImzaRota = $("#ImzaRota").data("kendoDropDownList");
+            if (ddlImzaRota) ddlImzaRota.value(data.imzaRotaId || data.ImzaRotaId);
+
+            var ddlGizlilik = $("#gizlilik").data("kendoDropDownList");
+            if (ddlGizlilik) ddlGizlilik.value(data.gizlilikDerecesi || data.GizlilikDerecesi);
+
+            var ddlIvedilik = $("#ivedilik").data("kendoDropDownList");
+            if (ddlIvedilik) ddlIvedilik.value(data.ivedilik || data.Ivedilik || data.ivedilikDurumu);
+
+            // 4. Kendo Editors
+            var editorGövde = $("#EvrakEditor").data("kendoEditor");
+            if (editorGövde) editorGövde.value(data.icerik || data.Icerik || "");
+
+            var editorAlt = $("#AltMetinEditor").data("kendoEditor");
+            if (editorAlt) editorAlt.value(data.imzaAltindaOlanIcerik || data.ImzaAltindaOlanIcerik || "");
+        },
         getData: function () {
          
             var ddlImzaRota = $("#ImzaRota").data("kendoDropDownList");

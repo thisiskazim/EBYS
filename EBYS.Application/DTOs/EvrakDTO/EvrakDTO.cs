@@ -1,8 +1,6 @@
 ﻿
 using EBYS.Domain.Enum;
 
-using EBYS.Application.DTOs.EvtakDTO;
-
 namespace EBYS.Application.DTOs.EvrakDTO
 {
     public class GidenEvrakBaseDTO

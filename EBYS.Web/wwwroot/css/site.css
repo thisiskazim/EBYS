@@ -133,3 +133,43 @@
     position: relative;
     z - index: 1000;
 }
+
+
+/**/
+/* Sidebar Ýkon Kutularý */
+.menu-icon {
+    width: 38px;
+    height: 38px;
+    min-width: 38px; /* Daralmayý önler */
+    border-radius: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 1.1rem;
+}
+
+/* Sidebar Linkleri Hover Efekti */
+.menu-item {
+    border-radius: 12px;
+    transition: background 0.2s;
+    padding: 10px;
+}
+
+    .menu-item:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+        .menu-item:hover .menu-icon {
+            background-color: #5a67d8 !important; /* Kurumsal bir maviye döner */
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+/* Alt menü ikonlarý daha küçük ve zarif */
+.collapse .nav-link i {
+    width: 20px;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+.collapse .nav-link:hover {
+    color: white !important;
+}

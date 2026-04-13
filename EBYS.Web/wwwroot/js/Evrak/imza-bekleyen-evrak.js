@@ -26,7 +26,7 @@
             _grid = $("#gridImzaBekleyenler").kendoGrid({
                 noRecords: { template: "<div class='p-5 text-center text-muted'>İmza bekleyen evrak bulunamadı.</div>" },
                 sortable: true,
-                pageable: { pageSize: 10 },
+                pageable: { pageSize: 10, buttonCount: 5 },
                 columns: [
                     {
                         title: "İşlemler",
@@ -34,26 +34,34 @@
                         headerAttributes: { style: "text-align: center" },
                         attributes: { style: "text-align: center" },
                         template: function (dataItem) {
-                             var editHtml = dataItem.CanEdit
-                             ? `<li><a class='dropdown-item' href='#' onclick='EvrakBekleyenListModule.edit("${dataItem.Id}")'><i class='fas fa-edit text-warning me-2'></i>Düzenle</a></li>`
-                             : `<li><a class='dropdown-item disabled text-muted' href='#'><i class='fas fa-edit me-2'></i>Düzenle (Yetki Yok)</a></li>`;
-                            return `
+                            // Düzenle butonu yetki kontrolü - İkon renklerini biraz daha soft yaptık
+                            var editHtml = dataItem.CanEdit
+                                ? `<li><a class='dropdown-item py-2' href='#' onclick='EvrakBekleyenListModule.edit("${dataItem.Id}")'><i class='fas fa-edit text-primary me-2'></i>Düzenle</a></li>`
+                                : `<li><a class='dropdown-item disabled text-muted py-2' href='#'><i class='fas fa-lock me-2'></i>Düzenle <small>(Yetki Yok)</small></a></li>`;
 
-                            <div class='dropdown'>
-                                <button class='btn btn-sm btn-outline-secondary dropdown-toggle' 
-                                        type='button' 
-                                        data-bs-toggle='dropdown' 
-                                        data-bs-popper-config='{"strategy":"fixed"}' 
-                                        aria-expanded='false'>
-                                    <i class='fas fa-cog'></i>
-                                </button>
-                                <ul class='dropdown-menu dropdown-menu-end shadow border-0'>
-                                    <li><a class='dropdown-item' href='#' onclick='EvrakBekleyenListModule.sign("${dataItem.Id}")'><i class='fas fa-pen-nib text-success me-2'></i>İmzala</a></li>
-                                    ${editHtml} 
-                                    <li><hr class='dropdown-divider'></li>
-                                    <li><a class='dropdown-item text-danger' href='#' onclick='EvrakBekleyenListModule.cancel("${dataItem.Id}")'><i class='fas fa-trash-alt me-2'></i>İptal Et</a></li>
-                                </ul>
-                            </div>`;
+                            return `
+                                <div class='dropdown'>
+                                    <button class='fa-solid fa-caret-down'
+                                            type='button' 
+                                            data-bs-toggle='dropdown' 
+                                            data-bs-popper-config='{"strategy":"fixed"}' 
+                                            aria-expanded='false'>
+                                        <i class='text-secondary'></i></button>
+                                    <ul class='dropdown-menu dropdown-menu-end shadow-lg border-0' style='border-radius: 12px; min-width: 160px;'>
+                                        <li>
+                                            <a class='dropdown-item py-2' href='#' onclick='EvrakBekleyenListModule.sign("${dataItem.Id}")'>
+                                                <i class='fas fa-file-signature text-success me-2'></i>İmzala / Parafla
+                                            </a>
+                                        </li>
+                                        ${editHtml} 
+                                        <li><hr class='dropdown-divider opacity-50'></li>
+                                        <li>
+                                            <a class='dropdown-item py-2 text-danger' href='#' onclick='EvrakBekleyenListModule.cancel("${dataItem.Id}")'>
+                                                <i class='fas fa-ban me-2'></i>İptal Et
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>`;
                         }
                     },
                     {
@@ -103,6 +111,7 @@
         },
 
         edit: function (id) {
+
             window.location.href = '/Home/Index?id=' + id;
         },
 

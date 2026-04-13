@@ -180,10 +180,6 @@ var ImzaRotaModule = (function () {
         loadInitialData: function () {
             var id = $("#RotaId").val();
             if (id && id !== "0" && id !== "") {
-                // Güncelleme Modu UI Ayarları
-                $("#modalTitle").text("İmza Rota Güncelle");
-                $("#btnKaydet").text("Güncelle");
-
                 _ajaxCall("ImzaRotaGetir/" + id, "GET").done(function (response) {
                     _fillForm(response);
                 });

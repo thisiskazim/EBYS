@@ -46,7 +46,7 @@
                                 name: "customEdit",
                                 text: " Düzenle",
                                 className: "btn-grid-action btn btn-outline-primary",
-                                iconClass: "k-icon k-i-edit",
+                                iconClass: "fas fa-edit",
                                 click: function (e) {
                                     e.preventDefault();
                                     var grid = $("#rotaListGrid").data("kendoGrid");
@@ -63,7 +63,7 @@
                                 name: "customDelete",
                                 text: " Sil",
                                 className: "btn-grid-action btn btn-outline-danger ms-2",
-                                iconClass: "k-icon k-i-delete",
+                                iconClass: "fas fa-trash-alt",
                                 click: function (e) {
                                     e.preventDefault();
                                     var dataItem = this.dataItem($(e.currentTarget).closest("tr"));

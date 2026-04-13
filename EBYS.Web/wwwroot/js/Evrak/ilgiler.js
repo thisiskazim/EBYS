@@ -53,7 +53,18 @@
             // Metin kutusunu temizle ve odağı tekrar oraya ver
             $("#IlgiMetni").val("").focus();
         },
-
+        setData: function (ilgiler) {
+            if (_grid && Array.isArray(ilgiler)) {
+                var mappedData = ilgiler.map(function (item) {
+                    return {
+                        // API'den gelen 'ilgiMetni' (küçük i) 
+                        // Grid field'ı olan 'IlgiMetni' (Büyük I) ile eşleşmeli
+                        IlgiMetni: item.ilgiMetni || item.IlgiMetni
+                    };
+                });
+                _grid.dataSource.data(mappedData);
+            }
+        },
         // Servise gönderilecek veriyi toplamak için
         getData: function () {
             var data = _grid.dataSource.data();
