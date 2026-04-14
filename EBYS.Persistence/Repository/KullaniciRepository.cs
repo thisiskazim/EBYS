@@ -16,7 +16,7 @@ namespace EBYS.Persistence.Repository
         public async Task<List<Kullanici>> AsyncKullanicilarVeRolleriniGetir()
         {
             return await _context.Kullanicilar
-                .Include(x => x.Rol)
+                .Include(x => x.Rol).Where(r=>r.Id != _context.CurrentUserId)
                 .ToListAsync();
 
         }

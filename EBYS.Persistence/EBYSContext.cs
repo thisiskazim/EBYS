@@ -87,6 +87,35 @@ namespace EBYS.Persistence
                 .WithMany(e => e.Muhataplar)
                 .HasForeignKey(em => em.EvrakId);
 
+
+            // 1. Muhataplar İlişkisi
+            modelBuilder.Entity<EvrakMuhatap>()
+                .HasOne(x => x.Evrak)
+                .WithMany(x => x.Muhataplar)
+                .HasForeignKey(x => x.EvrakId)
+                .OnDelete(DeleteBehavior.Cascade); // Evrak silinince Muhataplar silinir
+
+            // 2. İlgiler İlişkisi
+            modelBuilder.Entity<EvrakIlgi>()
+                .HasOne(x => x.Evrak)
+                .WithMany(x => x.İlgiler)
+                .HasForeignKey(x => x.EvrakId)
+                .OnDelete(DeleteBehavior.Cascade); // Evrak silinince İlgiler silinir
+
+            // 3. Ekler İlişkisi
+            modelBuilder.Entity<EvrakEk>()
+                .HasOne(x => x.Evrak)
+                .WithMany(x => x.Ekler)
+                .HasForeignKey(x => x.EvrakId)
+                .OnDelete(DeleteBehavior.Cascade); // Evrak silinince Ekler silinir
+
+            // 4. Akış Adımları İlişkisi
+            modelBuilder.Entity<EvrakAkis>()
+                .HasOne(x => x.Evrak)
+                .WithMany(x => x.AkisAdimlari)
+                .HasForeignKey(x => x.EvrakId)
+                .OnDelete(DeleteBehavior.Cascade); // Evrak silinince Akış geçmişi silinir
+
             // Konu Kodu Koruması
             modelBuilder.Entity<Evrak>()
                 .HasOne(e => e.EvrakKonuKodu)

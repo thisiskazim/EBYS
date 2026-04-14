@@ -39,6 +39,9 @@
                                 ? `<li><a class='dropdown-item py-2' href='#' onclick='EvrakBekleyenListModule.edit("${dataItem.Id}")'><i class='fas fa-edit text-primary me-2'></i>Düzenle</a></li>`
                                 : `<li><a class='dropdown-item disabled text-muted py-2' href='#'><i class='fas fa-lock me-2'></i>Düzenle <small>(Yetki Yok)</small></a></li>`;
 
+                            var deleteHtml = dataItem.CanEdit
+                                ? `<li><a class='dropdown-item py - 2 text - danger' href='#' onclick='EvrakBekleyenListModule.cancel("${dataItem.Id}")'><i class='fas fa - ban me - 2'></i>Sil</a></li>`  
+                                : `<li><a class='dropdown-item disabled text-muted py-2' href='#'><i class='fas fa-lock me-2'></i>Sil<small>(Yetki Yok)</small></a></li>`;
                             return `
                                 <div class='dropdown'>
                                     <button class='fa-solid fa-caret-down'
@@ -55,11 +58,7 @@
                                         </li>
                                         ${editHtml} 
                                         <li><hr class='dropdown-divider opacity-50'></li>
-                                        <li>
-                                            <a class='dropdown-item py-2 text-danger' href='#' onclick='EvrakBekleyenListModule.cancel("${dataItem.Id}")'>
-                                                <i class='fas fa-ban me-2'></i>İptal Et
-                                            </a>
-                                        </li>
+                                        ${deleteHtml} 
                                     </ul>
                                 </div>`;
                         }
@@ -116,8 +115,18 @@
         },
 
         cancel: function (id) {
-            if (confirm("Bu evrakı iptal etmek istediğinize emin misiniz?")) {
-                // İptal API çağrısı yapılabilir
+            if (confirm("Bu evrakı silmek istediğinize emin misiniz?")) {
+                $.ajax({
+                    url: "https://localhost:7060/api/Evrak/EvrakSil/" + id,
+                    type: "DELETE",
+                    success: function (response) {
+                        showNotification(response, "success");
+                        EvrakBekleyenListModule.loadData();
+                    },
+                    error: function (err) {
+                        showNotification(err.responseText, "error");
+                    }
+                });
             }
         }
     };

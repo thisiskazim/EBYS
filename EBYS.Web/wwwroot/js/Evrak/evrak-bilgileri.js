@@ -33,6 +33,7 @@
         },
         getData: function () {
          
+
             var ddlImzaRota = $("#ImzaRota").data("kendoDropDownList");
             var ddlKonuKodu = $("#KonuKoduId").data("kendoComboBox");
             var ddlGizlilik = $("#gizlilik").data("kendoDropDownList");
@@ -41,6 +42,7 @@
             var editorAlt = $("#AltMetinEditor").data("kendoEditor");
                 
             return {
+                Id: parseInt($("#EvrakId").val()) || 0,
                 Konu: $("#konu").val(),
                 KonuKoduId: ddlKonuKodu ? parseInt(ddlKonuKodu.value()) : 0,
                 Icerik: editorGövde.value(),

@@ -18,6 +18,8 @@
             this.loadInitialData();
         },  
 
+     
+
         kaydet: function () {
             // Her modülün kendi verisini topluyoruz
             var alicilar = AliciModule.getData();
@@ -26,9 +28,10 @@
             var ilgiler = IlgilerModule.getData();
          
             var payload = { ...bilgiler, Muhataplar: alicilar, Ilgiler: ilgiler };
-            console.log("Gönderilecek Veri:", payload);
+           
 
             if (!payload.Konu) {
+                
                 showNotification("Lütfen evrak konusunu giriniz.", "warning");
                 return;
             }
@@ -37,7 +40,7 @@
 
             _ajaxCall(action, "POST", payload).done(function (response) {
                 showNotification("Evrak başarıyla kaydedildi.", "success");
-                // İsterseniz formu temizleyebilir veya başka bir sayfaya yönlendirebilirsiniz
+                setTimeout(function () { window.location.href = "/ImzaBekleyenEvrak/Listele"; }, 1000);
             });
         },
 

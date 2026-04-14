@@ -19,6 +19,15 @@ namespace EBYS.Application.Services.EvrakService
             evrak.BelgeDurum = Enums.BelgeDurum.Taslak;
             evrak.EvrakSayisi= "E.-1";
             evrak.IsGelenEvrak = false;
+            evrak.AkisAdimlari.Add(new EvrakAkis
+            {
+                KullaniciId = evrakRepository.GetContextUserId(),
+                ParafMiImzaMi = Enums.ImzaTipi.Imza,
+                SiraNo = 1,
+                AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
+                SiradakiMi = true
+
+            });
 
 
             if (createDto.Muhataplar != null)
@@ -43,9 +52,9 @@ namespace EBYS.Application.Services.EvrakService
                     {
                         KullaniciId = adim.KullaniciId,
                         ParafMiImzaMi = adim.ParafMiImzaMi,
-                        SiraNo = adim.SiraNo,
+                        SiraNo = adim.SiraNo+1,
                         AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
-                        SiradakiMi = (adim.SiraNo == 1)
+                        SiradakiMi = false
 
                     });
                 }
@@ -74,9 +83,16 @@ namespace EBYS.Application.Services.EvrakService
 
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var getVeri = await evrakRepository.GetByIdAsync(id);
+            if (getVeri == null)
+            {
+                throw new Exception("Evrak bulunamadı");
+
+            }
+            evrakRepository.DeleteAsync(getVeri);
+            await evrakRepository.SaveAsync();
         }
 
         public Task<List<GidenEvrakListDTO>> GetAllAsync()
@@ -165,6 +181,19 @@ namespace EBYS.Application.Services.EvrakService
             if (mevcutEvrak.ImzaRotaId != updateDto.ImzaRotaId)
             {
                 mevcutEvrak.AkisAdimlari.Clear();
+
+                mevcutEvrak.AkisAdimlari.Add(new EvrakAkis
+                {
+                    KullaniciId = evrakRepository.GetContextUserId(),
+                    ParafMiImzaMi = Enums.ImzaTipi.Imza,
+                    SiraNo = 1,
+                    AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
+                    SiradakiMi = true
+
+                });
+
+
+
                 var yeniRota = await imzaRotaRepository.GetImzaRotaVeAdimlariDetay(updateDto.ImzaRotaId);
 
                 if (yeniRota != null)
@@ -175,9 +204,9 @@ namespace EBYS.Application.Services.EvrakService
                         {
                             KullaniciId = adim.KullaniciId,
                             ParafMiImzaMi = adim.ParafMiImzaMi,
-                            SiraNo = adim.SiraNo,
+                            SiraNo = adim.SiraNo+1,
                             AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
-                            SiradakiMi = (adim.SiraNo == 1)
+                            SiradakiMi = false
                         });
                     }
                 }

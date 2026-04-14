@@ -46,22 +46,21 @@ namespace EBYS.WebAPI.Controllers
 
         }
 
-        [HttpPost("ParafımıBekleyenler")]
-        public async Task<IActionResult> ParafimiBekleyenler(GidenEvrakCreateDTO evrakCreateDTO)
+        [HttpDelete("EvrakSil/{id}")]
+        public async Task<IActionResult> EvrakSil(int id)
         {
-
             try
             {
-                await evrakServive.AddAsync(evrakCreateDTO);
-                return Ok("Evrak başarıyla kaydedildi");
+                await evrakServive.DeleteAsync(id);
+                return Ok("Evrak silindi");
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
-
-
         }
+
+       
 
 
         [HttpGet("KonuKoduGet")]
