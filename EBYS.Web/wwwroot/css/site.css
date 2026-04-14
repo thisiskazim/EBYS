@@ -2,16 +2,49 @@
   font-size: 14px;
 }
 
+
 /* Modern left sidebar styles */
 .ebys-app { min-height: 100vh; }
-.ebys-sidebar-modern { width: 280px; max-width: 85vw; flex-shrink: 0; }
-.ebys-sidebar-modern .sidebar-inner { height: 100%; display: flex; flex-direction: column; }
-.ebys-sidebar-modern .menu-icon { width: 42px; height: 42px; border-radius: 6px; }
-.ebys-sidebar-modern .menu-icon .k-icon { font-size: 18px; }
-.ebys-sidebar-modern .menu-item { text-decoration: none; }
-.ebys-sidebar-modern .menu-title { font-weight: 600; }
-.ebys-sidebar-modern .menu-sub { font-size: 12px; }
-.ebys-sidebar-modern .info-box { background: rgba(255,255,255,0.03); border-radius: 6px; }
+
+.ebys-sidebar-modern {
+    width: 280px;
+    max-width: 85vw;
+    flex-shrink: 0;
+    /* Arka plan rengini buraya ekliyoruz */
+    background-color: #083651 !important;
+    color: white !important;
+}
+
+.ebys-sidebar-modern .sidebar-inner { 
+    height: 100%; 
+    display: flex; 
+    flex-direction: column; 
+}
+
+/* Ýkon kutularýný sidebarýn yeni rengine göre ayarlayalým */
+.ebys-sidebar-modern .menu-icon { 
+    width: 42px; 
+    height: 42px; 
+    border-radius: 8px; 
+    background-color: rgba(255, 255, 255, 0.1) !important; /* Hafif þeffaf beyaz */
+    color: white !important;
+}
+
+/* Sidebar içindeki tüm yazýlarýn beyaz kalmasýný garantiye alalým */
+.ebys-sidebar-modern .menu-title, 
+.ebys-sidebar-modern .menu-sub,
+.ebys-sidebar-modern .menu-header {
+    color: white !important;
+}
+
+/* Alt menü linkleri (collapse içindekiler) */
+.ebys-sidebar-modern .collapse .nav-link {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.ebys-sidebar-modern .collapse .nav-link:hover {
+    color: #60a5fa !important; /* Hover olunca tatlý bir açýk mavi */
+}
 
 /* Make main content push to the right on larger screens */
 @media (min-width: 768px) {
@@ -81,7 +114,7 @@
 
 .k-grid-header {
     background-color: #f8f9fa !important;
-    border-bottom: 30px solid #dee2e6 !important;
+    border-bottom: 10px solid #dee2e6 !important;
 }
 
     .k-grid-header th.k-header {
@@ -114,24 +147,24 @@
 
 // Write your JavaScript code.
 /* Grid hücrelerinin menüyü kesmesini engelle */
-.k - grid td {
+.k-grid td {
     overflow: visible !important;
-    white - space: nowrap; /* Ýçeriðin kaymasýný önler */
+    white-space: nowrap; /* Ýçeriðin kaymasýný önler */
 }
 
-.k - grid - content {
+.k-grid-content {
     overflow: visible !important;
 }
 
 /* Bootstrap dropdown'ýn Kendo üzerinde görünmesini garantile */
-.dropdown - menu {
-    z - index: 999999 !important;
+.dropdown-menu {
+    z-index: 999999 !important;
 }
 
 /* Eðer menü hala çok garip duruyorsa, butona basýldýðýnda kapsayýcýyý öne çýkar */
 .dropdown.show {
     position: relative;
-    z - index: 1000;
+    z-index: 1000;
 }
 
 
@@ -172,4 +205,71 @@
 
 .collapse .nav-link:hover {
     color: white !important;
+}
+
+
+/* Kendo Grid Lisans Yazýsýný Gizleme */
+.k-watermark,
+.k-grid .k-watermark,
+.k-grid-norecord .k-watermark {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    width: 0 !important;
+    pointer-events: none !important;
+}
+
+
+/* Navbar Saðdaki Kullanýcý Kartý (Frosted Gri Görünüm) */
+.user-card-wrapper {
+    background-color: rgba(241, 245, 249, 0.8) !important; /* Hafif gri opak arka plan */
+    backdrop-filter: blur(8px); /* Buzlu cam efekti */
+    border: 1px solid rgba(203, 213, 225, 0.5);
+    border-radius: 15px; /* Yumuþak köþeler */
+    padding: 6px 2px;
+    transition: all 0.3s ease;
+}
+
+    .user-card-wrapper:hover {
+        background-color: rgba(226, 232, 240, 0.95) !important;
+        border-color: #cbd5e1;
+    }
+
+/* Yuvarlak Kullanýcý Ýkonu (Sidebar Mavisiyle Uyumlu) */
+.user-avatar-circle {
+    width: 35px;
+    height: 35px;
+    background-color: #1e293b; /* Sidebar ana rengi */
+    color: white;
+    border-radius: 50%; /* Tam yuvarlak */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+/* Çýkýþ Butonu Stili */
+.logout-btn-modern {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: transform 0.2s ease;
+}
+
+    .logout-btn-modern:hover {
+        transform: scale(1.1);
+    }
+
+    .logout-btn-modern i {
+        filter: drop-shadow(0 2px 4px rgba(220, 53, 69, 0.2));
+    }
+
+/* Navbar Genel Köþe Yumuþatma */
+.ebys-top-nav {
+    border-bottom: 1px solid #e2e8f0;
+    /* Alt köþelere de hafif yuvarlaklýk vermek istersen (opsiyonel): */
+    /* border-bottom-left-radius: 12px; 
+       border-bottom-right-radius: 12px; */
 }

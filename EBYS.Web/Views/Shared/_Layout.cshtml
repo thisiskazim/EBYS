@@ -27,15 +27,46 @@
         html, body { height: 100%; }
     </style>
 </head>
+<nav class="navbar navbar-expand navbar-light bg-white shadow-sm ebys-top-nav">
+    <div class="container-fluid px-4">
+        <div class="d-flex align-items-center">
+            <div class="logo-text">
+                <span class="fw-bold fs-5 text-black" style="letter-spacing: 1px;">E-iMZA</span>
+                <span class="d-block text-black-50" style="font-size: 10px; margin-top: -5px;">EBYS SİSTEMİ</span>
+            </div>
+        </div>
+
+        <ul class="navbar-nav ms-auto align-items-center">
+            <li class="nav-item">
+                <div class="user-card-wrapper d-flex align-items-center shadow-sm">
+                    <div class="d-flex align-items-center px-3 border-end border-light border-opacity-25">
+                        <div class="text-end me-3 d-none d-sm-block">
+                            <div class="fw-bold text-dark small">Ahmet Yılmaz</div>
+                            <div class="text-muted" style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Yazılım Geliştirici</div>
+                        </div>
+                        <div class="user-avatar-circle shadow-sm">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+
+                    <a class="nav-link logout-btn-modern px-3" href="/Account/Logout" title="Güvenli Çıkış">
+                        <i class="fas fa-power-off text-danger"></i>
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
 <body class="k-body">
-  
+
     <div class="ebys-app d-flex">
         @if (!(ViewData["HideMenu"] as bool? ?? false))
         {
+
             <!-- Left visual sidebar -->
-       <aside class="ebys-sidebar-modern bg-dark text-white shadow-lg">
+       <aside class="ebys-sidebar-modern ebys-sidebar-blue text-white shadow-lg">
     <div class="sidebar-inner p-3">
-        <div class="menu-header text-uppercase small text-white-50 mb-3 px-2" style="letter-spacing: 1px;">Sistem Menüsü</div>
+       
 
         <nav class="nav flex-column">
             <a class="nav-link menu-item d-flex align-items-center text-white mb-3" href="/">

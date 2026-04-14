@@ -34,22 +34,26 @@
                         headerAttributes: { style: "text-align: center" },
                         attributes: { style: "text-align: center" },
                         template: function (dataItem) {
-                            // Düzenle butonu yetki kontrolü - İkon renklerini biraz daha soft yaptık
+                            // Düzenle butonu yetki kontrolü
                             var editHtml = dataItem.CanEdit
                                 ? `<li><a class='dropdown-item py-2' href='#' onclick='EvrakBekleyenListModule.edit("${dataItem.Id}")'><i class='fas fa-edit text-primary me-2'></i>Düzenle</a></li>`
                                 : `<li><a class='dropdown-item disabled text-muted py-2' href='#'><i class='fas fa-lock me-2'></i>Düzenle <small>(Yetki Yok)</small></a></li>`;
 
+                            // Sil butonu yetki kontrolü
                             var deleteHtml = dataItem.CanEdit
-                                ? `<li><a class='dropdown-item py - 2 text - danger' href='#' onclick='EvrakBekleyenListModule.cancel("${dataItem.Id}")'><i class='fas fa - ban me - 2'></i>Sil</a></li>`  
-                                : `<li><a class='dropdown-item disabled text-muted py-2' href='#'><i class='fas fa-lock me-2'></i>Sil<small>(Yetki Yok)</small></a></li>`;
+                                ? `<li><a class='dropdown-item py-2 text-danger' href='#' onclick='EvrakBekleyenListModule.cancel("${dataItem.Id}")'><i class='fas fa-trash-alt me-2'></i>Sil</a></li>`
+                                : `<li><a class='dropdown-item disabled text-muted py-2' href='#'><i class='fas fa-lock me-2'></i>Sil <small>(Yetki Yok)</small></a></li>`;
+
                             return `
                                 <div class='dropdown'>
-                                    <button class='fa-solid fa-caret-down'
+                                    <button class='btn btn-link btn-sm p-0 border-0' 
                                             type='button' 
                                             data-bs-toggle='dropdown' 
                                             data-bs-popper-config='{"strategy":"fixed"}' 
-                                            aria-expanded='false'>
-                                        <i class='text-secondary'></i></button>
+                                            aria-expanded='false'
+                                            style='text-decoration: none;'>
+                                        <i class='fas fa-cog text-primary' style='font-size: 18px;'></i> 
+                                    </button>
                                     <ul class='dropdown-menu dropdown-menu-end shadow-lg border-0' style='border-radius: 12px; min-width: 160px;'>
                                         <li>
                                             <a class='dropdown-item py-2' href='#' onclick='EvrakBekleyenListModule.sign("${dataItem.Id}")'>
@@ -66,7 +70,7 @@
                     {
                         field: "OlusturanKullanici",
                         title: "Oluşturan",
-                        template: "<div class='d-flex align-items-center'><i class='fas fa-user-circle me-2 text-secondary'></i>#: OlusturanKullanici #</div>",
+                        template: "<div class='d-flex align-items-center'></i>#: OlusturanKullanici #</div>",
                         width: "120px"
                     },
                     { field: "Konu", title: "Konu", width: "200px" },

@@ -8,6 +8,7 @@
                 .DataValueField("id")
                 .Placeholder("Seçiniz...")
                 .AutoBind(false)
+                .HtmlAttributes(new { style = "width:100%", @class = "form-control" })
                 .DataSource(source => {
                     source.Read(read => read.Url("https://localhost:7060/api/Muhatap/TumMuhataplar").Type(HttpVerbs.Get));
                 })
