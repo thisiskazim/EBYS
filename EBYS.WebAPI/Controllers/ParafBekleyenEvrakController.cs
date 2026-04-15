@@ -5,14 +5,14 @@ namespace EBYS.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ParafBekleyenEvrakController(IEvrakService evrakService) : ControllerBase
+    public class ParafBekleyenEvrakController(IAkisService akisService) : ControllerBase
     {
         [HttpGet("Listele")]
         public async Task<IActionResult> Listele()
         {
             try
             {
-                var data = await evrakService.ImzaBekleyenListe();
+                var data = await akisService.ParafBekleyenleriGetirAsync();
 
                 return Ok(data);
             }

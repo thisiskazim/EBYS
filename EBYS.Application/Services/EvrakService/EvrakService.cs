@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using EBYS.Application.DTOs;
+
 using EBYS.Application.DTOs.EvrakDTO;
 using EBYS.Application.Interfaces.IService;
 using EBYS.Application.Interfaces.Repository;
@@ -113,24 +113,7 @@ namespace EBYS.Application.Services.EvrakService
             return dto;
         }
 
-        public async Task<List<EvrakListeDTO>> ImzaBekleyenListe()
-         {
-            var userId = evrakRepository.GetContextUserId();
-
-            // 1. Veriyi Repository'den Entity olarak çekiyoruz
-            var entities = await evrakRepository.ImzaBekleyenlenKullaniciSorgu(userId);
-
-            // 2. AutoMapper ile Entity -> DTO dönüşümü (MAPPING)
-            var dtoList = mapper.Map<List<EvrakListeDTO>>(entities);
-
-            // 3. Özel iş kuralını (CanEdit) döngüyle veya mapping sırasında set edebiliriz
-            foreach (var dto in dtoList)
-            {
-                dto.EditYapabilirMi = dto.OlusturanKullaniciId == userId;
-            }
-
-            return dtoList;
-        }
+        
 
         public async Task UpdateAsync(GidenEvrakUpdateDTO updateDto)
         {

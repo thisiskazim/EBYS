@@ -9,9 +9,13 @@
             contentType: "application/json",
             data: data ? JSON.stringify(data) : null,
             error: function (err) {
-                var msg = err && err.responseText ? err.responseText : "Hata oluştu.";
+                var msg = "Sistem hatası oluştu.";
+                if (err.responseJSON && err.responseJSON.mesaj) {
+                    msg = err.responseJSON.mesaj;
+                } else if (err.responseText) {
+                    msg = err.responseText;
+                }
                 showNotification(msg, "error");
-                console.error(msg);
             }
         });
     };
@@ -56,7 +60,7 @@
                                     </button>
                                     <ul class='dropdown-menu dropdown-menu-end shadow-lg border-0' style='border-radius: 12px; min-width: 160px;'>
                                         <li>
-                                            <a class='dropdown-item py-2' href='#' onclick='EvrakBekleyenListModule.sign("${dataItem.Id}")'>
+                                            <a class='dropdown-item py-2' href='#' onclick='EvrakBekleyenListModule.onay("${dataItem.Id}")'>
                                                 <i class='fas fa-file-signature text-success me-2'></i>İmzala / Parafla
                                             </a>
                                         </li>
@@ -108,9 +112,32 @@
             });
         },
 
-        sign: function (id) {
-            // İmzalama logic'i buraya
-            console.log("İmzalanacak ID:", id);
+        onay: function (id) {
+            if (!confirm("Seçili evrakı onaylamak istediğinize emin misiniz?")) {
+                return;
+            }
+            // URL düzeltildi: Parametreyi query string olarak gönderiyoruz (id=5 gibi)
+            // Eğer [FromBody] bekliyorsan data kısmına { id: id } göndermelisin
+            _ajaxCall('Onayla/' + id, 'POST').done(function (response) {
+
+            
+                // C#'taki IslemSonuc sınıfına göre kontrol yapıyoruz
+                if (response.basariliMi) {
+                    showNotification(response.mesaj, "success");
+                    // Listeyi yenile (Grid kullanıyorsan)
+                    if (EvrakBekleyenListModule && EvrakBekleyenListModule.loadData) {
+                        EvrakBekleyenListModule.loadData();
+                    }
+                } else {
+                    // Servis bazen 200 dönüp başarısız mesajı da verebilir (isteğe bağlı)
+                    showNotification(response.mesaj, "warning");
+                }
+            }).fail(function (err) {
+                // BadRequest(sonuc) döndüğünde buraya düşer
+                if (err.responseJSON) {
+                    showNotification(err.responseJSON.mesaj, "error");
+                }
+            });;
         },
 
         edit: function (id) {

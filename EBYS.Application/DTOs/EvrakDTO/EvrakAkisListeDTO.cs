@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace EBYS.Application.DTOs.EvrakDTO
 {
-    public class EvrakListeDTO
+    public class EvrakAkisListeDTO
     {
         public int Id { get; set; }
         public string OlusturanKullanici { get; set; }

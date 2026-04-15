@@ -36,10 +36,13 @@ builder.Services.AddDbContext<EBYSContext>(options =>
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IEvrakRepository, EvrakRepository>();
 builder.Services.AddScoped<IEvrakService, EvrakService>();
+
+builder.Services.AddScoped<IAkisService, AkisService>();
+
 builder.Services.AddScoped<IKonuKoduService, KonuKoduService>();
 
 
-
+builder.Services.AddScoped<IImzaRotaRepository, ImzaRotaRepository>();
 builder.Services.AddScoped<IImzaRotaService, ImzaRotaService>();
 
 builder.Services.AddScoped<IKullaniciRepository, KullaniciRepository>();
@@ -50,8 +53,8 @@ builder.Services.AddScoped<IMuhatapKurumService,KurumService>();
 
 builder.Services.AddScoped<IMuhatapTuzelKisiService, TuzelKisiService>();
 
-builder.Services.AddScoped<IImzaRotaRepository, ImzaRotaRepository>();
-builder.Services.AddScoped<IImzaRotaService, ImzaRotaService>();
+
+
 
 
 

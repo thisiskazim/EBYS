@@ -90,7 +90,7 @@ namespace EBYS.WebAPI.Controllers
 
                 if (gelenVeri == null)
                 {
-                    return NotFound("Böyle bir rota bulunamadı.");
+                    return NotFound("Böyle bir evrak bulunamadı.");
                 }
 
                 return Ok(gelenVeri);

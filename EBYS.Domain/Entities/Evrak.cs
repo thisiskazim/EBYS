@@ -6,6 +6,10 @@ using EBYS.Domain.Enum;
 
 namespace EBYS.Domain.Entities
 {
+    //onaylanma tarihini eklenecek
+    //evrak sayısı int olacak
+
+
     public class Evrak:BaseEntity
     {
         public string Konu { get; set; }

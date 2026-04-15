@@ -1,5 +1,4 @@
 ﻿using EBYS.Application.Interfaces.IService;
-using EBYS.Application.Services.EvrakService;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -7,14 +6,14 @@ namespace EBYS.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ImzaBekleyenEvrakController(IEvrakService evrakService) : ControllerBase
+    public class ImzaBekleyenEvrakController(IAkisService akisService) : ControllerBase
     {
         [HttpGet("Listele")]
         public async Task<IActionResult> Listele()
         {
             try
             {
-                var data = await evrakService.ImzaBekleyenListe();
+                var data = await akisService.ImzaBekleyenleriGetirAsync();
 
                 return Ok(data);
             }
@@ -24,6 +23,17 @@ namespace EBYS.WebAPI.Controllers
                 return BadRequest(e.Message);
             }
             
+        }
+
+        [HttpPost("Onayla/{id}")]
+        public async Task<IActionResult> Onayla(int id)
+        {
+            var sonuc = await akisService.OnaylaAsync(id);
+
+            if (sonuc.BasariliMi)
+                return Ok(sonuc); // 200 döner
+
+            return BadRequest(sonuc); // 400 döner ve içindeki mesajı verir
         }
 
 

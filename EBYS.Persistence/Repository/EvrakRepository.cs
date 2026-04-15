@@ -14,6 +14,11 @@ namespace EBYS.Persistence.Repository
     {
         public EvrakRepository(EBYSContext context) : base(context){ }
 
+        public async Task<Evrak> AkisAdimlariSorgu(int evrakId)
+        {
+            return await _context.Evraklar.Include(x => x.AkisAdimlari).Where(e =>  e.AkisAdimlari.Any(a=>a.SiradakiMi)).FirstOrDefaultAsync(e=>e.Id==evrakId);
+        }
+
         public async Task<Evrak> DetayliGetirAsync(int id)
         {
             return await _context.Evraklar
@@ -25,14 +30,14 @@ namespace EBYS.Persistence.Repository
          .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<List<Evrak>> ImzaBekleyenlenKullaniciSorgu(int userId)
+        public async Task<List<Evrak>> ImzaBekleyenlenKullaniciSorgu(int userId,Enums.ImzaTipi imzaTipi)
         {
       
             return await _context.Evraklar
                 .Include(x => x.EvrakKonuKodu)
                 .Include(x => x.Olusturan)
                 .Where(e => (e.BelgeDurum == Enums.BelgeDurum.Taslak || e.BelgeDurum == Enums.BelgeDurum.Imzada) && 
-                            (e.AkisAdimlari.Any(a => a.KullaniciId == userId && a.SiradakiMi && a.ParafMiImzaMi== Enums.ImzaTipi.Imza)))
+                            (e.AkisAdimlari.Any(a => a.KullaniciId == userId && a.SiradakiMi && a.ParafMiImzaMi== imzaTipi)))
                 .AsNoTracking()
                 .ToListAsync();
         }

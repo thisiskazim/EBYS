@@ -14,7 +14,7 @@ namespace EBYS.Application.Mapping
             //EVRAK MAPPİNG
             // --- 1. LİSTELEME EKRANI (Entity -> DTO) ---
             // Evrakları tabloda listelerken kullanılır.
-            CreateMap<Evrak, EvrakListeDTO>()
+            CreateMap<Evrak, EvrakAkisListeDTO>()
                 .ForMember(dest => dest.OlusturanKullanici, opt => opt.MapFrom(src => $"{src.Olusturan.Ad} - {src.Olusturan.Soyad}"))
                 .ForMember(dest => dest.FullKonuKodu, opt => opt.MapFrom(src => $"{src.EvrakKonuKodu.KodNumber} - {src.EvrakKonuKodu.KodAdi}"))
                 .ForMember(dest => dest.OlusturanKullaniciId, opt => opt.MapFrom(src => src.OlusturanId));
