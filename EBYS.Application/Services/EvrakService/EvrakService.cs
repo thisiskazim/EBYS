@@ -114,7 +114,7 @@ namespace EBYS.Application.Services.EvrakService
         }
 
         public async Task<List<EvrakListeDTO>> ImzaBekleyenListe()
-        {
+         {
             var userId = evrakRepository.GetContextUserId();
 
             // 1. Veriyi Repository'den Entity olarak çekiyoruz

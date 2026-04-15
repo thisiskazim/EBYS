@@ -37,6 +37,7 @@ namespace EBYS.Persistence.Services
                 new Claim("UserId", kullanici.Id.ToString()),
                 new Claim("BaseKurumId", kullanici.BaseKurumId.ToString()),
                 new Claim("RolId", kullanici.RolId.ToString()),
+                new Claim("RolAdi", kullanici.Rol.RolAdi),
                 new Claim(ClaimTypes.Name, $"{kullanici.Ad} {kullanici.Soyad}"),
                 new Claim(ClaimTypes.SerialNumber, kullanici.KimlikNo)
             };

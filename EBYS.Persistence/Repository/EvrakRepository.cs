@@ -27,12 +27,12 @@ namespace EBYS.Persistence.Repository
 
         public async Task<List<Evrak>> ImzaBekleyenlenKullaniciSorgu(int userId)
         {
-           
+      
             return await _context.Evraklar
                 .Include(x => x.EvrakKonuKodu)
                 .Include(x => x.Olusturan)
-                .Where(e => e.BelgeDurum == Enums.BelgeDurum.Taslak || e.BelgeDurum == Enums.BelgeDurum.Imzada && 
-                            e.AkisAdimlari.Any(a => a.KullaniciId == userId && a.SiradakiMi && a.ParafMiImzaMi== Enums.ImzaTipi.Imza))
+                .Where(e => (e.BelgeDurum == Enums.BelgeDurum.Taslak || e.BelgeDurum == Enums.BelgeDurum.Imzada) && 
+                            (e.AkisAdimlari.Any(a => a.KullaniciId == userId && a.SiradakiMi && a.ParafMiImzaMi== Enums.ImzaTipi.Imza)))
                 .AsNoTracking()
                 .ToListAsync();
         }
