@@ -23,5 +23,17 @@ namespace EBYS.WebAPI.Controllers
             }
 
         }
+
+        [HttpPost("Onayla/{id}")]
+        public async Task<IActionResult> Onayla(int id)
+        {
+            var sonuc = await akisService.OnaylaAsync(id);
+
+            if (sonuc.BasariliMi)
+                return Ok(sonuc); // 200 döner
+
+            return BadRequest(sonuc); // 400 döner ve içindeki mesajı verir
+        }
+
     }
 }

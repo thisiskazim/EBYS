@@ -1,6 +1,6 @@
 ﻿var EvrakBekleyenListModule = (function () {
     var _grid = null;
-    var _apiBaseUrl = "https://localhost:7060/api/ImzaBekleyenEvrak/";
+    var _apiBaseUrl = "https://localhost:7060/api/ParafBekleyenEvrak/";
 
     var _ajaxCall = function (url, type, data) {
         return $.ajax({

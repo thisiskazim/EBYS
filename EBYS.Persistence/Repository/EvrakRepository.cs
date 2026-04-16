@@ -30,7 +30,7 @@ namespace EBYS.Persistence.Repository
          .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<List<Evrak>> ImzaBekleyenlenKullaniciSorgu(int userId,Enums.ImzaTipi imzaTipi)
+        public async Task<List<Evrak>> IslemBekleyenlenKullaniciSorgu(int userId,Enums.ImzaTipi imzaTipi)//evrak mı parafmı berkleyenlerde kullanıcıya göre sorgu
         {
       
             return await _context.Evraklar
