@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,9 @@ namespace EBYS.Domain.Entities
         public string SifreHash { get; set; }
         public int RolId { get; set; }
         public virtual Rol Rol { get; set; }
+
+        [NotMapped]
+        public string AdSoyad => $"{Ad} {Soyad}"; 
     }
 
     

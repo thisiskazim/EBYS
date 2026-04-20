@@ -7,14 +7,25 @@ using System.Threading.Tasks;
 
 namespace EBYS.Domain.Utilities
 {
-    public class EvrakOnaySonuc
+    public class IslemSonuc
     {
         public bool BasariliMi { get; set; }
         public string Mesaj { get; set; }
-        public EvrakOnaySonuc(bool basariliMi, string mesaj)
+
+        public IslemSonuc(bool basariliMi, string mesaj)
         {
             BasariliMi = basariliMi;
             Mesaj = mesaj;
+        }
+
+        public static IslemSonuc İslemBasarili(string mesaj = "İşlem başarılı.")
+        {
+            return new IslemSonuc(true, mesaj);
+        }
+
+        public static IslemSonuc Hata(string mesaj)
+        {
+            return new IslemSonuc(false, mesaj);
         }
     }
 }

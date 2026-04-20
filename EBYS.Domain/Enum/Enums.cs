@@ -47,7 +47,8 @@ namespace EBYS.Domain.Enum
         {
             Reddedildi = 0,
             Onaylandi = 1,
-            Bekliyor = 2
+            Bekliyor = 2,
+            IadeEdildi= 3
         }
     }
 }

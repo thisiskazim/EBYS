@@ -1,5 +1,6 @@
 ﻿
 using EBYS.Application.DTOs.EvrakDTO;
+using EBYS.Domain.Entities;
 using EBYS.Domain.Utilities;
 
 namespace EBYS.Application.Interfaces.IService
@@ -11,9 +12,14 @@ namespace EBYS.Application.Interfaces.IService
     
         Task<List<EvrakAkisListeDTO>> ParafBekleyenleriGetirAsync();
 
-        Task<EvrakOnaySonuc> OnaylaAsync(int evrakId);
+        Task<List<EvrakAkisListeDTO>> ImzayaGonderdigimAsync();
 
-       
+        Task<List<EvrakAkisHareketleriDTO>> EvrakHareketleriGetirAsync(int evrakId);
+
+        Task<IslemSonuc> OnaylaAsync(int evrakId);
+
+        Task<IslemSonuc> GeriCekAsync(int evrakId);
+
         Task<bool> ReddetAsync(int evrakId, string neden);
 
         

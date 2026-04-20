@@ -6,9 +6,14 @@ namespace EBYS.Application.Interfaces.Repository
 {
     public interface IEvrakRepository:IGenericRepository<Evrak>
     {
-        Task<List<Evrak>> IslemBekleyenlenKullaniciSorgu(int userId,Enums.ImzaTipi imzaTipi);
+        Task<List<Evrak>> IslemBekleyenlenKullaniciSorguAsync(int userId,Enums.ImzaTipi imzaTipi);
         Task<Evrak> DetayliGetirAsync(int id);
 
-        Task<Evrak> AkisAdimlariSorgu(int evrakId);
+        Task<List<Evrak>> ImzayaGonderdigimEvraklarAsync(int userId);
+        Task<List<EvrakAkis>> EvrakHareketleriGetirAsync(int evrakId);
+        Task<Evrak> AkisAdimlariSorguAsync(int evrakId);
+
+
+
     }
 }

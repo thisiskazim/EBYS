@@ -38,6 +38,11 @@ namespace EBYS.Domain.Entities
         public virtual ICollection<EvrakIlgi> İlgiler { get; set; } = new HashSet<EvrakIlgi>();
         public virtual ICollection<EvrakEk> Ekler { get; set; } = new HashSet<EvrakEk>();
         public virtual ICollection<EvrakAkis> AkisAdimlari { get; set; } = new HashSet<EvrakAkis>();
+
+
+
+
+
     }
 
    

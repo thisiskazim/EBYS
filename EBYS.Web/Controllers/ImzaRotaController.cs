@@ -2,7 +2,7 @@
 
 namespace EBYS.Web.Controllers
 {
-    public class ImzaRota : Controller
+    public class ImzaRotaController : Controller
     {
         public IActionResult ImzaRotaAdd(int? id)
         {

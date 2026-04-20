@@ -5,9 +5,10 @@ using EBYS.Application.DTOs.EvrakDTO;
 
 using EBYS.Application.DTOs.MuhatapDTO;
 using EBYS.Domain.Entities;
+using EBYS.Domain.Enum;
 namespace EBYS.Application.Mapping
 {
-    public class MappingProfile: Profile
+    public class MappingProfile : Profile
     {
         public MappingProfile()
         {
@@ -15,9 +16,15 @@ namespace EBYS.Application.Mapping
             // --- 1. LİSTELEME EKRANI (Entity -> DTO) ---
             // Evrakları tabloda listelerken kullanılır.
             CreateMap<Evrak, EvrakAkisListeDTO>()
-                .ForMember(dest => dest.OlusturanKullanici, opt => opt.MapFrom(src => $"{src.Olusturan.Ad} - {src.Olusturan.Soyad}"))
-                .ForMember(dest => dest.FullKonuKodu, opt => opt.MapFrom(src => $"{src.EvrakKonuKodu.KodNumber} - {src.EvrakKonuKodu.KodAdi}"))
-                .ForMember(dest => dest.OlusturanKullaniciId, opt => opt.MapFrom(src => src.OlusturanId));
+                .ForMember(dest => dest.OlusturanKullaniciId, opt => opt.MapFrom(src => src.OlusturanId))
+                .ForMember(dest => dest.OlusturanKullanici, opt => opt.MapFrom(src => src.Olusturan.AdSoyad))
+                .ForMember(dest => dest.SuAnKimde, opt => opt.MapFrom(src => src.AkisAdimlari.FirstOrDefault(a => a.SiradakiMi).Kullanici.AdSoyad ?? "Tamamlandı"))
+                .ForMember(dest => dest.FullKonuKodu, opt => opt.MapFrom(src => $"{src.EvrakKonuKodu.KodNumber} - {src.EvrakKonuKodu.KodAdi}")
+                );
+
+
+            CreateMap<EvrakAkis, EvrakAkisHareketleriDTO>().ForMember(dest => dest.KullaniciAdSoyad, opt => opt.MapFrom(src => src.Kullanici.AdSoyad));
+   
 
             // --- 2. DÜZENLEME EKRANI (Entity -> DTO) ---
 
@@ -33,7 +40,7 @@ namespace EBYS.Application.Mapping
                 .ForMember(dest => dest.Muhataplar, opt => opt.MapFrom(src => src.Muhataplar))
                 .ForMember(dest => dest.Ekler, opt => opt.MapFrom(src => src.Ekler));
 
-         
+
 
             // --- 3. KAYDETME VE GÜNCELLEME (DTO -> Entity) ---
             // Ekrandan gelen veriyi veritabanına yazarken kullanılır.
@@ -58,7 +65,7 @@ namespace EBYS.Application.Mapping
             CreateMap<EvrakEkUpdateDTO, EvrakEk>();
             CreateMap<EvrakMuhatapSecimDTO, EvrakMuhatap>();
 
-         
+
 
             CreateMap<EvrakKonuKodu, EvrakKonuKoduDTO>()
                 .ForMember(dest => dest.FullKod,
@@ -66,7 +73,7 @@ namespace EBYS.Application.Mapping
 
 
 
-            
+
             CreateMap<Muhatap, MuhatapBaseDTO>()
                 .Include<KurumMuhatap, KurumMuhatapListDTO>()
                 .Include<BireyselMuhatap, BireyselMuhatapListDTO>()
@@ -91,25 +98,25 @@ namespace EBYS.Application.Mapping
             CreateMap<TuzelKisiMuhatapUpdateDTO, TuzelKisiMuhatap>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore()).ReverseMap();
 
-         
+
             //İMZA ROTA 
-        
+
             CreateMap<ImzaRotaCreateDTO, ImzaRota>()
                 .ForMember(dest => dest.ImzaRotaAdimlari, opt => opt.MapFrom(src => src.RotaAdimlari))
                 .ReverseMap();
 
-     
+
             CreateMap<ImzaRotaUpdateDTO, ImzaRota>()
                 .ForMember(dest => dest.ImzaRotaAdimlari, opt => opt.MapFrom(src => src.RotaAdimlari))
                 .ReverseMap();
 
-            
+
             CreateMap<ImzaRotaAdimlariCreateDTO, ImzaRotaAdimi>().ReverseMap();
             CreateMap<ImzaRotaAdimlariUpdateDTO, ImzaRotaAdimi>().ForMember(dest => dest.Id, opt => opt.Ignore());
             CreateMap<ImzaRota, ImzaRotaListDTO>().ReverseMap();
 
 
-           
+
 
             CreateMap<Kullanici, KullaniciListDTO>()
                 .ForMember(dest => dest.AdSoyad, opt => opt.MapFrom(src => $"{src.Ad} {src.Soyad}"))

@@ -40,7 +40,7 @@
 
             _ajaxCall(action, "POST", payload).done(function (response) {
                 showNotification("Evrak başarıyla kaydedildi.", "success");
-                setTimeout(function () { window.location.href = "/ImzaBekleyenEvrak/Listele"; }, 1000);
+                setTimeout(function () { window.location.href = "/Akis/ImzaBekleyenListele"; }, 1000);
             });
         },
 

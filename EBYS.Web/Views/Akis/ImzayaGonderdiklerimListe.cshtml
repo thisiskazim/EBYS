@@ -1,0 +1,41 @@
+﻿<div class="card shadow-sm border-0">
+    <div class="card-header bg-white py-3">
+        <div class="col-md-12">
+            <h4 class="m-0"><span class="k-icon k-i-file-pdf"></span>İmzaya Gönderdiklerim</h4>
+            <hr />
+        </div>
+    </div>
+
+    <div class="bg-light border-top border-bottom px-3 py-3">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label small fw-bold text-muted">Oluşturan</label>
+                <input type="text" id="filterOlusturan" class="form-control form-control-sm custom-filter-input" placeholder="Personel adı...">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-bold text-muted">Konu</label>
+                <input type="text" id="filterKonu" class="form-control form-control-sm custom-filter-input" placeholder="Evrak konusu...">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small fw-bold text-muted">Konu Kodu / Adı</label>
+                <input type="text" id="filterKonuKodu" class="form-control form-control-sm custom-filter-input" placeholder="Kod veya tanım...">
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button class="btn btn-primary btn-sm w-100 fw-bold" onclick="filterGrid()">
+                    <i class="fas fa-search me-1"></i> Sorgula
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+        <div id="gridGonderdiklerim"></div>
+    </div>
+    <div id="historyWindow" style="display:none;">
+        <div id="historyGrid"></div>
+    </div>
+</div>
+
+
+<script src="~/js/Evrak/imzaya-gonderdiklerim.js"></script>

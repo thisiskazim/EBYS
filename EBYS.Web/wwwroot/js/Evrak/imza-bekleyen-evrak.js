@@ -1,6 +1,6 @@
 ﻿var EvrakBekleyenListModule = (function () {
     var _grid = null;
-    var _apiBaseUrl = "https://localhost:7060/api/ImzaBekleyenEvrak/";
+    var _apiBaseUrl = "https://localhost:7060/api/Akis/";
 
     var _ajaxCall = function (url, type, data) {
         return $.ajax({
@@ -61,7 +61,7 @@
                                     <ul class='dropdown-menu dropdown-menu-end shadow-lg border-0' style='border-radius: 12px; min-width: 160px;'>
                                         <li>
                                             <a class='dropdown-item py-2' href='#' onclick='EvrakBekleyenListModule.onay("${dataItem.Id}")'>
-                                                <i class='fas fa-file-signature text-success me-2'></i>İmzala / Parafla
+                                                <i class='fas fa-file-signature text-success me-2'></i>İmzala
                                             </a>
                                         </li>
                                         ${editHtml} 
@@ -97,7 +97,7 @@
 
         loadData: function () {
             var self = this;
-            _ajaxCall('Listele', 'GET').done(function (res) {
+            _ajaxCall('imza-bekleyen-listele', 'GET').done(function (res) {
                 // Senin mapleme mantığın: API'den gelen küçük harf karmaşasını burada çözüyoruz
                 var list = Array.isArray(res) ? res : (res.data || []);
                 var mappedList = list.map(x => ({

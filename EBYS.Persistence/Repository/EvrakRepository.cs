@@ -1,6 +1,7 @@
 ﻿using EBYS.Application.Interfaces.Repository;
 using EBYS.Domain.Entities;
 using EBYS.Domain.Enum;
+using EBYS.Domain.Utilities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,15 +9,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EBYS.Persistence.Repository   
+namespace EBYS.Persistence.Repository
 {
     public class EvrakRepository : GenericRepository<Evrak>, IEvrakRepository
     {
-        public EvrakRepository(EBYSContext context) : base(context){ }
+        public EvrakRepository(EBYSContext context) : base(context) { }
 
-        public async Task<Evrak> AkisAdimlariSorgu(int evrakId)
+        public async Task<Evrak> AkisAdimlariSorguAsync(int evrakId)
         {
-            return await _context.Evraklar.Include(x => x.AkisAdimlari).Where(e =>  e.AkisAdimlari.Any(a=>a.SiradakiMi)).FirstOrDefaultAsync(e=>e.Id==evrakId);
+
+            return await _context.Evraklar
+                      .Include(x => x.AkisAdimlari)
+                      .ThenInclude(a => a.Kullanici) // Burası kritik!
+                      .FirstOrDefaultAsync(e => e.Id == evrakId); ;
         }
 
         public async Task<Evrak> DetayliGetirAsync(int id)
@@ -30,16 +35,41 @@ namespace EBYS.Persistence.Repository
          .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<List<Evrak>> IslemBekleyenlenKullaniciSorgu(int userId,Enums.ImzaTipi imzaTipi)//evrak mı parafmı berkleyenlerde kullanıcıya göre sorgu
+        public async Task<List<EvrakAkis>> EvrakHareketleriGetirAsync(int evrakId)
         {
-      
+            return await _context.EvrakAkislari
+                    .Include(x => x.Kullanici)
+                    .Where(x => x.EvrakId == evrakId)
+                    .OrderBy(x => x.SiraNo)
+                    .AsNoTracking()
+                    .ToListAsync();
+        }
+
+        public async Task<List<Evrak>> ImzayaGonderdigimEvraklarAsync(int userId)
+        {
             return await _context.Evraklar
                 .Include(x => x.EvrakKonuKodu)
                 .Include(x => x.Olusturan)
-                .Where(e => (e.BelgeDurum == Enums.BelgeDurum.Taslak || e.BelgeDurum == Enums.BelgeDurum.Imzada) && 
-                            (e.AkisAdimlari.Any(a => a.KullaniciId == userId && a.SiradakiMi && a.ParafMiImzaMi== imzaTipi)))
+                .Include(x => x.AkisAdimlari)
+                        .ThenInclude(a => a.Kullanici)//şu an kimde
+                .Where(e => e.BelgeDurum == Enums.BelgeDurum.Imzada && e.AkisAdimlari.Any(a => a.KullaniciId == userId && a.AdimDurumu == Enums.AkisAdimDurumu.Onaylandi))
                 .AsNoTracking()
                 .ToListAsync();
         }
+
+        public async Task<List<Evrak>> IslemBekleyenlenKullaniciSorguAsync(int userId, Enums.ImzaTipi imzaTipi)//evrak mı parafmı berkleyenlerde kullanıcıya göre sorgu
+        {
+
+            return await _context.Evraklar
+                .Include(x => x.EvrakKonuKodu)
+                .Include(x => x.Olusturan)
+                .Include(x => x.AkisAdimlari)
+                .Where(e => (e.BelgeDurum == Enums.BelgeDurum.Taslak || e.BelgeDurum == Enums.BelgeDurum.Imzada) &&
+                            (e.AkisAdimlari.Any(a => a.KullaniciId == userId && a.SiradakiMi && a.ParafMiImzaMi == imzaTipi)))
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+
     }
 }
