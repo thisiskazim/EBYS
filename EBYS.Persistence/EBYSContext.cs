@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 namespace EBYS.Persistence
 {
-    public class EBYSContext:DbContext
+    public class EBYSContext : DbContext
     {
         private readonly int _currentKurumId;
         public int CurrentUserId => _currentUserId;
@@ -102,19 +102,20 @@ namespace EBYS.Persistence
                 .HasForeignKey(x => x.EvrakId)
                 .OnDelete(DeleteBehavior.Cascade); // Evrak silinince İlgiler silinir
 
-            // 3. Ekler İlişkisi
             modelBuilder.Entity<EvrakEk>()
-                .HasOne(x => x.Evrak)
-                .WithMany(x => x.Ekler)
-                .HasForeignKey(x => x.EvrakId)
-                .OnDelete(DeleteBehavior.Cascade); // Evrak silinince Ekler silinir
+                 .HasOne(x => x.Evrak)
+                 .WithMany(x => x.Ekler)
+                 .HasForeignKey(x => x.EvrakId)
+                 .IsRequired() // 1. BU ÇOK ÖNEMLİ: EvrakId boş olamaz (Required)
+                 .OnDelete(DeleteBehavior.Cascade); // 2. Evrak silinirse her şeyi sil
 
-            // 4. Akış Adımları İlişkisi
-            modelBuilder.Entity<EvrakAkis>()
+            // Aynı işlemi İlgiler için de yap
+            modelBuilder.Entity<EvrakIlgi>()
                 .HasOne(x => x.Evrak)
-                .WithMany(x => x.AkisAdimlari)
+                .WithMany(x => x.İlgiler)
                 .HasForeignKey(x => x.EvrakId)
-                .OnDelete(DeleteBehavior.Cascade); // Evrak silinince Akış geçmişi silinir
+                .IsRequired() // Null olamaz dedik
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Konu Kodu Koruması
             modelBuilder.Entity<Evrak>()
@@ -141,14 +142,6 @@ namespace EBYS.Persistence
                 .HasForeignKey(e => e.OlusturanId)
                 .OnDelete(DeleteBehavior.Restrict); // Kullanıcıyı sildirme!
 
-            // 3. PostgreSQL İçin Veri Tipleri (Opsiyonel)
-            modelBuilder.Entity<Evrak>()
-                .Property(e => e.Icerik)
-                .HasColumnType("text");
-
-            modelBuilder.Entity<Evrak>()
-                .Property(e => e.ImzaAltindaOlanIcerik)
-                .HasColumnType("text");
 
             modelBuilder.Entity<EvrakAkis>(entity =>
             {
@@ -158,7 +151,7 @@ namespace EBYS.Persistence
                     .HasForeignKey(d => d.EvrakId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-         
+
                 // Bir kullanıcı silinirse, akış kayıtları silinmesin (Restrict) 
                 // Çünkü o imza geçmişi bir belgedir, kullanıcı gitse de imza kalmalı.
                 entity.HasOne(d => d.Kullanici)
@@ -166,6 +159,17 @@ namespace EBYS.Persistence
                     .HasForeignKey(d => d.KullaniciId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
+
+            
+            modelBuilder.Entity<Evrak>()
+                .Property(e => e.Icerik)
+                .HasColumnType("text");
+
+            modelBuilder.Entity<Evrak>()
+                .Property(e => e.ImzaAltindaOlanIcerik)
+                .HasColumnType("text");
+
+            
         }
 
         //KurumId'yi zorunlu olarak bas

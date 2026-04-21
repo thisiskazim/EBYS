@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,17 +9,27 @@ namespace EBYS.Application.DTOs.EvrakDTO
 {
     public class EvrakEkBaseDTO
     {
-        public string? EkAdi { get; set; }
-      //  public string? DosyaYolu { get; set; } // Fiziksel dosya yolu veya GUID
+        public int Id { get; set; }
+        public string Ad { get; set; }
+        public string? DosyaUzantisi { get; set; }
+        public string? MimeType { get; set; }
+
     }
 
-    public class EvrakEkCreateDTO : EvrakEkBaseDTO
+    public class EvrakEkCreateDTO
     {
-
+        public string? Ad { get; set; }
+        public IFormFile? Dosya { get; set; }
     }
 
     public class EvrakEkUpdateDTO : EvrakEkBaseDTO
     {
-         public int Id { get; set; }
+        public IFormFile? Dosya { get; set; }
+    }
+
+    public class EvrakEkListDTO : EvrakEkBaseDTO
+    {
+       
+
     }
 }

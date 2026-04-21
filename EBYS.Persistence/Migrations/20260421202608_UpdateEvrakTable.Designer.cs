@@ -3,6 +3,7 @@ using System;
 using EBYS.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EBYS.Persistence.Migrations
 {
     [DbContext(typeof(EBYSContext))]
-    partial class EBYSContextModelSnapshot : ModelSnapshot
+    [Migration("20260421202608_UpdateEvrakTable")]
+    partial class UpdateEvrakTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -193,7 +196,7 @@ namespace EBYS.Persistence.Migrations
                     b.Property<byte[]>("DosyaVerisi")
                         .HasColumnType("bytea");
 
-                    b.Property<int>("EvrakId")
+                    b.Property<int?>("EvrakId")
                         .HasColumnType("integer");
 
                     b.Property<string>("MimeType")
@@ -223,7 +226,7 @@ namespace EBYS.Persistence.Migrations
                     b.Property<int>("BaseKurumId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("EvrakId")
+                    b.Property<int?>("EvrakId")
                         .HasColumnType("integer");
 
                     b.Property<string>("IlgiMetni")
@@ -573,8 +576,7 @@ namespace EBYS.Persistence.Migrations
                     b.HasOne("EBYS.Domain.Entities.Evrak", "Evrak")
                         .WithMany("Ekler")
                         .HasForeignKey("EvrakId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Evrak");
                 });
@@ -584,8 +586,7 @@ namespace EBYS.Persistence.Migrations
                     b.HasOne("EBYS.Domain.Entities.Evrak", "Evrak")
                         .WithMany("İlgiler")
                         .HasForeignKey("EvrakId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Evrak");
                 });

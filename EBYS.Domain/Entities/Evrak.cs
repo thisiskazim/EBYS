@@ -18,7 +18,7 @@ namespace EBYS.Domain.Entities
 
         public string Icerik { get; set; } // Rich Text Editor'den gelen HTML/Text
         public string? ImzaAltindaOlanIcerik { get; set; }
-        public string EvrakSayisi { get; set; }//int olarak değiştirelim.bu belge durumu tamamlandı olduğunda oluşacak bir property.
+        public int? EvrakSayisi { get; set; }//int olarak değiştirelim.bu belge durumu tamamlandı olduğunda oluşacak bir property.
         public bool IsGelenEvrak { get; set; } // True ise Gelen, False ise Giden
         public Enums.BelgeDurum BelgeDurum { get; set;} // Taslak, İmzada, Tamamlandı vb.
 

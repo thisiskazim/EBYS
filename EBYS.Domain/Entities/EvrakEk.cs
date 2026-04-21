@@ -10,8 +10,10 @@ namespace EBYS.Domain.Entities
     {
         public int? EvrakId { get; set; }
         public virtual Evrak? Evrak { get; set; }
-        public string? EkAdi { get; set; }
-     //   public string? DosyaYolu { get; set; } // Fiziksel dosya yolu ekleyeceğimiz zaman kullanacağız
+        public string? Ad { get; set; }
+        public byte[]? DosyaVerisi { get; set; }
+        public string? DosyaUzantisi { get; set; }
+        public string? MimeType { get; set; }
 
     }
 }

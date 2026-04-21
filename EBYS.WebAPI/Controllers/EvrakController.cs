@@ -12,7 +12,7 @@ namespace EBYS.WebAPI.Controllers
     {
 
         [HttpPost("EvrakOlustur")]
-        public async Task<IActionResult> EvrakOlustur(GidenEvrakCreateDTO evrakCreateDTO)
+        public async Task<IActionResult> EvrakOlustur([FromForm] GidenEvrakCreateDTO evrakCreateDTO)
         {
 
             try
@@ -30,7 +30,7 @@ namespace EBYS.WebAPI.Controllers
 
 
         [HttpPost("EvrakGuncelle")]
-        public async Task<IActionResult> EvrakGuncelle(GidenEvrakUpdateDTO evrakCreateDTO)
+        public async Task<IActionResult> EvrakGuncelle([FromForm] GidenEvrakUpdateDTO evrakCreateDTO)
         {
 
             try

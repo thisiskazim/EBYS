@@ -128,6 +128,24 @@ namespace EBYS.Application.Mapping
                 .ForMember(dest => dest.RolAdi, opt => opt.MapFrom(src => src.Kullanici.Rol.RolAdi))
                 .ForMember(dest => dest.ImzaTuruLabel, opt => opt.MapFrom(src => (int)src.ParafMiImzaMi == 1 ? "İmza" : "Paraf"));
 
+
+
+            // Entity -> EvrakEkListDTO (Görüntüleme için)
+            CreateMap<EvrakEk, EvrakEkListDTO>();
+
+            // Entity -> EvrakEkBaseDTO (Gerekirse genel kullanım için)
+            CreateMap<EvrakEk, EvrakEkBaseDTO>();
+
+            // CreateDTO -> Entity (Kaydetme için)
+            CreateMap<EvrakEkCreateDTO, EvrakEk>()
+                .ForMember(dest => dest.DosyaVerisi, opt => opt.Ignore()) // Dosyayı elle işleyeceğiz
+                .ForMember(dest => dest.DosyaUzantisi, opt => opt.Ignore())
+                .ForMember(dest => dest.MimeType, opt => opt.Ignore());
+
+            // UpdateDTO -> Entity (Güncelleme için)
+            CreateMap<EvrakEkUpdateDTO, EvrakEk>()
+                .ForMember(dest => dest.DosyaVerisi, opt => opt.Ignore());
+
         }
     }
 }
