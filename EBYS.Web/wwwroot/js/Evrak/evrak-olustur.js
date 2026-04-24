@@ -21,6 +21,30 @@
             this.loadInitialData();
         },
 
+        updateImzaciFromRota: function (rotaId) {
+            if (!rotaId || rotaId === "0") return;
+
+            $.get("https://localhost:7060/api/ImzaRota/ImzaRotaGetir/" + rotaId, function (response) {
+       
+                var adimlar = response.rotaAdimlari || [];
+
+                if (adimlar && adimlar.length > 0) {
+
+                    var siraliAdimlar = adimlar.sort((a, b) => (a.siraNo || a.id) - (b.siraNo || b.id));
+                    var sonAdim = siraliAdimlar[siraliAdimlar.length - 1];
+            
+                    var ad = sonAdim.adSoyad;
+                    var unvan = sonAdim.rolAdi;
+
+         
+
+                    if (typeof OnizlemeModule !== "undefined") {
+                        OnizlemeModule.setImzaci(ad, unvan);
+                    }
+                } 
+            });
+        },
+
         kaydet: function () {
             var alicilar = AliciModule.getData();
             var bilgiler = EvrakBilgiModule.getData();
@@ -86,6 +110,10 @@
                     if (typeof EklerModule !== "undefined") {
                         EklerModule.setData(response.ekler);
                     }
+                    var rotaId = response.imzaRotaId || response.ImzaRotaId;
+                    if (rotaId) {
+                        EvrakOlustur.updateImzaciFromRota(rotaId);
+                    }
                 });
             }
         }
@@ -94,13 +122,28 @@
 
 
 $(document).ready(function () {
+    // 1. Modülleri Başlat
     if (typeof AliciModule !== "undefined") AliciModule.init();
     if (typeof EvrakBilgiModule !== "undefined") EvrakBilgiModule.init();
-    if (typeof EklerModule !== "undefined") EklerModule.init(); // Artık aktif!
+    if (typeof EklerModule !== "undefined") EklerModule.init();
     if (typeof IlgilerModule !== "undefined") IlgilerModule.init();
-
+  
+    // 2. Sayfa Verilerini Yükle
     EvrakOlustur.init();
 
+    // 3. TAB TETİKLEYİCİSİ (Kesin Çözüm Burası)
+    // bootstrap.Tab.getInstance kullanmak daha garantidir
+    var tabEl = document.querySelector('#gorunum-tab');
+    if (tabEl) {
+        tabEl.addEventListener('shown.bs.tab', function (event) {
+            console.log("Evrak Görünüm Sekmesi Açıldı.");
+            setTimeout(function () {
+                OnizlemeModule.verileriYukle();
+            }, 150); // 150ms bekleme editörün dolması için şart
+        });
+    }
+
+    // 4. Kaydet Butonu
     $("#evrakKaydet").on("click", function (e) {
         EvrakOlustur.kaydet();
     });

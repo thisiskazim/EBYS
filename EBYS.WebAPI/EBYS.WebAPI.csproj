@@ -15,7 +15,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.OpenApi" Version="2.4.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.4" />
-    <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2026.1.415" />
+    <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2026.1.212" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EBYS.Application\EBYS.Application.csproj" />

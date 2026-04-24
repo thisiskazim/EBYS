@@ -50,10 +50,11 @@
             </div>
             
 
-            <div class="tab-pane fade" id="gorunum" role="tabpanel">
-                <h6>Evrak Görünüm</h6>
-                <p>Oluşan evrakın önizlemesi buraya gelecek.</p>
+            <div class="tab-pane fade" id="gorunum">
+                @await Html.PartialAsync("Components/Evrak/_GorunumPartial")
             </div>
+
+            
         </div>
     </div>
 </div>

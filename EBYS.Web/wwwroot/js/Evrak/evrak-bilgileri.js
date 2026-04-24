@@ -2,6 +2,14 @@
     return {
         init: function () {
 
+            var ddlImzaRota = $("#ImzaRota").data("kendoDropDownList");
+            if (ddlImzaRota) {
+                ddlImzaRota.bind("change", function (e) {
+                    // Rota değiştiğinde son imzacıyı güncelle
+                    EvrakOlustur.updateImzaciFromRota(this.value());
+                });
+            }
+
         },
         setData: function (data) {
             if (!data) return;

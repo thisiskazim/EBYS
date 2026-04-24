@@ -273,3 +273,169 @@
     /* border-bottom-left-radius: 12px; 
        border-bottom-right-radius: 12px; */
 }
+
+
+
+/*pdf belge görünüm*/
+.belge-imza {
+    float: right;
+    width: 250px; /* Ýmza alanýnýn geniþliði */
+    text-align: center; /* Ýsim ve unvaný kendi içinde ortalar */
+    margin-top: 50px;
+    margin-right: 50px;
+    font-weight: bold;
+}
+
+#view-imza-ad {
+    text-transform: uppercase; /* Ýsmi otomatik büyük harf yapar */
+    display: block;
+    margin-bottom: 2px;
+}
+
+#view-imza-unvan {
+    font-weight: normal; /* Unvan genelde bold olmaz, isteðe baðlý */
+    font-size: 11pt;
+}
+
+
+.ust-bilgi-satir {
+    display: flex;
+    gap: 10px;
+}
+
+.etiket {
+    width: 60px;
+    font-weight: bold;
+}
+
+.belge-muhatap-baslik {
+    text-align: center;
+    font-weight: bold;
+    margin: 40px 0;
+    text-transform: uppercase;
+}
+
+.belge-imza-alani {
+    margin-top: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    text-align: center;
+}
+
+.imza-kutusu {
+    width: 250px;
+    font-weight: bold;
+}
+
+.dagitim-baslik {
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 5px;
+}
+
+.belge-footer {
+    position: absolute;
+    bottom: 15mm;
+    left: 20mm;
+    right: 20mm;
+    font-size: 9pt;
+    color: #555;
+    text-align: center;
+}
+
+.footer-line {
+    border-top: 1px solid #000;
+    margin-bottom: 5px;
+}
+
+/* Sayý ve Konu Sol Üstte */
+.belge-ust-bilgi {
+    position: absolute;
+    top: 50mm; /* Kaðýdýn tepesinden uzaklýk */
+    left: 20mm;
+}
+
+/* Alýcý (Muhatap) Orta-Sað Üstte */
+.belge-muhatap-alaný {
+    margin-top: 20mm;
+    text-align: center; /* Genelde ortalanýr */
+    width: 100%;
+}
+
+/* Ýmza Sað Alt */
+.belge-imza-alani {
+    position: absolute;
+    bottom: 60mm; /* Alttan yükseklik */
+    right: 20mm;
+    text-align: center;
+}
+
+.belge-onizleme-container {
+    background-color: #ced4da; /* Arka plan gri */
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+
+.belge-header {
+    display: flex;
+    justify-content: space-between; /* Logo - Metin - Logo dizilimi */
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+}
+
+.a4-container {
+    background: #525659;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+ .a4-sayfa {
+    background: white;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 20mm;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    font-family: "Times New Roman", Times, serif;
+    position: relative;
+    color: black;
+}
+
+/* Telerik bu sýnýfý gördüðünde PDF'i buradan böler */
+.pdf-page-break {
+    page-break-after: always;
+}
+
+#gorunum.active {
+    display: block !important;
+    opacity: 1 !important;
+}
+
+
+/* Sayfa yapýsýný flex yapýyoruz */
+#gorunum .a4-sayfa {
+    display: flex;
+    flex-direction: column;
+    min-height: 297mm; /* Standart A4 yüksekliði */
+    padding: 20mm; /* Standart kenar boþluðu */
+    box-sizing: border-box;
+    background: white;
+    position: relative;
+}
+
+/* Ýçerik alanýnýn esnemesini saðlayarak footer'ý dibe iter */
+.belge-alt-bolum {
+    flex-grow: 1;
+}
+
+/* Footer'ýn her zaman en altta kalmasý için */
+.belge-footer {
+    margin-top: auto; /* Üstteki boþluðu otomatik doldurur */
+    padding-top: 20px;
+    font-size: 0.75rem;
+    color: #555;
+}
