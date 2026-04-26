@@ -277,24 +277,24 @@
 
 
 /*pdf belge görünüm*/
-.belge-imza {
+/*.belge-imza {
     float: right;
-    width: 250px; /* Ýmza alanýnýn geniþliði */
-    text-align: center; /* Ýsim ve unvaný kendi içinde ortalar */
-    margin-top: 50px;
+    width: 250px;*/ /* Ýmza alanýnýn geniþliði */
+    /*text-align: center;*/ /* Ýsim ve unvaný kendi içinde ortalar */
+    /*margin-top: 50px;
     margin-right: 50px;
     font-weight: bold;
 }
 
 #view-imza-ad {
-    text-transform: uppercase; /* Ýsmi otomatik büyük harf yapar */
-    display: block;
+    text-transform: uppercase;*/ /* Ýsmi otomatik büyük harf yapar */
+    /*display: block;
     margin-bottom: 2px;
 }
 
 #view-imza-unvan {
-    font-weight: normal; /* Unvan genelde bold olmaz, isteðe baðlý */
-    font-size: 11pt;
+    font-weight: normal;*/ /* Unvan genelde bold olmaz, isteðe baðlý */
+    /*font-size: 11pt;
 }
 
 
@@ -334,46 +334,38 @@
     margin-bottom: 5px;
 }
 
-.belge-footer {
-    position: absolute;
-    bottom: 15mm;
-    left: 20mm;
-    right: 20mm;
-    font-size: 9pt;
-    color: #555;
-    text-align: center;
-}
+
 
 .footer-line {
     border-top: 1px solid #000;
     margin-bottom: 5px;
-}
+}*/
 
 /* Sayý ve Konu Sol Üstte */
-.belge-ust-bilgi {
+/*.belge-ust-bilgi {
     position: absolute;
-    top: 50mm; /* Kaðýdýn tepesinden uzaklýk */
-    left: 20mm;
-}
+    top: 50mm;*/ /* Kaðýdýn tepesinden uzaklýk */
+    /*left: 20mm;
+}*/
 
 /* Alýcý (Muhatap) Orta-Sað Üstte */
-.belge-muhatap-alaný {
+/*.belge-muhatap-alaný {
     margin-top: 20mm;
-    text-align: center; /* Genelde ortalanýr */
-    width: 100%;
-}
+    text-align: center;*/ /* Genelde ortalanýr */
+    /*width: 100%;
+}*/
 
 /* Ýmza Sað Alt */
-.belge-imza-alani {
+/*.belge-imza-alani {
     position: absolute;
-    bottom: 60mm; /* Alttan yükseklik */
-    right: 20mm;
+    bottom: 60mm;*/ /* Alttan yükseklik */
+    /*right: 20mm;
     text-align: center;
 }
 
 .belge-onizleme-container {
-    background-color: #ced4da; /* Arka plan gri */
-    padding: 30px;
+    background-color: #ced4da;*/ /* Arka plan gri */
+    /*padding: 30px;
     display: flex;
     justify-content: center;
 }
@@ -381,8 +373,8 @@
 
 .belge-header {
     display: flex;
-    justify-content: space-between; /* Logo - Metin - Logo dizilimi */
-    align-items: center;
+    justify-content: space-between;*/ /* Logo - Metin - Logo dizilimi */
+    /*align-items: center;
     text-align: center;
     font-weight: bold;
 }
@@ -403,39 +395,304 @@
     font-family: "Times New Roman", Times, serif;
     position: relative;
     color: black;
-}
+}*/
 
 /* Telerik bu sýnýfý gördüðünde PDF'i buradan böler */
-.pdf-page-break {
+/*.pdf-page-break {
     page-break-after: always;
 }
 
 #gorunum.active {
     display: block !important;
     opacity: 1 !important;
-}
+}*/
 
 
 /* Sayfa yapýsýný flex yapýyoruz */
-#gorunum .a4-sayfa {
+/*#gorunum .a4-sayfa {
     display: flex;
     flex-direction: column;
-    min-height: 297mm; /* Standart A4 yüksekliði */
-    padding: 20mm; /* Standart kenar boþluðu */
-    box-sizing: border-box;
+    min-height: 297mm;*/ /* Standart A4 yüksekliði */
+    /*padding: 20mm;*/ /* Standart kenar boþluðu */
+    /*box-sizing: border-box;
     background: white;
     position: relative;
-}
+}*/
 
 /* Ýçerik alanýnýn esnemesini saðlayarak footer'ý dibe iter */
-.belge-alt-bolum {
+/*.belge-alt-bolum {
     flex-grow: 1;
-}
+}*/
 
 /* Footer'ýn her zaman en altta kalmasý için */
-.belge-footer {
-    margin-top: auto; /* Üstteki boþluðu otomatik doldurur */
-    padding-top: 20px;
+/*.belge-footer {
+    margin-top: auto;*/ /* Üstteki boþluðu otomatik doldurur */
+    /*padding-top: 20px;
     font-size: 0.75rem;
     color: #555;
+}*/
+
+
+.belge-onizleme-container {
+    background-color: #ced4da;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+/* =============================================
+   A4 SAYFA — Flex column, footer en alta iter
+   ============================================= */
+.a4-sayfa {
+    background: white;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 20mm 20mm 15mm 20mm;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    font-family: "Times New Roman", Times, serif;
+    font-size: 11pt;
+    color: black;
+    box-sizing: border-box;
+    /* Flex column: içerik büyür, footer dibe yapýþýr */
+    display: flex;
+    flex-direction: column;
+}
+
+/* =============================================
+   HEADER — Logo | Kurum Bilgisi | Logo
+   ============================================= */
+.belge-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.logo-left,
+.logo-right {
+    width: 90px;
+    flex-shrink: 0;
+}
+
+    .logo-left img,
+    .logo-right img {
+        max-width: 100%;
+    }
+
+.logo-right {
+    text-align: right;
+}
+
+.kurum-bilgi {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 11pt;
+    line-height: 1.5;
+}
+
+/* =============================================
+   ÜST BÝLGÝ — Sayý / Konu  +  Tarih
+   ============================================= */
+.belge-ust-bilgi {
+    /* DÜZELTME: position:absolute kaldýrýldý, normal akýþta */
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 16px;
+}
+
+.ust-bilgi-satir {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.etiket {
+    width: 60px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+#view-tarih-right {
+    text-align: right;
+    min-width: 120px;
+}
+
+/* =============================================
+   MUHATAP BAÞLIÐI — Ortalý, büyük harf
+   ============================================= */
+.belge-muhatap-baslik {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 28px;
+    margin-bottom: 0;
+    text-transform: uppercase;
+    line-height: 1.5;
+}
+
+/* =============================================
+   ÝLGÝ ALANI
+   ============================================= */
+.belge-ilgi {
+    margin-top: 16px;
+    font-size: 11pt;
+    line-height: 1.45;
+}
+
+/* =============================================
+   BELGE METNÝ (ÝÇERÝK)
+   ============================================= */
+.belge-metin {
+    margin-top: 25px;
+    text-align: justify;
+    line-height: 1.55;
+    flex-grow: 1; /* bu alan büyüyerek footer'ý dibe iter */
+}
+
+/* =============================================
+   ÝMZA ALTI ÝÇERÝK (kapanýþ cümlesi vb.)
+   ============================================= */
+.belge-imza-alti-icerik {
+    margin-top: 12px;
+    margin-bottom: 8px;
+}
+
+/* =============================================
+   ÝMZA ALANI — Saða hizalý
+   ============================================= */
+.belge-imza-alani {
+    /* DÜZELTME: position:absolute kaldýrýldý */
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 40px;
+    width: 100%;
+}
+
+.imza-kutusu {
+    width: 250px;
+    text-align: center;
+    font-weight: bold;
+}
+
+#view-imza-ad {
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 2px;
+}
+tamam 
+#view-imza-unvan {
+    font-weight: normal;
+    font-size: 10.5pt;
+    display: block;
+    padding-bottom: 20px;
+}
+
+/* =============================================
+   ALT BÖLÜM — Ekler + Daðýtým
+   ============================================= */
+.belge-alt-bolum {
+    margin-top: 24px;
+}
+
+.dagitim-baslik {
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 4px;
+}
+
+/* =============================================
+   FOOTER — Her zaman en altta
+   ============================================= */
+.belge-footer {
+    /* DÜZELTME: position:absolute kaldýrýldý, margin-top:auto ile dibe yapýþýr */
+    margin-top: auto;
+    padding-top: 8px;
+    font-size: 8.5pt;
+    color: #555;
+    text-align: center;
+}
+
+.footer-line {
+    height: 1px;
+    background: #000;
+    margin-bottom: 6px;
+}
+
+.e-imza-notu {
+    font-size: 7.5pt;
+    color: #b00;
+    margin-top: 6px;
+}
+
+/* =============================================
+   PDF SAYFA KIRMA
+   ============================================= */
+.pdf-page-break {
+    page-break-after: always;
+}
+
+
+
+/* Sadece Dialog Ýçindeki Önizleme Ýçin */
+#onizlemeDialog {
+    overflow: hidden !important;
+}
+
+
+.preview-mode {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px 0;
+    /* Arka planý koyu yaparak kaðýdý öne çýkaralým */
+    background-color: #525659 !important;
+}
+
+    .preview-mode .a4-preview-wrapper {
+        /* Burasý büyü sihirli deðnek: Sayfayý %75 oranýnda küçültür */
+        /* Dialog geniþliðine göre 0.7 veya 0.8 yapabilirsin */
+        transform: scale(0.75);
+        transform-origin: top center;
+        margin-bottom: -150px; /* Scale sonrasý oluþan boþluðu toplar */
+    }
+
+    .preview-mode .a4-sayfa {
+        width: 210mm !important;
+        min-height: 297mm !important;
+        margin: 0 !important;
+        padding: 20mm !important;
+        box-shadow: 0 0 15px rgba(0,0,0,0.3) !important;
+        background: white !important;
+        /* PDF'te taþma olmamasý için */
+        overflow: hidden;
+    }
+
+/* Dialog içinde scroll barý özelleþtirelim ki kaba durmasýn */
+.preview-mode-parent::-webkit-scrollbar {
+    width: 8px;
+}
+
+.preview-mode-parent::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+/* 1. Kendo'nun kendi otomatik scroll'unu iptal et */
+#onizlemeDialog {
+    overflow: hidden !important;
+    padding: 0 !important; /* Kenarlardaki beyaz boþluðu sýfýrla */
+}
+
+/* 2. Senin yazdýðýn bu sýnýfa yükseklik ve gizleme ver */
+.preview-mode-parent {
+    height: 100%;
+    overflow-y: auto !important; /* Tek yetkili scroll burasý olsun */
+    overflow-x: hidden !important;
+}
+
+/* 3. Scale deðerini ve margin-bottom'u biraz daha agresif yapalým */
+.preview-mode .a4-preview-wrapper {
+    transform: scale(0.70); /* Biraz daha küçültelim ki ferahlasýn */
+    transform-origin: top center;
+    /* Scale yapýnca altta kalan hayalet boþluðu yok etmek için bunu artýr */
+    margin-bottom: -350px;
 }

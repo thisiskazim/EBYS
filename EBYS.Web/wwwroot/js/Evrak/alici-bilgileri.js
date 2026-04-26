@@ -9,14 +9,14 @@ var AliciModule = (function () {
             if (gridElement.length > 0) {
                 _grid = gridElement.kendoGrid({
                     columns: [
-                        { field: "MuhatapAdi", title: "Alıcı Adı" },
+                        { field: "Adi", title: "Alıcı Adı" },
                         { field: "IsBilgi", title: "Türü", template: "#= IsBilgi ? '<span class=\"badge bg-info\">Bilgi</span>' : '<span class=\"badge bg-primary\">Gereği</span>' #" },
                         {
                             command: [{
                                 className: "btn-grid-action btn btn-outline-danger ms-2",
                                 text: "Sil",
                                 click: function (e) {
-                                    e.preventDefault();
+                                      e.preventDefault();
                                     var tr = $(e.currentTarget).closest("tr");
                                     var dataItem = _grid.dataItem(tr);
                                     if (dataItem) _grid.dataSource.remove(dataItem);
@@ -35,7 +35,7 @@ var AliciModule = (function () {
             var selectedDataItems = multiSelect.dataItems();
 
             if (selectedDataItems.length === 0) {
-                showNotification("Lütfen önce kurum seçiniz!", "warning");
+                showNotification("Lütfen önce kurum seçiniz!", "error");
                 return;
             }
 
@@ -46,7 +46,7 @@ var AliciModule = (function () {
                     if (!exists) {
                         grid.dataSource.add({
                             MuhatapId: item.id,
-                            MuhatapAdi: item.adi,
+                            Adi: item.adi,
                             IsBilgi: isBilgi
                         });
                     }
@@ -62,11 +62,12 @@ var AliciModule = (function () {
                 var mappedData = muhataplar.map(function (item) {
                     return {
                         MuhatapId: item.muhatapId || item.MuhatapId,
-                        MuhatapAdi: item.muhatapAdi || item.MuhatapAdi || item.adi,
+                        Adi: item.adi || item.Adi,
                         IsBilgi: item.isBilgi
                     };
                 });
                 grid.dataSource.data(mappedData);
+                console.log("setdata:", mappedData);
             }
         },
 

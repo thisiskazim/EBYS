@@ -30,7 +30,12 @@ namespace EBYS.Application.Mapping
 
             // Alt listelerin (İlgiler, Muhataplar, Ekler) Entity'den DTO'ya dönüşebilmesi için bunlar ŞART:
             CreateMap<EvrakIlgi, EvrakIlgiUpdateDTO>();
-            CreateMap<EvrakMuhatap, EvrakMuhatapSecimDTO>();
+
+            // Diğer Muhatap -> DTO eşleşmelerini sil, sadece bu kalsın:
+            CreateMap<EvrakMuhatap, EvrakMuhatapSecimDTO>()
+                .ForMember(dest => dest.MuhatapId, opt => opt.MapFrom(src => src.MuhatapId))
+                .ForMember(dest => dest.IsBilgi, opt => opt.MapFrom(src => src.IsBilgi))
+                .ForMember(dest => dest.Adi, opt => opt.MapFrom(src => src.Muhatap.Adi));
             CreateMap<EvrakEk, EvrakEkUpdateDTO>();
 
 
@@ -98,6 +103,10 @@ namespace EBYS.Application.Mapping
             CreateMap<TuzelKisiMuhatapUpdateDTO, TuzelKisiMuhatap>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore()).ReverseMap();
 
+
+            //
+
+            
 
             //İMZA ROTA 
 

@@ -28,6 +28,7 @@ namespace EBYS.Persistence.Repository
         {
             return await _context.Evraklar
          .Include(x => x.Muhataplar)
+            .ThenInclude(m => m.Muhatap)
          .Include(x => x.İlgiler)
          .Include(x => x.Ekler)
          .Include(x => x.AkisAdimlari)

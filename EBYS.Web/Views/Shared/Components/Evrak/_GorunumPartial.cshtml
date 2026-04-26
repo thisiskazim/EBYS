@@ -6,78 +6,88 @@
         </button>
     </div>
 
-    <div class="belge-onizleme-container">
-        <div class="a4-sayfa">
-            <div class="belge-header d-flex align-items-start">
-                <div class="logo-left" style="width:90px;">
-                    <img src="~/images/ebys.png" alt="logo" style="max-width:100%;" />
-                </div>
-                <div class="kurum-bilgi text-center flex-grow-1">
-                    <div style="font-weight:700;">T.C.</div>
-                    <div style="font-weight:700;">TARIM VE ORMAN BAKANLIĞI</div>
-                    <div>Devlet Su İşleri Genel Müdürlüğü</div>
-                    <div style="font-weight:700;">OVA SULAMA BİRLİĞİ BAŞKANLIĞI</div>
-                </div>
-                <div class="logo-right text-end" style="width:90px;">
-                    <img src="~/images/ebys.png" alt="logo" style="max-width:100%;" />
-                    <div class="mt-2" style="font-size:0.95rem;" id="view-tarih">&nbsp;</div>
-                </div>
+<div class="belge-onizleme-container">
+    <div class="a4-sayfa">
+
+        <!-- HEADER -->
+        <div class="belge-header">
+            <div class="logo-left">
+                <img src="~/images/ebys.png" alt="logo" />
             </div>
-
-            <div class="belge-ust-bilgi mt-4 d-flex justify-content-between">
-                <div>
-                    <div class="ust-bilgi-satir">
-                        <span class="etiket" style="font-weight:600;">Sayı:</span>
-                        <span id="view-sayi">11428951-000</span>
-                    </div>
-                    <div class="ust-bilgi-satir mt-1">
-                        <span class="etiket" style="font-weight:600;">Konu:</span>
-                        <span id="view-konu"></span>
-                    </div>
-                </div>
-                <div style="min-width:180px; text-align:right;">
-                    <!-- Tarih alanı opsiyonel; JS ile doldurulabilir -->
-                    <div id="view-tarih-right">&nbsp;</div>
-                </div>
+            <div class="kurum-bilgi">
+                <div style="font-weight:700;">T.C.</div>
+                <div style="font-weight:700;">TARIM VE ORMAN BAKANLIĞI</div>
+                <div>Devlet Su İşleri Genel Müdürlüğü</div>
+              @*  // <div style="font-weight:700;">OVA SULAMA BİRLİĞİ BAŞKANLIĞI</div> *@
             </div>
-
-            <div id="view-ilgiler-alani" class="belge-ilgi mt-3" style="display:none;"></div>
-            <div id="view-muhatap-baslik" class="belge-muhatap-baslik text-center mt-4" style="font-weight:700;"></div>
-
-            <div id="view-icerik" class="belge-metin mt-4" style="text-align:justify; line-height:1.45;"></div>
-
-            <div id="view-imza-alti-icerik" class="mt-3 mb-3"></div>
-
-            <div class="belge-imza-alani">
-                <div class="imza-kutusu">
-                    <span id="view-imza-ad"></span><br>
-                    <span id="view-imza-unvan"></span>
-                </div>
-            </div>
-
-        <div id="view-imza-alti-icerik" class="mt-3 mb-3"></div>
-
-            <div class="belge-alt-bolum mt-5">
-                <div id="view-ekler-listesi" class="mb-3"></div>
-
-                <div id="view-dagitim-alani" style="display:none;">
-                    <div class="dagitim-baslik">DAĞITIM:</div>
-                    <div id="view-geregi-listesi"></div>
-                    <div id="view-bilgi-listesi" class="mt-2"></div>
-                </div>
-            </div>
-
-            <div class="belge-footer" style="position:relative; margin-top:40px; font-size:0.75rem; color:#555;">
-                <div class="footer-line" style="height:1px; background:#000; margin-bottom:6px;"></div>
-                <div class="footer-icerik">
-                    Ovakavağı Mh. 22401 Sk. No: 5/1 42290 Karatay/KONYA Tel: 0332 389 50 01 Faks: 0332 389 50 01<br>
-                    e-Posta: bilgi@ovasulama.gov.tr Web: https://ovasulama.gov.tr Kep: ovasulama@hs01.kep.tr
-                </div>
-                <div style="position:absolute; bottom:-40px; left:0; font-size:0.7rem; color:#b00;">Bu belge, güvenli elektronik imza ile imzalanmıştır.</div>
-               
+            <div class="logo-right">
+                <img src="~/images/ebys.png" alt="logo" />
+                <div class="mt-2" id="view-tarih">&nbsp;</div>
             </div>
         </div>
+
+        <!-- SAYI / KONU + TARİH -->
+        <div class="belge-ust-bilgi">
+            <div>
+                <div class="ust-bilgi-satir">
+                    <span class="etiket">Sayı :</span>
+                    <span id="view-sayi">11428951-000</span>
+                </div>
+                <div class="ust-bilgi-satir">
+                    <span class="etiket">Konu :</span>
+                    <span id="view-konu"></span>
+                </div>
+            </div>
+            <div id="view-tarih-right">&nbsp;</div>
+        </div>
+
+        <!-- MUHATAP BAŞLIĞI -->
+        <div id="view-muhatap-baslik" class="belge-muhatap-baslik"></div>
+
+        <!-- İLGİ ALANI -->
+        <div id="view-ilgiler-alani" class="belge-ilgi" style="display:none;"></div>
+
+        <!-- BELGE METNİ -->
+        <div id="view-icerik" class="belge-metin"></div>
+
+     
+
+        <!-- İMZA ALANI -->
+        <div class="belge-imza-alani">
+            <div class="imza-kutusu">
+                <span id="view-imza-ad"></span>
+                <span id="view-imza-unvan"></span>
+            </div>
+        </div>
+
+        <!-- İMZA ALTI İÇERİK (2) — imzadan sonra -->
+        <div id="view-imza-alti-icerik" class="belge-imza-alti-icerik"></div>
+
+        <!-- EKLER + DAĞITIM -->
+        <div class="belge-alt-bolum">
+            <div id="view-ekler-listesi" class="mb-3"></div>
+            <div id="view-dagitim-alani" style="display:none;">
+                <div class="dagitim-baslik">DAĞITIM:</div>
+                <div id="view-geregi-listesi"></div>
+                <div id="view-bilgi-listesi" class="mt-2"></div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="belge-footer">
+            <div class="footer-line"></div>
+            <div>
+                Ovakavağı Mh. 22401 Sk. No: 5/1 42290 Karatay/KONYA &nbsp;&nbsp;
+                Tel: 0332 389 50 01 &nbsp; Faks: 0332 389 50 01<br>
+                e-Posta: bilgi@ovasulama.gov.tr &nbsp;&nbsp;
+                Web: https://ovasulama.gov.tr &nbsp;&nbsp;
+                Kep: ovasulama@hs01.kep.tr
+            </div>
+            <div class="e-imza-notu">Bu belge, güvenli elektronik imza ile imzalanmıştır.</div>
+        </div>
+
     </div>
 </div>
+
 
 <script src="~/js/evrak/evrak-gorunum.js"></script>

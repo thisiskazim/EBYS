@@ -49,7 +49,7 @@
             var alicilar = AliciModule.getData();
             var bilgiler = EvrakBilgiModule.getData();
             var ilgiler = IlgilerModule.getData();
-            var ekler = EklerModule.getData(); // Ekler modülünden veriyi çekiyoruz
+            var ekler = EklerModule.getData(); 
 
             // 1. JSON yerine FormData nesnesi oluşturuyoruz
             var formData = new FormData();
@@ -63,6 +63,8 @@
             alicilar.forEach((alici, index) => {
                 formData.append(`Muhataplar[${index}].MuhatapId`, alici.MuhatapId);
                 formData.append(`Muhataplar[${index}].IsBilgi`, alici.IsBilgi);
+                formData.append(`Muhataplar[${index}].Adi`, alici.Adi);
+
             });
 
             // 4. İlgileri ekle
@@ -101,15 +103,14 @@
             var id = urlParams.get('id') || $("#EvrakId").val();
 
             if (id && id !== "0" && id !== "") {
-                // GET işlemi JSON döneceği için eski usul kullanılabilir 
-                // ya da basit bir $.get yapılabilir.
+     
                 $.get(_apiBaseUrl + "EvrakGetir/" + id, function (response) {
                     EvrakBilgiModule.setData(response);
                     AliciModule.setData(response.muhataplar);
                     IlgilerModule.setData(response.ilgiler);
-                    if (typeof EklerModule !== "undefined") {
+                   // if (typeof EklerModule !== "undefined") {
                         EklerModule.setData(response.ekler);
-                    }
+                   // }
                     var rotaId = response.imzaRotaId || response.ImzaRotaId;
                     if (rotaId) {
                         EvrakOlustur.updateImzaciFromRota(rotaId);
@@ -128,22 +129,19 @@ $(document).ready(function () {
     if (typeof EklerModule !== "undefined") EklerModule.init();
     if (typeof IlgilerModule !== "undefined") IlgilerModule.init();
   
-    // 2. Sayfa Verilerini Yükle
+
     EvrakOlustur.init();
 
-    // 3. TAB TETİKLEYİCİSİ (Kesin Çözüm Burası)
-    // bootstrap.Tab.getInstance kullanmak daha garantidir
     var tabEl = document.querySelector('#gorunum-tab');
     if (tabEl) {
         tabEl.addEventListener('shown.bs.tab', function (event) {
-            console.log("Evrak Görünüm Sekmesi Açıldı.");
             setTimeout(function () {
                 OnizlemeModule.verileriYukle();
-            }, 150); // 150ms bekleme editörün dolması için şart
+            }, 150); 
         });
     }
 
-    // 4. Kaydet Butonu
+
     $("#evrakKaydet").on("click", function (e) {
         EvrakOlustur.kaydet();
     });
