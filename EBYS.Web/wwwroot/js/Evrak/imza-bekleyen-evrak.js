@@ -408,9 +408,8 @@ var EvrakBekleyenListModule = (function () {
     // -------------------------------------------------------
     var _initDialog = function () {
         _onizlemeDialog = $("#onizlemeDialog").kendoDialog({
-            width: "1000px", // Sol menü + Küçültülmüş A4 için ideal
-            height: "700px",
-           
+            width: "1200px", // Genişliği biraz artırdık ki A4 rahat sığsın
+            height: "750px",
             title: "Evrak Önizleme",
             closable: true,
             modal: true,
@@ -421,8 +420,9 @@ var EvrakBekleyenListModule = (function () {
                     text: "PDF İndir",
                     primary: true,
                     action: function () {
+                        // PDF Reader içindeki dosyayı indirtiyoruz
                         OnizlemeModule.pdfIndir();
-                        return false; // dialogu kapatma
+                        return false;
                     }
                 }
             ]
@@ -538,76 +538,73 @@ var EvrakBekleyenListModule = (function () {
         // -------------------------------------------------------
         onizle: function (id) {
             var self = this;
-            _onizlemeDialog.open();
+            _onizlemeDialog.open(); // Pop-up'ı aç
             $("#onizleme-yukleniyor").show();
-            $("#onizleme-panel-ana-yazi, #onizleme-panel-ekler").hide();
             $("#popupDosyaListesi").empty();
+            $("#pdf-frame-popup").attr("src", "about:blank");
 
-            _ajaxCall('Evrak/EvrakGetir/' + id, 'GET').done(function (evrak) {
+            $.get('https://localhost:7060/api/Evrak/EvrakGetir/' + id, function (evrak) {
                 $("#onizleme-yukleniyor").hide();
 
-                // 1. SOL MENÜYE ÜST YAZIYI EKLE
-                var btnUstYazi = $(`<a href="#" class="list-group-item list-group-item-action active">
-                                <i class="fas fa-file-signature me-2 text-primary"></i>Üst Yazı
-                            </a>`);
-                btnUstYazi.click(function () {
+                // 1. LİSTEYE "ÜST YAZI"YI EKLE (Senin oluşturduğun şablon)
+                var btnUstYazi = $(`
+            <a href="#" class="list-group-item list-group-item-action active">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-file-alt me-2 text-primary"></i>Üst Yazı</span>
+                    <span class="badge bg-primary rounded-pill">Asıl</span>
+                </div>
+            </a>`);
+
+                btnUstYazi.click(function (e) {
+                    e.preventDefault();
                     $(this).addClass("active").siblings().removeClass("active");
-                    $("#onizleme-panel-ekler").hide();
-                    $("#onizleme-panel-ana-yazi").show();
-                    OnizlemeModule.verileriYukleDB(evrak); // Mevcut Partial'ı doldurur
+                    // Senin o meşhur HTML-to-PDF motorunu popup'taki iframe için çalıştırır
+                    OnizlemeModule.verileriYukleDB(evrak, "#pdf-frame-popup");
                 });
                 $("#popupDosyaListesi").append(btnUstYazi);
 
-                // 2. SOL MENÜYE EKLERİ EKLE
+                // 2. LİSTEYE "EKLERİ" EKLE (Varsa)
                 if (evrak.ekler && evrak.ekler.length > 0) {
-                    evrak.ekler.forEach(function (ek) {
-                        var btnEk = $(`<a href="#" class="list-group-item list-group-item-action">
-                                <i class="fas fa-paperclip me-2 text-secondary"></i>${ek.ad || ek.Ad}
-                               </a>`);
-                        btnEk.click(function () {
+                    evrak.ekler.forEach(function (ek, index) {
+                        var btnEk = $(`
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="fas fa-paperclip me-2 text-secondary"></i>Ek-${index + 1}: ${ek.ad || ek.Ad}
+                    </a>`);
+
+                        btnEk.click(function (e) {
+                            e.preventDefault();
                             $(this).addClass("active").siblings().removeClass("active");
-                            $("#onizleme-panel-ana-yazi").hide();
-                            $("#onizleme-panel-ekler").show();
-                            self.ekOnizle(ek); // Ek PDF/Resim gösterir
+                            // Eklerin (PDF veya Resim) gösterimi
+                            self.ekOnizle(ek);
                         });
                         $("#popupDosyaListesi").append(btnEk);
                     });
                 }
 
-                // İlk açılışta Üst Yazıyı göster
-                $("#onizleme-panel-ana-yazi").show();
-                OnizlemeModule.verileriYukleDB(evrak);
+                // 3. İLK AÇILIŞ: Varsayılan olarak "Üst Yazı"yı göster
+                OnizlemeModule.verileriYukleDB(evrak, "#pdf-frame-popup");
+
+            }).fail(function () {
+                alert("Evrak detayları alınamadı.");
+                $("#onizleme-yukleniyor").hide();
             });
         },
-
         ekOnizle: function (ek) {
-            var $ekPanel = $("#onizleme-panel-ekler");
-            $ekPanel.empty();
-
-            // Backend'den gelen byte dizisi: ek.dosyaIcerik
             var base64Data = ek.dosyaIcerik || ek.DosyaIcerik;
-            if (!base64Data) {
-                $ekPanel.html("<div class='alert alert-warning'>Dosya içeriği boş.</div>");
-                return;
-            }
+            if (!base64Data) return;
 
             var contentType = ek.mimeType || ek.MimeType || "application/pdf";
-            var blob = this._base64ToBlob(base64Data, contentType);
-            var fileURL = URL.createObjectURL(blob);
 
+            // Eğer PDF ise direkt Iframe'e göm (Siyah barlı arayüz gelir)
             if (contentType.includes("pdf")) {
-                $ekPanel.html(`<iframe src="${fileURL}#toolbar=0" style="width:100%; height:100%; border:none; border-radius:8px;"></iframe>`);
+                $("#pdf-frame-popup").attr("src", "data:application/pdf;base64," + base64Data + "#toolbar=1");
             } else {
-                $ekPanel.html(`<div class="text-center"><img src="${fileURL}" class="shadow" style="max-width:100%; border-radius:8px;"></div>`);
+                // Resim ise Base64 URL oluşturup bas
+                $("#pdf-frame-popup").attr("src", "data:" + contentType + ";base64," + base64Data);
             }
         },
 
-        _base64ToBlob: function (base64, contentType) {
-            var byteCharacters = atob(base64);
-            var byteNumbers = new Array(byteCharacters.length);
-            for (var i = 0; i < byteCharacters.length; i++) byteNumbers[i] = byteCharacters.charCodeAt(i);
-            return new Blob([new Uint8Array(byteNumbers)], { type: contentType });
-        },
+        
 
         onay: function (id) {
             if (!confirm("Seçili evrakı onaylamak istediğinize emin misiniz?")) return;
@@ -648,3 +645,4 @@ var EvrakBekleyenListModule = (function () {
 $(document).ready(function () {
     EvrakBekleyenListModule.init();
 });
+

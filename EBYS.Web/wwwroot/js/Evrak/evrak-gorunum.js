@@ -100,6 +100,74 @@ var OnizlemeModule = (function () {
     var _imzaciAd = "";
     var _imzaciUnvan = "";
 
+    kendo.pdf.defineFont({
+        "DejaVu Sans": "https://kendo.cdn.telerik.com/2023.1.117/styles/fonts/DejaVu/DejaVuSans.ttf",
+        "DejaVu Sans|Bold": "https://kendo.cdn.telerik.com/2023.1.117/styles/fonts/DejaVu/DejaVuSans-Bold.ttf",
+        "Times New Roman": "https://kendo.cdn.telerik.com/2023.1.117/styles/fonts/DejaVu/DejaVuSans.ttf",
+        "serif": "https://kendo.cdn.telerik.com/2023.1.117/styles/fonts/DejaVu/DejaVuSans.ttf"
+    });
+
+
+    //var _renderKendoPdf = function () {
+    //    var loaderContainer = $(".pdf-viewer-wrapper");
+    //    kendo.ui.progress(loaderContainer, true); // Yükleniyor animasyonu
+
+    //    var elementToExport = $("#documentPreviewContent"); // Gizli şablonun ana divi
+
+    //    // Kendo Drawing ile PDF üretimi
+    //    kendo.drawing.drawDOM(elementToExport, {
+    //        paperSize: "A4",
+    //        scale: 0.75, // Kağıda sığması için ölçekleme
+    //        margin: { top: "0mm", bottom: "0mm", left: "0mm", right: "0mm" },
+    //        forcePageBreak: ".page-break"
+    //        // İstersen buraya örnekteki gibi 'template' ile footer da ekleyebiliriz
+    //    })
+    //        .then(function (group) {
+    //            return kendo.drawing.exportPDF(group);
+    //        })
+    //        .then(function (dataURI) {
+    //            // İŞTE O SİYAH BARLI ARAYÜZÜ GETİREN SATIR:
+    //            $("#pdf-frame").attr("src", dataURI);
+    //            kendo.ui.progress(loaderContainer, false);
+    //        })
+    //        .fail(function (err) {
+    //            console.error("PDF üretilirken hata:", err);
+    //            kendo.ui.progress(loaderContainer, false);
+    //        });
+    };
+
+
+    var _renderKendoPdf = function (targetIframeId) {
+        // Eğer popup içindeysek popup'ın loader'ını, değilsek ana sayfanınkini alalım
+        var loaderContainer = targetIframeId ? $("#onizlemeDialog") : $(".pdf-viewer-wrapper");
+
+        kendo.ui.progress(loaderContainer, true);
+
+        var elementToExport = $("#documentPreviewContent");
+
+        // Eğer dışarıdan bir ID gelirse onu kullan (popup için), gelmezse varsayılanı kullan
+        var iframeSelector = targetIframeId || "#pdf-frame";
+
+        kendo.drawing.drawDOM(elementToExport, {
+            paperSize: "A4",
+            scale: 0.75,
+            margin: { top: "0mm", bottom: "0mm", left: "0mm", right: "0mm" },
+            forcePageBreak: ".page-break"
+        })
+            .then(function (group) {
+                return kendo.drawing.exportPDF(group);
+            })
+            .then(function (dataURI) {
+                // PDF'i doğru iframe'e basıyoruz
+                $(iframeSelector).attr("src", dataURI);
+                kendo.ui.progress(loaderContainer, false);
+            })
+            .fail(function (err) {
+                console.error("PDF Hatası:", err);
+                kendo.ui.progress(loaderContainer, false);
+            });
+    };
+
     // GidenEvrakUpdateDTO -> şablona bas
     var _doldur = function (evrak) {
         // Sayı
@@ -115,8 +183,8 @@ var OnizlemeModule = (function () {
         var altMetin = evrak.imzaAltindaOlanIcerik || evrak.ImzaAltindaOlanIcerik || "";
         // HTML'de id'yi ikiye ayırdık: view-imza-alti-icerik-ust ve -alt
         // Eğer eski tek id kullanıyorsan ikisine de bas, yoksa istediğini seç
-        $("#view-imza-alti-icerik-ust").html(altMetin);
-        $("#view-imza-alti-icerik-alt").html("");
+        $("#view-imza-alti-icerik").html(altMetin);
+   
 
         // İlgiler
         var ilgiler = evrak.ilgiler || evrak.Ilgiler || [];
@@ -173,6 +241,8 @@ var OnizlemeModule = (function () {
         } else {
             $("#view-ekler-listesi").hide();
         }
+
+        _renderKendoPdf();
     };
 
     return {
@@ -216,13 +286,12 @@ var OnizlemeModule = (function () {
         },
 
         // ── İmza Bekleyen Liste sayfası: API'den gelen DTO'yu doğrudan basar ──
-        verileriYukleDB: function (evrak) {
-            try {
-                _doldur(evrak);
-                console.log("dbden çek", evrak);
-            } catch (err) {
-                console.error("DB önizleme yüklenirken hata oluştu:", err);
-            }
+        // OnizlemeModule.js içinde güncelle
+        verileriYukleDB: function (evrak, targetIframe) {
+
+            _doldur(evrak); // Gizli şablonu doldurur
+
+            _renderKendoPdf(targetIframe);
         },
 
         pdfIndir: function () {
@@ -241,6 +310,10 @@ var OnizlemeModule = (function () {
                         fileName: "Evrak_Onizleme.pdf"
                     });
                 });
-        }
+        },
+
+
+
     };
 })();
+

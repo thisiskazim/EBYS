@@ -1,93 +1,153 @@
-﻿
+﻿<meta charset="utf-8">
 
-<div class="d-flex justify-content-end mb-2 mt-2">
-        <button type="button" class="btn btn-danger btn-sm" onclick="OnizlemeModule.pdfIndir()">
-            <i class="k-icon k-i-file-pdf"></i> PDF İndir
-        </button>
-    </div>
-
-<div class="belge-onizleme-container">
-    <div class="a4-sayfa">
-
-        <!-- HEADER -->
-        <div class="belge-header">
-            <div class="logo-left">
-                <img src="~/images/ebys.png" alt="logo" />
-            </div>
-            <div class="kurum-bilgi">
-                <div style="font-weight:700;">T.C.</div>
-                <div style="font-weight:700;">TARIM VE ORMAN BAKANLIĞI</div>
-                <div>Devlet Su İşleri Genel Müdürlüğü</div>
-              @*  // <div style="font-weight:700;">OVA SULAMA BİRLİĞİ BAŞKANLIĞI</div> *@
-            </div>
-            <div class="logo-right">
-                <img src="~/images/ebys.png" alt="logo" />
-                <div class="mt-2" id="view-tarih">&nbsp;</div>
-            </div>
-        </div>
-
-        <!-- SAYI / KONU + TARİH -->
-        <div class="belge-ust-bilgi">
-            <div>
-                <div class="ust-bilgi-satir">
-                    <span class="etiket">Sayı :</span>
-                    <span id="view-sayi">11428951-000</span>
-                </div>
-                <div class="ust-bilgi-satir">
-                    <span class="etiket">Konu :</span>
-                    <span id="view-konu"></span>
-                </div>
-            </div>
-            <div id="view-tarih-right">&nbsp;</div>
-        </div>
-
-        <!-- MUHATAP BAŞLIĞI -->
-        <div id="view-muhatap-baslik" class="belge-muhatap-baslik"></div>
-
-        <!-- İLGİ ALANI -->
-        <div id="view-ilgiler-alani" class="belge-ilgi" style="display:none;"></div>
-
-        <!-- BELGE METNİ -->
-        <div id="view-icerik" class="belge-metin"></div>
-
-     
-
-        <!-- İMZA ALANI -->
-        <div class="belge-imza-alani">
-            <div class="imza-kutusu">
-                <span id="view-imza-ad"></span>
-                <span id="view-imza-unvan"></span>
-            </div>
-        </div>
-
-        <!-- İMZA ALTI İÇERİK (2) — imzadan sonra -->
-        <div id="view-imza-alti-icerik" class="belge-imza-alti-icerik"></div>
-
-        <!-- EKLER + DAĞITIM -->
-        <div class="belge-alt-bolum">
-            <div id="view-ekler-listesi" class="mb-3"></div>
-            <div id="view-dagitim-alani" style="display:none;">
-                <div class="dagitim-baslik">DAĞITIM:</div>
-                <div id="view-geregi-listesi"></div>
-                <div id="view-bilgi-listesi" class="mt-2"></div>
-            </div>
-        </div>
-
-        <!-- FOOTER -->
-        <div class="belge-footer">
-            <div class="footer-line"></div>
-            <div>
-                Ovakavağı Mh. 22401 Sk. No: 5/1 42290 Karatay/KONYA &nbsp;&nbsp;
-                Tel: 0332 389 50 01 &nbsp; Faks: 0332 389 50 01<br>
-                e-Posta: bilgi@ovasulama.gov.tr &nbsp;&nbsp;
-                Web: https://ovasulama.gov.tr &nbsp;&nbsp;
-                Kep: ovasulama@hs01.kep.tr
-            </div>
-            <div class="e-imza-notu">Bu belge, güvenli elektronik imza ile imzalanmıştır.</div>
-        </div>
-
-    </div>
+<div id="pdf-viewer-wrapper" style="width: 100%; height: 850px; background: #525659; border-radius: 8px; overflow: hidden;">
+    <iframe id="pdf-frame" style="width: 100%; height: 100%; border: none;"></iframe>
 </div>
 
+<div id="hiddenDocumentTemplate" style="position: absolute; left: -10000px; top: 0; width: 210mm;">
+    <div class="document-paper a4-sayfa" id="documentPreviewContent" style="background: white; width: 210mm; min-height: 297mm; padding: 20mm; font-family: 'DejaVu Sans', 'Times New Roman', serif; color: black; position: relative; box-sizing: border-box;">
+     
+
+            <!-- HEADER -->
+
+            <div class="belge-header">
+
+                <div class="logo-left">
+
+                    <img src="~/images/ebys.png" alt="logo" />
+
+                </div>
+
+                <div class="kurum-bilgi">
+
+                    <div style="font-weight:700;">T.C.</div>
+
+                    <div style="font-weight:700;">TARIM VE ORMAN BAKANLIĞI</div>
+
+                    <div>Devlet Su İşleri Genel Müdürlüğü</div>
+
+                    @*  // <div style="font-weight:700;">OVA SULAMA BİRLİĞİ BAŞKANLIĞI</div> *@
+
+                </div>
+
+                <div class="logo-right">
+
+                    <img src="~/images/ebys.png" alt="logo" />
+
+                    <div class="mt-2" id="view-tarih">&nbsp;</div>
+
+                </div>
+
+            </div>
+
+
+            <!-- SAYI / KONU + TARİH -->
+
+            <div class="belge-ust-bilgi">
+
+                <div>
+
+                    <div class="ust-bilgi-satir">
+
+                        <span class="etiket">Sayı :</span>
+
+                        <span id="view-sayi">11428951-000</span>
+
+                    </div>
+
+                    <div class="ust-bilgi-satir">
+
+                        <span class="etiket">Konu :</span>
+
+                        <span id="view-konu"></span>
+
+                    </div>
+
+                </div>
+
+                <div id="view-tarih-right">&nbsp;</div>
+
+            </div>
+
+            <!-- MUHATAP BAŞLIĞI -->
+
+            <div id="view-muhatap-baslik" class="belge-muhatap-baslik"></div>
+
+            <!-- İLGİ ALANI -->
+
+            <div id="view-ilgiler-alani" class="belge-ilgi" style="display:none;"></div>
+
+
+            <!-- BELGE METNİ -->
+
+            <div id="view-icerik" class="belge-metin"></div>
+
+            <!-- İMZA ALANI -->
+
+            <div class="belge-imza-alani">
+
+                <div class="imza-kutusu">
+
+                    <span id="view-imza-ad"></span>
+
+                    <span id="view-imza-unvan"></span>
+
+                </div>
+
+            </div>
+
+
+            <!-- İMZA ALTI İÇERİK (2) — imzadan sonra -->
+
+            <div id="view-imza-alti-icerik" class="belge-imza-alti-icerik"></div>
+
+
+            <!-- EKLER + DAĞITIM -->
+
+            <div class="belge-alt-bolum">
+
+                <div id="view-ekler-listesi" class="mb-3"></div>
+
+                <div id="view-dagitim-alani" style="display:none;">
+
+                    <div class="dagitim-baslik">DAĞITIM:</div>
+
+                    <div id="view-geregi-listesi"></div>
+
+                    <div id="view-bilgi-listesi" class="mt-2"></div>
+
+                </div>
+
+            </div>
+
+            <!-- FOOTER -->
+
+            <div class="belge-footer">
+
+                <div class="footer-line"></div>
+
+                <div>
+
+                    Ovakavağı Mh. 22401 Sk. No: 5/1 42290 Karatay/KONYA &nbsp;&nbsp;
+
+                    Tel: 0332 389 50 01 &nbsp; Faks: 0332 389 50 01<br>
+
+                    e-Posta: bilgi@ovasulama.gov.tr &nbsp;&nbsp;
+
+                    Web: https://ovasulama.gov.tr &nbsp;&nbsp;
+
+                    Kep: ovasulama@hs01.kep.tr
+
+                </div>
+
+                <div class="e-imza-notu">Bu belge, güvenli elektronik imza ile imzalanmıştır.</div>
+
+            </div>
+
+        </div>
+
+    
+ 
+        </div>
 
 <script src="~/js/evrak/evrak-gorunum.js"></script>
