@@ -12,7 +12,7 @@ namespace EBYS.Application.DTOs.EvrakDTO
         public Enums.GizlilikDerecesi GizlilikDerecesi { get; set; }
         public Enums.IvedilikDerecesi IvedilikDerecesi { get; set; }
         public int ImzaRotaId { get; set; }
-        public List<EvrakMuhatapSecimDTO> Muhataplar { get; set; } = new();
+        public List<GidenEvrakMuhatapSecimDTO> Muhataplar { get; set; } = new();
 
     }
 

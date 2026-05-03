@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EBYS.Application.DTOs.EvrakDTO
 {
-    public class EvrakAkisHareketleriDTO
+    public class GidenEvrakAkisHareketleriDTO
     {
         public string KullaniciAdSoyad { get; set; }
         public DateTime creat_time { get; set; }

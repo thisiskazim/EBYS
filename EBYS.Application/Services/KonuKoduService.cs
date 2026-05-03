@@ -8,11 +8,11 @@ namespace EBYS.Application.Services
 {
     public class KonuKoduService(IGenericRepository<EvrakKonuKodu> konukoduRepository,IMapper mapper) : IKonuKoduService
     {
-        public async Task<List<EvrakKonuKoduDTO>> KonuKoduList()
+        public async Task<List<GidenEvrakKonuKoduDTO>> KonuKoduList()
         {
             var get = await konukoduRepository.GetAllAsync();
  
-            return mapper.Map<List<EvrakKonuKoduDTO>>(get);
+            return mapper.Map<List<GidenEvrakKonuKoduDTO>>(get);
         }
     }
 }

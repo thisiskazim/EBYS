@@ -15,7 +15,6 @@ using System.Text;
 using EBYS.Application.Interfaces.IService;
 using EBYS.Application.Services.MuhatapService;
 using EBYS.Application.Interfaces.IService.IMuhatapService;
-using EBYS.Application.Services.EvrakService;
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var builder =WebApplication.CreateBuilder(args);
@@ -34,8 +33,8 @@ builder.Services.AddDbContext<EBYSContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection")));
 // Add services to the container.
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.AddScoped<IEvrakRepository, EvrakRepository>();
-builder.Services.AddScoped<IEvrakService, EvrakService>();
+builder.Services.AddScoped<IGidenEvrakRepository, GidenEvrakRepository>();
+builder.Services.AddScoped<IGidenEvrakService, GidenEvrakService>();
 
 builder.Services.AddScoped<IAkisService, AkisService>();
 

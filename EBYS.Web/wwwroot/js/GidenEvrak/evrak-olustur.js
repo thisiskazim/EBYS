@@ -1,5 +1,5 @@
 ﻿var EvrakOlustur = (function () {
-    var _apiBaseUrl = "https://localhost:7060/api/Evrak/";
+    var _apiBaseUrl = "https://localhost:7060/api/GidenEvrak/";
 
     // FormData gönderimi için güncellenmiş AJAX çağrısı
     var _ajaxCallFormData = function (url, formData) {

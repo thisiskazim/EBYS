@@ -15,7 +15,7 @@ namespace EBYS.Application.Mapping
             //EVRAK MAPPİNG
             // --- 1. LİSTELEME EKRANI (Entity -> DTO) ---
             // Evrakları tabloda listelerken kullanılır.
-            CreateMap<Evrak, EvrakAkisListeDTO>()
+            CreateMap<Evrak, GidenEvrakAkisListeDTO>()
                 .ForMember(dest => dest.OlusturanKullaniciId, opt => opt.MapFrom(src => src.OlusturanId))
                 .ForMember(dest => dest.OlusturanKullanici, opt => opt.MapFrom(src => src.Olusturan.AdSoyad))
                 .ForMember(dest => dest.SuAnKimde, opt => opt.MapFrom(src => src.AkisAdimlari.FirstOrDefault(a => a.SiradakiMi).Kullanici.AdSoyad ?? "Tamamlandı"))
@@ -23,7 +23,7 @@ namespace EBYS.Application.Mapping
                 );
 
 
-            CreateMap<EvrakAkis, EvrakAkisHareketleriDTO>().ForMember(dest => dest.KullaniciAdSoyad, opt => opt.MapFrom(src => src.Kullanici.AdSoyad));
+            CreateMap<EvrakAkis, GidenEvrakAkisHareketleriDTO>().ForMember(dest => dest.KullaniciAdSoyad, opt => opt.MapFrom(src => src.Kullanici.AdSoyad));
    
 
             // --- 2. DÜZENLEME EKRANI (Entity -> DTO) ---
@@ -32,7 +32,7 @@ namespace EBYS.Application.Mapping
             CreateMap<EvrakIlgi, EvrakIlgiUpdateDTO>();
 
             // Diğer Muhatap -> DTO eşleşmelerini sil, sadece bu kalsın:
-            CreateMap<EvrakMuhatap, EvrakMuhatapSecimDTO>()
+            CreateMap<EvrakMuhatap, GidenEvrakMuhatapSecimDTO>()
                 .ForMember(dest => dest.MuhatapId, opt => opt.MapFrom(src => src.MuhatapId))
                 .ForMember(dest => dest.IsBilgi, opt => opt.MapFrom(src => src.IsBilgi))
                 .ForMember(dest => dest.Adi, opt => opt.MapFrom(src => src.Muhatap.Adi));
@@ -68,11 +68,11 @@ namespace EBYS.Application.Mapping
             CreateMap<EvrakIlgiUpdateDTO, EvrakIlgi>();
             CreateMap<EvrakEkCreateDTO, EvrakEk>();
             CreateMap<EvrakEkUpdateDTO, EvrakEk>();
-            CreateMap<EvrakMuhatapSecimDTO, EvrakMuhatap>();
+            CreateMap<GidenEvrakMuhatapSecimDTO, EvrakMuhatap>();
 
 
 
-            CreateMap<EvrakKonuKodu, EvrakKonuKoduDTO>()
+            CreateMap<EvrakKonuKodu, GidenEvrakKonuKoduDTO>()
                 .ForMember(dest => dest.FullKod,
                     opt => opt.MapFrom(src => $"{src.KodNumber} - {src.KodAdi}"));
 

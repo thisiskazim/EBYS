@@ -4,7 +4,7 @@ using EBYS.Domain.Enum;
 
 namespace EBYS.Application.Interfaces.Repository
 {
-    public interface IEvrakRepository:IGenericRepository<Evrak>
+    public interface IGidenEvrakRepository:IGenericRepository<Evrak>
     {
         Task<List<Evrak>> IslemBekleyenlenKullaniciSorguAsync(int userId,Enums.ImzaTipi imzaTipi);
         Task<Evrak> DetayliGetirAsync(int id);

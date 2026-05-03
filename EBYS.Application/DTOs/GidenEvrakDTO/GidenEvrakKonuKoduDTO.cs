@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EBYS.Application.DTOs.EvrakDTO
 {
-    public class EvrakKonuKoduDTO
+    public class GidenEvrakKonuKoduDTO
     {
         public int Id { get; set; }
         public string FullKod { get; set; } // "622.01 - Bilgi Belge Talepleri"

@@ -7,14 +7,14 @@ namespace EBYS.Application.Interfaces.IService
 {
     public interface IAkisService
     {
-        Task<List<EvrakAkisListeDTO>> ImzaBekleyenleriGetirAsync();
+        Task<List<GidenEvrakAkisListeDTO>> ImzaBekleyenleriGetirAsync();
 
     
-        Task<List<EvrakAkisListeDTO>> ParafBekleyenleriGetirAsync();
+        Task<List<GidenEvrakAkisListeDTO>> ParafBekleyenleriGetirAsync();
 
-        Task<List<EvrakAkisListeDTO>> ImzayaGonderdigimAsync();
+        Task<List<GidenEvrakAkisListeDTO>> ImzayaGonderdigimAsync();
 
-        Task<List<EvrakAkisHareketleriDTO>> EvrakHareketleriGetirAsync(int evrakId);
+        Task<List<GidenEvrakAkisHareketleriDTO>> EvrakHareketleriGetirAsync(int evrakId);
 
         Task<IslemSonuc> OnaylaAsync(int evrakId);
 

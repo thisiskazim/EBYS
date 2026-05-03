@@ -12,7 +12,7 @@
                                 .AutoBind(true)
                                 .Suggest(true)
                                 .DataSource(ds => ds
-                                .Read(r => r.Url("https://localhost:7060/api/Evrak/KonuKoduGet").Type(HttpVerbs.Get))
+                                .Read(r => r.Url("https://localhost:7060/api/GidenEvrak/KonuKoduGet").Type(HttpVerbs.Get))
                                 )
                                 .HtmlAttributes(new { style = "width:100%", @class = "form-control" })
                                 )
@@ -108,7 +108,7 @@
 
 
 
-<script src="~/js/evrak/evrak-bilgileri.js"></script>
+<script src="~/js/GidenEvrak/evrak-bilgileri.js"></script>
 
                         
 

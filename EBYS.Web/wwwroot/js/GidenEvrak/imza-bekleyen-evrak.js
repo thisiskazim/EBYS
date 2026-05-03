@@ -543,7 +543,7 @@ var EvrakBekleyenListModule = (function () {
             $("#popupDosyaListesi").empty();
             $("#pdf-frame-popup").attr("src", "about:blank");
 
-            $.get('https://localhost:7060/api/Evrak/EvrakGetir/' + id, function (evrak) {
+            $.get('https://localhost:7060/api/GidenEvrak/EvrakGetir/' + id, function (evrak) {
                 $("#onizleme-yukleniyor").hide();
 
                 // 1. LİSTEYE "ÜST YAZI"YI EKLE (Senin oluşturduğun şablon)
@@ -627,7 +627,7 @@ var EvrakBekleyenListModule = (function () {
         cancel: function (id) {
             if (confirm("Bu evrakı silmek istediğinize emin misiniz?")) {
                 $.ajax({
-                    url: "https://localhost:7060/api/Evrak/EvrakSil/" + id,
+                    url: "https://localhost:7060/api/GidenEvrak/EvrakSil/" + id,
                     type: "DELETE",
                     success: function (response) {
                         showNotification(response, "success");

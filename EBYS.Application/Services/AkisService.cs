@@ -8,15 +8,15 @@ using EBYS.Domain.Utilities;
 
 namespace EBYS.Application.Services
 {
-    public class AkisService(IEvrakRepository evrakRepository, IMapper mapper) : IAkisService
+    public class AkisService(IGidenEvrakRepository evrakRepository, IMapper mapper) : IAkisService
     {
 
-        public async Task<List<EvrakAkisListeDTO>> ImzaBekleyenleriGetirAsync()
+        public async Task<List<GidenEvrakAkisListeDTO>> ImzaBekleyenleriGetirAsync()
         {
             return await IslemBekleyenler(Enums.ImzaTipi.Imza);
         }
 
-        public Task<List<EvrakAkisListeDTO>> ParafBekleyenleriGetirAsync()
+        public Task<List<GidenEvrakAkisListeDTO>> ParafBekleyenleriGetirAsync()
         {
             return IslemBekleyenler(Enums.ImzaTipi.Paraf);
         }
@@ -78,7 +78,7 @@ namespace EBYS.Application.Services
         }
 
 
-        public async Task<List<EvrakAkisListeDTO>> ImzayaGonderdigimAsync()
+        public async Task<List<GidenEvrakAkisListeDTO>> ImzayaGonderdigimAsync()
         {
             var userId = evrakRepository.GetContextUserId();
 
@@ -86,7 +86,7 @@ namespace EBYS.Application.Services
 
             return entities.Select(e =>
             {
-                var dto = mapper.Map<EvrakAkisListeDTO>(e);
+                var dto = mapper.Map<GidenEvrakAkisListeDTO>(e);
 
                 var benimAdimim = e.AkisAdimlari.FirstOrDefault(a => a.KullaniciId == userId);
                 var sonrakiAdim = e.AkisAdimlari.FirstOrDefault(a => a.SiraNo == benimAdimim?.SiraNo + 1);
@@ -156,18 +156,18 @@ namespace EBYS.Application.Services
             }
         }
 
-        public async Task<List<EvrakAkisHareketleriDTO>> EvrakHareketleriGetirAsync(int evrakId)
+        public async Task<List<GidenEvrakAkisHareketleriDTO>> EvrakHareketleriGetirAsync(int evrakId)
         {
              var entities = await evrakRepository.EvrakHareketleriGetirAsync(evrakId);
 
-             var dtoList = mapper.Map<List<EvrakAkisHareketleriDTO>>(entities);
+             var dtoList = mapper.Map<List<GidenEvrakAkisHareketleriDTO>>(entities);
 
              return dtoList;
 
         }
 
 
-        private async Task<List<EvrakAkisListeDTO>> IslemBekleyenler(Enums.ImzaTipi imzaTipi)
+        private async Task<List<GidenEvrakAkisListeDTO>> IslemBekleyenler(Enums.ImzaTipi imzaTipi)
         {
             var userId = evrakRepository.GetContextUserId();
 
@@ -175,7 +175,7 @@ namespace EBYS.Application.Services
             var entities = await evrakRepository.IslemBekleyenlenKullaniciSorguAsync(userId, imzaTipi);
 
             // 2. AutoMapper ile Entity -> DTO dönüşümü (MAPPING)
-            var dtoList = mapper.Map<List<EvrakAkisListeDTO>>(entities);
+            var dtoList = mapper.Map<List<GidenEvrakAkisListeDTO>>(entities);
 
             // 3. Özel iş kuralını (CanEdit) döngüyle veya mapping sırasında set edebiliriz
             foreach (var dto in dtoList)

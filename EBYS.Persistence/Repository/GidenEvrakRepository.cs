@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace EBYS.Persistence.Repository
 {
-    public class EvrakRepository : GenericRepository<Evrak>, IEvrakRepository
+    public class GidenEvrakRepository : GenericRepository<Evrak>, IGidenEvrakRepository
     {
-        public EvrakRepository(EBYSContext context) : base(context) { }
+        public GidenEvrakRepository(EBYSContext context) : base(context) { }
 
         public async Task<Evrak> AkisAdimlariSorguAsync(int evrakId)
         {

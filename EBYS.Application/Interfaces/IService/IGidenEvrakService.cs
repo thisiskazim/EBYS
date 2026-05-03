@@ -3,7 +3,7 @@
 
 namespace EBYS.Application.Interfaces.IService
 {
-    public interface IEvrakService:IGenericService<GidenEvrakCreateDTO, GidenEvrakUpdateDTO, GidenEvrakListDTO>
+    public interface IGidenEvrakService:IGenericService<GidenEvrakCreateDTO, GidenEvrakUpdateDTO, GidenEvrakListDTO>
     {
         
     

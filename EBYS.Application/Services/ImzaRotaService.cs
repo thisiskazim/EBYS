@@ -8,7 +8,7 @@ using EBYS.Domain.Enum;
 
 namespace EBYS.Application.Services
 {
-    public class ImzaRotaService(IImzaRotaRepository imzaRotaRepository, IMapper mapper,IEvrakRepository evrakRepository) : IImzaRotaService
+    public class ImzaRotaService(IImzaRotaRepository imzaRotaRepository, IMapper mapper,IGidenEvrakRepository evrakRepository) : IImzaRotaService
     {
         public async Task AddAsync(ImzaRotaCreateDTO dto)
         {

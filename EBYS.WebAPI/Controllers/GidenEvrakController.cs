@@ -8,7 +8,7 @@ namespace EBYS.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EvrakController(IEvrakService evrakServive, IKonuKoduService konuKoduService) : ControllerBase
+    public class GidenEvrakController(IGidenEvrakService evrakServive, IKonuKoduService konuKoduService) : ControllerBase
     {
 
         [HttpPost("EvrakOlustur")]

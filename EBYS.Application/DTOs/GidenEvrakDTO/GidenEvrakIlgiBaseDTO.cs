@@ -2,20 +2,20 @@
 
 namespace EBYS.Application.DTOs.EvrakDTO
 {
-    public class EvrakIlgiBaseDTO
+    public class GidenEvrakIlgiBaseDTO
     {
         public string? IlgiMetni { get; set; }
 
-        //bir gün dosya ekleme ihtiyacı olabilir diye ekledim
+        //dosya ekleme ihtiyacı olabilir diye ekledim
        //  public string? EkDosyaYolu { get; set; }
     }
 
-    public class EvrakIlgiCreateDTO : EvrakIlgiBaseDTO
+    public class EvrakIlgiCreateDTO : GidenEvrakIlgiBaseDTO
     {
        
     }
 
-    public class EvrakIlgiUpdateDTO : EvrakIlgiBaseDTO
+    public class EvrakIlgiUpdateDTO : GidenEvrakIlgiBaseDTO
     {
         public int Id { get; set; }
     }

@@ -10,6 +10,6 @@ namespace EBYS.Application.Interfaces.IService
 {
     public interface IKonuKoduService
     {
-        Task<List<EvrakKonuKoduDTO>> KonuKoduList();
+        Task<List<GidenEvrakKonuKoduDTO>> KonuKoduList();
     }
 }

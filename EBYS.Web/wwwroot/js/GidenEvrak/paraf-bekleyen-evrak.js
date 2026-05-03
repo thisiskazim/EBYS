@@ -143,7 +143,7 @@
         cancel: function (id) {
             if (confirm("Bu evrakı silmek istediğinize emin misiniz?")) {
                 $.ajax({
-                    url: "https://localhost:7060/api/Evrak/EvrakSil/" + id,
+                    url: "https://localhost:7060/api/GidenEvrak/EvrakSil/" + id,
                     type: "DELETE",
                     success: function (response) {
                         showNotification(response, "success");

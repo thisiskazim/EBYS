@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-
 using EBYS.Application.DTOs.EvrakDTO;
 using EBYS.Application.Interfaces.IService;
 using EBYS.Application.Interfaces.Repository;
@@ -7,12 +6,10 @@ using EBYS.Domain.Entities;
 using EBYS.Domain.Enum;
 using Microsoft.AspNetCore.Http;
 
-namespace EBYS.Application.Services.EvrakService
+namespace EBYS.Application.Services
 {
-    public class EvrakService(IEvrakRepository evrakRepository,IMapper mapper,IImzaRotaRepository imzaRotaRepository) : IEvrakService
-
+    public class GidenEvrakService(IGidenEvrakRepository evrakRepository,IMapper mapper,IImzaRotaRepository imzaRotaRepository) : IGidenEvrakService
     {
-
 
         public async Task AddAsync(GidenEvrakCreateDTO createDto)
         {
@@ -88,7 +85,7 @@ namespace EBYS.Application.Services.EvrakService
                     // 1. İsim Mantığı: Kullanıcı ad girdiyse onu al, girmediyse dosya adını al
                     yeniEk.Ad = !string.IsNullOrEmpty(ekDto.Ad)
                                 ? ekDto.Ad
-                                : (ekDto.Dosya != null ? ekDto.Dosya.FileName : "Adsız Ek");
+                                : ekDto.Dosya != null ? ekDto.Dosya.FileName : "Adsız Ek";
 
                     // 2. Dosya Mantığı: Eğer dosya varsa işle
                     if (ekDto.Dosya != null)
