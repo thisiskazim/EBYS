@@ -108,65 +108,65 @@ var OnizlemeModule = (function () {
     });
 
 
-    //var _renderKendoPdf = function () {
-    //    var loaderContainer = $(".pdf-viewer-wrapper");
-    //    kendo.ui.progress(loaderContainer, true); // Yükleniyor animasyonu
+    var _renderKendoPdf = function () {
+        var loaderContainer = $(".pdf-viewer-wrapper");
+        kendo.ui.progress(loaderContainer, true); // Yükleniyor animasyonu
 
-    //    var elementToExport = $("#documentPreviewContent"); // Gizli şablonun ana divi
+        var elementToExport = $("#documentPreviewContent"); // Gizli şablonun ana divi
 
-    //    // Kendo Drawing ile PDF üretimi
-    //    kendo.drawing.drawDOM(elementToExport, {
-    //        paperSize: "A4",
-    //        scale: 0.75, // Kağıda sığması için ölçekleme
-    //        margin: { top: "0mm", bottom: "0mm", left: "0mm", right: "0mm" },
-    //        forcePageBreak: ".page-break"
-    //        // İstersen buraya örnekteki gibi 'template' ile footer da ekleyebiliriz
-    //    })
-    //        .then(function (group) {
-    //            return kendo.drawing.exportPDF(group);
-    //        })
-    //        .then(function (dataURI) {
-    //            // İŞTE O SİYAH BARLI ARAYÜZÜ GETİREN SATIR:
-    //            $("#pdf-frame").attr("src", dataURI);
-    //            kendo.ui.progress(loaderContainer, false);
-    //        })
-    //        .fail(function (err) {
-    //            console.error("PDF üretilirken hata:", err);
-    //            kendo.ui.progress(loaderContainer, false);
-    //        });
-    };
-
-
-    var _renderKendoPdf = function (targetIframeId) {
-        // Eğer popup içindeysek popup'ın loader'ını, değilsek ana sayfanınkini alalım
-        var loaderContainer = targetIframeId ? $("#onizlemeDialog") : $(".pdf-viewer-wrapper");
-
-        kendo.ui.progress(loaderContainer, true);
-
-        var elementToExport = $("#documentPreviewContent");
-
-        // Eğer dışarıdan bir ID gelirse onu kullan (popup için), gelmezse varsayılanı kullan
-        var iframeSelector = targetIframeId || "#pdf-frame";
-
+        // Kendo Drawing ile PDF üretimi
         kendo.drawing.drawDOM(elementToExport, {
             paperSize: "A4",
-            scale: 0.75,
+            scale: 0.75, // Kağıda sığması için ölçekleme
             margin: { top: "0mm", bottom: "0mm", left: "0mm", right: "0mm" },
             forcePageBreak: ".page-break"
+            // İstersen buraya örnekteki gibi 'template' ile footer da ekleyebiliriz
         })
             .then(function (group) {
                 return kendo.drawing.exportPDF(group);
             })
             .then(function (dataURI) {
-                // PDF'i doğru iframe'e basıyoruz
-                $(iframeSelector).attr("src", dataURI);
+                // İŞTE O SİYAH BARLI ARAYÜZÜ GETİREN SATIR:
+                $("#pdf-frame").attr("src", dataURI);
                 kendo.ui.progress(loaderContainer, false);
             })
             .fail(function (err) {
-                console.error("PDF Hatası:", err);
+                console.error("PDF üretilirken hata:", err);
                 kendo.ui.progress(loaderContainer, false);
             });
     };
+
+
+    //var _renderKendoPdf = function (targetIframeId) {
+    //    // Eğer popup içindeysek popup'ın loader'ını, değilsek ana sayfanınkini alalım
+    //    var loaderContainer = targetIframeId ? $("#onizlemeDialog") : $(".pdf-viewer-wrapper");
+
+    //    kendo.ui.progress(loaderContainer, true);
+
+    //    var elementToExport = $("#documentPreviewContent");
+
+    //    // Eğer dışarıdan bir ID gelirse onu kullan (popup için), gelmezse varsayılanı kullan
+    //    var iframeSelector = targetIframeId || "#pdf-frame";
+
+    //    kendo.drawing.drawDOM(elementToExport, {
+    //        paperSize: "A4",
+    //        scale: 0.75,
+    //        margin: { top: "0mm", bottom: "0mm", left: "0mm", right: "0mm" },
+    //        forcePageBreak: ".page-break"
+    //    })
+    //        .then(function (group) {
+    //            return kendo.drawing.exportPDF(group);
+    //        })
+    //        .then(function (dataURI) {
+    //            // PDF'i doğru iframe'e basıyoruz
+    //            $(iframeSelector).attr("src", dataURI);
+    //            kendo.ui.progress(loaderContainer, false);
+    //        })
+    //        .fail(function (err) {
+    //            console.error("PDF Hatası:", err);
+    //            kendo.ui.progress(loaderContainer, false);
+    //        });
+    //};
 
     // GidenEvrakUpdateDTO -> şablona bas
     var _doldur = function (evrak) {

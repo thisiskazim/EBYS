@@ -18,7 +18,7 @@ namespace EBYS.Application.Services.EvrakService
         {
             var evrak = mapper.Map<Evrak>(createDto);
             evrak.BelgeDurum = Enums.BelgeDurum.Taslak;
-            evrak.EvrakSayisi= 1;
+            evrak.EvrakSayisi= 0;
             evrak.IsGelenEvrak = false;
 
             // Oluşturan kullanıcıyı evrak nesnesine set et
@@ -26,7 +26,7 @@ namespace EBYS.Application.Services.EvrakService
             {
                 KullaniciId = evrakRepository.GetContextUserId(),
                 ParafMiImzaMi = Enums.ImzaTipi.Imza,
-                SiraNo = 1,
+                SiraNo = 0,
                 AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
                 SiradakiMi = true
 
@@ -57,7 +57,7 @@ namespace EBYS.Application.Services.EvrakService
                     {
                         KullaniciId = adim.KullaniciId,
                         ParafMiImzaMi = adim.ParafMiImzaMi,
-                        SiraNo = adim.SiraNo+1,
+                        SiraNo = adim.SiraNo,
                         AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
                         SiradakiMi = false
 

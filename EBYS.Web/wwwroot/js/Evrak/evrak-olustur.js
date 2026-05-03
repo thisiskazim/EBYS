@@ -84,11 +84,7 @@
                 }
             });
 
-            if (!bilgiler.Konu) {
-                showNotification("Lütfen evrak konusunu giriniz.", "warning");
-                return;
-            }
-
+       
             var action = bilgiler.Id > 0 ? "EvrakGuncelle" : "EvrakOlustur";
 
             // Ajax çağrısını yap
@@ -108,9 +104,8 @@
                     EvrakBilgiModule.setData(response);
                     AliciModule.setData(response.muhataplar);
                     IlgilerModule.setData(response.ilgiler);
-                   // if (typeof EklerModule !== "undefined") {
-                        EklerModule.setData(response.ekler);
-                   // }
+                    EklerModule.setData(response.ekler);
+          
                     var rotaId = response.imzaRotaId || response.ImzaRotaId;
                     if (rotaId) {
                         EvrakOlustur.updateImzaciFromRota(rotaId);

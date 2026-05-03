@@ -16,11 +16,17 @@
 
             // 1. Normal Inputlar
             $("#konu").val(data.konu || data.Konu);
-            $("#EvrakId").val(data.id || data.Id); // Hidden ID alanı varsa
+   
+
+
+            $("#EvrakId").val(data.id || data.Id);
+
 
             // 2. Kendo ComboBox (Konu Kodu)
             var ddlKonuKodu = $("#KonuKoduId").data("kendoComboBox");
             if (ddlKonuKodu) ddlKonuKodu.value(data.konuKoduId || data.KonuKoduId);
+
+           
 
             // 3. Kendo DropDownLists
             var ddlImzaRota = $("#ImzaRota").data("kendoDropDownList");
@@ -48,6 +54,9 @@
             var ddlIvedilik = $("#ivedilik").data("kendoDropDownList");
             var editorGövde = $("#EvrakEditor").data("kendoEditor");
             var editorAlt = $("#AltMetinEditor").data("kendoEditor");
+
+    
+
                 
             return {
                 Id: parseInt($("#EvrakId").val()) || 0,
