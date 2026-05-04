@@ -7,24 +7,22 @@ using System.Threading.Tasks;
 
 namespace EBYS.Application.DTOs.EvrakDTO
 {
-    public class GidenEvrakEkBaseDTO
+    public class GelenEvrakEkBaseDTO
     {
         public int Id { get; set; }
         public string Ad { get; set; }
         public string? DosyaUzantisi { get; set; }
         public string? MimeType { get; set; }
-
     }
 
-    public class GidenEvrakEkCreateDTO
+    public class GelenEvrakEkCreateDTO
     {
         public string? Ad { get; set; }
-        public IFormFile? Dosya { get; set; }
+        public IFormFile? Dosya { get; set; } // Upload edilen dosya
     }
 
-    public class GidenEvrakEkUpdateDTO : GidenEvrakEkBaseDTO
+    public class GelenEvrakEkUpdateDTO : GelenEvrakEkBaseDTO
     {
-        public IFormFile? Dosya { get; set; }
+        public IFormFile? Dosya { get; set; } // Eğer dosya değişecekse doldurulur
     }
-
 }

@@ -1,13 +1,11 @@
-﻿
-using EBYS.Application.Interfaces.IService;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 
 namespace EBYS.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AkisController(IAkisService akisService) : ControllerBase
+    public class AkisController(IGidenEvrakAkisService akisService) : ControllerBase
     {
         [HttpGet("imza-bekleyen-listele")]
         public async Task<IActionResult> ImzaBekleyenEvrakListele()

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EBYS.Domain.Entities.GidenEvrak;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace EBYS.Domain.Entities
         public string? EPosta { get; set; }
         public string Adress { get; set; }
             
-        public virtual ICollection<EvrakMuhatap> Evraklar { get; set; } = new HashSet<EvrakMuhatap>();
+        public virtual ICollection<GidenEvrakMuhatap> Evraklar { get; set; } = new HashSet<GidenEvrakMuhatap>();
     }
 
 

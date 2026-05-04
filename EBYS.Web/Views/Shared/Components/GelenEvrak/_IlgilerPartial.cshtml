@@ -1,0 +1,23 @@
+﻿<div class="p-3">
+
+    <div class="row g-2 mb-3 align-items-end">
+        <div class="col-md-9">
+            <label class="form-label">İlgi Metni</label>
+            @(Html.Kendo().TextBox()
+                        .Name("IlgiMetni")
+                        .Placeholder("Örn: 12.02.2024 tarihli ve 123 sayılı yazınız...")
+                        .HtmlAttributes(new { style = "width: 100%",@class = "form-control", id = "IlgiMetni" }))
+        </div>
+        <div class="col-md-3">
+            <button type="button" onclick="IlgilerModule.ekle()" class="btn btn-outline-primary w-100">
+                <i class="k-icon k-i-plus"></i> Ekle
+            </button>
+        </div>
+    </div>
+
+    <div id="ilgilerGrid"></div>
+</div>
+
+
+
+<script src="~/js/GidenEvrak/ilgiler.js"></script>

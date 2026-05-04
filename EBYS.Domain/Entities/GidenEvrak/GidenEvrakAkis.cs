@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EBYS.Domain.Entities
+namespace EBYS.Domain.Entities.GidenEvrak
 {
-    public class EvrakAkis : BaseEntity
+    public class GidenEvrakAkis : BaseEntity
     {
         public int EvrakId { get; set; }
-        public virtual Evrak Evrak { get; set; }
+        public virtual GidenEvrak Evrak { get; set; }
 
         public int KullaniciId { get; set; }
         public virtual Kullanici Kullanici { get; set; }

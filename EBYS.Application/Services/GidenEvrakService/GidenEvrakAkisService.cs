@@ -1,14 +1,13 @@
 ﻿
 using AutoMapper;
 using EBYS.Application.DTOs.EvrakDTO;
-using EBYS.Application.Interfaces.IService;
 using EBYS.Application.Interfaces.Repository;
 using EBYS.Domain.Enum;
 using EBYS.Domain.Utilities;
 
-namespace EBYS.Application.Services
+namespace EBYS.Application.Services.GidenEvrakService.GidenEvrakService
 {
-    public class AkisService(IGidenEvrakRepository evrakRepository, IMapper mapper) : IAkisService
+    public class GidenEvrakAkisService(IGidenEvrakRepository evrakRepository, IMapper mapper) : IGidenEvrakAkisService
     {
 
         public async Task<List<GidenEvrakAkisListeDTO>> ImzaBekleyenleriGetirAsync()

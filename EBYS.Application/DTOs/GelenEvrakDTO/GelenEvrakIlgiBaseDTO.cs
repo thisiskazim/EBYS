@@ -2,7 +2,7 @@
 
 namespace EBYS.Application.DTOs.EvrakDTO
 {
-    public class GidenEvrakIlgiBaseDTO
+    public class GelenEvrakIlgiBaseDTO
     {
         public string? IlgiMetni { get; set; }
 
@@ -10,12 +10,12 @@ namespace EBYS.Application.DTOs.EvrakDTO
        //  public string? EkDosyaYolu { get; set; }
     }
 
-    public class GidenEvrakIlgiCreateDTO : GidenEvrakIlgiBaseDTO
+    public class GelenEvrakIlgiCreateDTO : GelenEvrakIlgiBaseDTO
     {
        
     }
 
-    public class GidenEvrakIlgiUpdateDTO : GidenEvrakIlgiBaseDTO
+    public class GelenEvrakIlgiUpdateDTO : GelenEvrakIlgiBaseDTO
     {
         public int Id { get; set; }
     }

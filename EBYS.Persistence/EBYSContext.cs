@@ -1,5 +1,7 @@
 ﻿using EBYS.Application.Common.Interface;
 using EBYS.Domain.Entities;
+using EBYS.Domain.Entities.GelenEvrak;
+using EBYS.Domain.Entities.GidenEvrak;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 namespace EBYS.Persistence
@@ -17,21 +19,25 @@ namespace EBYS.Persistence
 
         }
 
-        public DbSet<Evrak> Evraklar { get; set; }
+        public DbSet<GidenEvrak> Evraklar { get; set; }
         public DbSet<EvrakKonuKodu> EvrakKonuKodlari { get; set; }
-        public DbSet<EvrakEk> EvrakEkler { get; set; }
-        public DbSet<EvrakIlgi> EvrakIlgiler { get; set; }
+        public DbSet<GidenEvrakEk> EvrakEkler { get; set; }
+        public DbSet<GidenEvrakIlgi> EvrakIlgiler { get; set; }
         public DbSet<Muhatap> Muhataplar { get; set; }
         public DbSet<BaseKurum> BaseKurums { get; set; }
         public DbSet<KurumMuhatap> KurumMuhataplar { get; set; }
         public DbSet<TuzelKisiMuhatap> TuzelKisiMuhataplar { get; set; }
         public DbSet<BireyselMuhatap> BireyselMuhataplar { get; set; }
-        public DbSet<EvrakMuhatap> EvrakMuhataplari { get; set; }
+        public DbSet<GidenEvrakMuhatap> EvrakMuhataplari { get; set; }
+        public DbSet<GidenEvrakAkis> EvrakAkislari { get; set; }
         public DbSet<Kullanici> Kullanicilar { get; set; }
         public DbSet<Rol> Roller { get; set; }
         public DbSet<ImzaRota> ImzaRotalar { get; set; }
         public DbSet<ImzaRotaAdimi> ImzaRotaAdimlari { get; set; }
-        public DbSet<EvrakAkis> EvrakAkislari { get; set; }
+        public DbSet<GelenEvrak> GelenEvraklar { get; set; }
+        public DbSet<GelenEvrakEk> GelenEvrakEkler { get; set; }
+        public DbSet<GelenEvrakIlgi> GelenEvrakIlgileri { get; set; }
+        public DbSet<GelenEvrakSevk> GelenEvrakSevkler { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -79,30 +85,30 @@ namespace EBYS.Persistence
                 .HasValue<BireyselMuhatap>("Birey");
 
 
-            modelBuilder.Entity<EvrakMuhatap>()
+            modelBuilder.Entity<GidenEvrakMuhatap>()
                 .HasKey(em => new { em.EvrakId, em.MuhatapId });
 
-            modelBuilder.Entity<EvrakMuhatap>()
+            modelBuilder.Entity<GidenEvrakMuhatap>()
                 .HasOne(em => em.Evrak)
                 .WithMany(e => e.Muhataplar)
                 .HasForeignKey(em => em.EvrakId);
 
 
             // 1. Muhataplar İlişkisi
-            modelBuilder.Entity<EvrakMuhatap>()
+            modelBuilder.Entity<GidenEvrakMuhatap>()
                 .HasOne(x => x.Evrak)
                 .WithMany(x => x.Muhataplar)
                 .HasForeignKey(x => x.EvrakId)
                 .OnDelete(DeleteBehavior.Cascade); // Evrak silinince Muhataplar silinir
 
             // 2. İlgiler İlişkisi
-            modelBuilder.Entity<EvrakIlgi>()
+            modelBuilder.Entity<GidenEvrakIlgi>()
                 .HasOne(x => x.Evrak)
                 .WithMany(x => x.İlgiler)
                 .HasForeignKey(x => x.EvrakId)
                 .OnDelete(DeleteBehavior.Cascade); // Evrak silinince İlgiler silinir
 
-            modelBuilder.Entity<EvrakEk>()
+            modelBuilder.Entity<GidenEvrakEk>()
                  .HasOne(x => x.Evrak)
                  .WithMany(x => x.Ekler)
                  .HasForeignKey(x => x.EvrakId)
@@ -110,7 +116,7 @@ namespace EBYS.Persistence
                  .OnDelete(DeleteBehavior.Cascade); // 2. Evrak silinirse her şeyi sil
 
             // Aynı işlemi İlgiler için de yap
-            modelBuilder.Entity<EvrakIlgi>()
+            modelBuilder.Entity<GidenEvrakIlgi>()
                 .HasOne(x => x.Evrak)
                 .WithMany(x => x.İlgiler)
                 .HasForeignKey(x => x.EvrakId)
@@ -118,32 +124,32 @@ namespace EBYS.Persistence
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Konu Kodu Koruması
-            modelBuilder.Entity<Evrak>()
+            modelBuilder.Entity<GidenEvrak>()
                 .HasOne(e => e.EvrakKonuKodu)
                 .WithMany()
                 .HasForeignKey(e => e.KonuKoduId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // İmza Rota Koruması
-            modelBuilder.Entity<Evrak>()
+            modelBuilder.Entity<GidenEvrak>()
                 .HasOne(e => e.ImzaRota)
                 .WithMany()
                 .HasForeignKey(e => e.ImzaRotaId)
                 .OnDelete(DeleteBehavior.Restrict); // Silinmesini engelle!
 
-            modelBuilder.Entity<EvrakMuhatap>()
+            modelBuilder.Entity<GidenEvrakMuhatap>()
                 .HasOne(em => em.Muhatap)
                 .WithMany(m => m.Evraklar)
                 .HasForeignKey(em => em.MuhatapId);
 
-            modelBuilder.Entity<Evrak>()
+            modelBuilder.Entity<GidenEvrak>()
                 .HasOne(e => e.Olusturan)
                 .WithMany()
                 .HasForeignKey(e => e.OlusturanId)
                 .OnDelete(DeleteBehavior.Restrict); // Kullanıcıyı sildirme!
 
 
-            modelBuilder.Entity<EvrakAkis>(entity =>
+            modelBuilder.Entity<GidenEvrakAkis>(entity =>
             {
                 // Bir evrak silinirse, o evraka ait akış adımları da silinsin (Cascade)
                 entity.HasOne(d => d.Evrak)
@@ -161,15 +167,41 @@ namespace EBYS.Persistence
             });
 
             
-            modelBuilder.Entity<Evrak>()
+            modelBuilder.Entity<GidenEvrak>()
                 .Property(e => e.Icerik)
                 .HasColumnType("text");
 
-            modelBuilder.Entity<Evrak>()
+            modelBuilder.Entity<GidenEvrak>()
                 .Property(e => e.ImzaAltindaOlanIcerik)
                 .HasColumnType("text");
 
-            
+            //gelen evrak
+            // --- Gelen Evrak ve Ekler İlişkisi ---
+            modelBuilder.Entity<GelenEvrakEk>()
+                .HasOne(x => x.GelenEvrak)
+                .WithMany(x => x.Ekler)
+                .HasForeignKey(x => x.GelenEvrakId)
+                .OnDelete(DeleteBehavior.Cascade); // Evrak silinirse ekler de silinir
+
+            // --- Gelen Evrak ve İlgiler İlişkisi ---
+            modelBuilder.Entity<GelenEvrakIlgi>()
+                .HasOne(x => x.GelenEvrak)
+                .WithMany(x => x.Ilgileri)
+                .HasForeignKey(x => x.GelenEvrakId)
+                .OnDelete(DeleteBehavior.Cascade); // Evrak silinirse ilgiler de silinir
+
+            // --- Gelen Evrak ve Sevkler (Akış) İlişkisi ---
+            modelBuilder.Entity<GelenEvrakSevk>()
+                .HasOne(x => x.GelenEvrak)
+                .WithMany(x => x.Sevkler)
+                .HasForeignKey(x => x.GelenEvrakId)
+                .OnDelete(DeleteBehavior.Cascade); // Evrak silinirse sevk geçmişi de silinir
+
+            // İPUCU: KayıtNo alanı için benzersizlik (Unique) kuralı ekleyebilirsin
+            modelBuilder.Entity<GelenEvrak>()
+                .HasIndex(x => x.KayitNo)
+                .IsUnique();
+
         }
 
         //KurumId'yi zorunlu olarak bas
@@ -183,7 +215,7 @@ namespace EBYS.Persistence
                 {
                     entry.Entity.SetBaseKurumId(_currentKurumId);
 
-                    if (entry.Entity is Evrak evrak)
+                    if (entry.Entity is GidenEvrak evrak)
                     {
                         evrak.SetOlusturanId(_currentUserId);
                     }
@@ -194,7 +226,7 @@ namespace EBYS.Persistence
                 {
                     entry.Property("BaseKurumId").IsModified = false;
 
-                    if (entry.Entity is Evrak)
+                    if (entry.Entity is GidenEvrak)
                     {
                         entry.Property("OlusturanId").IsModified = false;
                     }

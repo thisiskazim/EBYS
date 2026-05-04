@@ -1,5 +1,5 @@
 ﻿using EBYS.Application.Interfaces.Repository;
-using EBYS.Domain.Entities;
+using EBYS.Domain.Entities.GidenEvrak;
 using EBYS.Domain.Enum;
 using EBYS.Domain.Utilities;
 using Microsoft.EntityFrameworkCore;
@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace EBYS.Persistence.Repository
 {
-    public class GidenEvrakRepository : GenericRepository<Evrak>, IGidenEvrakRepository
+    public class GidenEvrakRepository : GenericRepository<GidenEvrak>, IGidenEvrakRepository
     {
         public GidenEvrakRepository(EBYSContext context) : base(context) { }
 
-        public async Task<Evrak> AkisAdimlariSorguAsync(int evrakId)
+        public async Task<GidenEvrak> AkisAdimlariSorguAsync(int evrakId)
         {
 
             return await _context.Evraklar
@@ -24,7 +24,7 @@ namespace EBYS.Persistence.Repository
                       .FirstOrDefaultAsync(e => e.Id == evrakId); ;
         }
 
-        public async Task<Evrak> DetayliGetirAsync(int id)
+        public async Task<GidenEvrak> DetayliGetirAsync(int id)
         {
             return await _context.Evraklar
          .Include(x => x.Muhataplar)
@@ -36,7 +36,7 @@ namespace EBYS.Persistence.Repository
          .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<List<EvrakAkis>> EvrakHareketleriGetirAsync(int evrakId)
+        public async Task<List<GidenEvrakAkis>> EvrakHareketleriGetirAsync(int evrakId)
         {
             return await _context.EvrakAkislari
                     .Include(x => x.Kullanici)
@@ -46,7 +46,7 @@ namespace EBYS.Persistence.Repository
                     .ToListAsync();
         }
 
-        public async Task<List<Evrak>> ImzayaGonderdigimEvraklarAsync(int userId)
+        public async Task<List<GidenEvrak>> ImzayaGonderdigimEvraklarAsync(int userId)
         {
             return await _context.Evraklar
                 .Include(x => x.EvrakKonuKodu)
@@ -58,7 +58,7 @@ namespace EBYS.Persistence.Repository
                 .ToListAsync();
         }
 
-        public async Task<List<Evrak>> IslemBekleyenlenKullaniciSorguAsync(int userId, Enums.ImzaTipi imzaTipi)//evrak mı parafmı berkleyenlerde kullanıcıya göre sorgu
+        public async Task<List<GidenEvrak>> IslemBekleyenlenKullaniciSorguAsync(int userId, Enums.ImzaTipi imzaTipi)//evrak mı parafmı berkleyenlerde kullanıcıya göre sorgu
         {
 
             return await _context.Evraklar

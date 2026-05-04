@@ -18,14 +18,14 @@ namespace EBYS.Application.DTOs.EvrakDTO
 
     public class GidenEvrakCreateDTO : GidenEvrakBaseDTO
     {
-        public List<EvrakIlgiCreateDTO>? Ilgiler { get; set; } = new();
-        public List<EvrakEkCreateDTO>? Ekler { get; set; } = new();
+        public List<GidenEvrakIlgiCreateDTO>? Ilgiler { get; set; } = new();
+        public List<GidenEvrakEkCreateDTO>? Ekler { get; set; } = new();
     }
     public class GidenEvrakUpdateDTO : GidenEvrakBaseDTO
     {
         public int Id { get; set; }
-        public List<EvrakIlgiUpdateDTO>? Ilgiler { get; set; } = new();
-        public List<EvrakEkUpdateDTO>? Ekler { get; set; } = new();
+        public List<GidenEvrakIlgiUpdateDTO>? Ilgiler { get; set; } = new();
+        public List<GidenEvrakEkUpdateDTO>? Ekler { get; set; } = new();
     }
 
     public class GidenEvrakListDTO : GidenEvrakBaseDTO

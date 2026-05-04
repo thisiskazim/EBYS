@@ -1,0 +1,3 @@
+﻿giden evrak
+GelenEvrakSevkListDTO hareket tipleri ekle
+repositoryleri ekle// serviceleri ekle//  html tarafını oluştur // js kısmını yaz 

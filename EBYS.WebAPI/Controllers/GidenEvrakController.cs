@@ -1,6 +1,7 @@
 ﻿
 using EBYS.Application.DTOs.EvrakDTO;
 using EBYS.Application.Interfaces.IService;
+using EBYS.Application.Interfaces.IService.IGidenEvrakService;
 using EBYS.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 

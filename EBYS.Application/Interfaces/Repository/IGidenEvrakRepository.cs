@@ -1,17 +1,16 @@
-﻿
-using EBYS.Domain.Entities;
+﻿using EBYS.Domain.Entities.GidenEvrak;
 using EBYS.Domain.Enum;
 
 namespace EBYS.Application.Interfaces.Repository
 {
-    public interface IGidenEvrakRepository:IGenericRepository<Evrak>
+    public interface IGidenEvrakRepository:IGenericRepository<GidenEvrak>
     {
-        Task<List<Evrak>> IslemBekleyenlenKullaniciSorguAsync(int userId,Enums.ImzaTipi imzaTipi);
-        Task<Evrak> DetayliGetirAsync(int id);
+        Task<List<GidenEvrak>> IslemBekleyenlenKullaniciSorguAsync(int userId,Enums.ImzaTipi imzaTipi);
+        Task<GidenEvrak> DetayliGetirAsync(int id);
 
-        Task<List<Evrak>> ImzayaGonderdigimEvraklarAsync(int userId);
-        Task<List<EvrakAkis>> EvrakHareketleriGetirAsync(int evrakId);
-        Task<Evrak> AkisAdimlariSorguAsync(int evrakId);
+        Task<List<GidenEvrak>> ImzayaGonderdigimEvraklarAsync(int userId);
+        Task<List<GidenEvrakAkis>> EvrakHareketleriGetirAsync(int evrakId);
+        Task<GidenEvrak> AkisAdimlariSorguAsync(int evrakId);
 
 
 

@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using EBYS.Domain.Enum;
 
-namespace EBYS.Domain.Entities
+namespace EBYS.Domain.Entities.GidenEvrak
 {
     //onaylanma tarihini eklenecek
 
 
-    public class Evrak:BaseEntity
+    public class GidenEvrak:BaseEntity
     {
         public string Konu { get; set; }
         public int KonuKoduId { get; set; } = 1;
@@ -33,10 +32,10 @@ namespace EBYS.Domain.Entities
         public int ImzaRotaId { get; set; }
         public virtual ImzaRota ImzaRota { get; set; }
 
-        public virtual ICollection<EvrakMuhatap> Muhataplar { get; set; } = new HashSet<EvrakMuhatap>();
-        public virtual ICollection<EvrakIlgi> İlgiler { get; set; } = new HashSet<EvrakIlgi>();
-        public virtual ICollection<EvrakEk> Ekler { get; set; } = new HashSet<EvrakEk>();
-        public virtual ICollection<EvrakAkis> AkisAdimlari { get; set; } = new HashSet<EvrakAkis>();
+        public virtual ICollection<GidenEvrakMuhatap> Muhataplar { get; set; } = new HashSet<GidenEvrakMuhatap>();
+        public virtual ICollection<GidenEvrakIlgi> İlgiler { get; set; } = new HashSet<GidenEvrakIlgi>();
+        public virtual ICollection<GidenEvrakEk> Ekler { get; set; } = new HashSet<GidenEvrakEk>();
+        public virtual ICollection<GidenEvrakAkis> AkisAdimlari { get; set; } = new HashSet<GidenEvrakAkis>();
 
 
 

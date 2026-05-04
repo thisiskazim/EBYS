@@ -1,11 +1,10 @@
-﻿
-using EBYS.Application.DTOs.EvrakDTO;
+﻿using EBYS.Application.DTOs.EvrakDTO;
 using EBYS.Domain.Entities;
 using EBYS.Domain.Utilities;
 
-namespace EBYS.Application.Interfaces.IService
+namespace EBYS.Application.Interfaces.IService.IGidenEvrakService.IGidenEvrakService
 {
-    public interface IAkisService
+    public interface IGidenEvrakAkisService
     {
         Task<List<GidenEvrakAkisListeDTO>> ImzaBekleyenleriGetirAsync();
 

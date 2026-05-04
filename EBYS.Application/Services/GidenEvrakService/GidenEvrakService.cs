@@ -1,25 +1,26 @@
 ﻿using AutoMapper;
 using EBYS.Application.DTOs.EvrakDTO;
-using EBYS.Application.Interfaces.IService;
+using EBYS.Application.Interfaces.IService.IGidenEvrakService;
 using EBYS.Application.Interfaces.Repository;
 using EBYS.Domain.Entities;
+using EBYS.Domain.Entities.GidenEvrak;
 using EBYS.Domain.Enum;
 using Microsoft.AspNetCore.Http;
 
-namespace EBYS.Application.Services
+namespace EBYS.Application.Services.GidenEvrakService
 {
     public class GidenEvrakService(IGidenEvrakRepository evrakRepository,IMapper mapper,IImzaRotaRepository imzaRotaRepository) : IGidenEvrakService
     {
 
         public async Task AddAsync(GidenEvrakCreateDTO createDto)
         {
-            var evrak = mapper.Map<Evrak>(createDto);
+            var evrak = mapper.Map<GidenEvrak>(createDto);
             evrak.BelgeDurum = Enums.BelgeDurum.Taslak;
             evrak.EvrakSayisi= 0;
             evrak.IsGelenEvrak = false;
 
             // Oluşturan kullanıcıyı evrak nesnesine set et
-            evrak.AkisAdimlari.Add(new EvrakAkis
+            evrak.AkisAdimlari.Add(new GidenEvrakAkis
             {
                 KullaniciId = evrakRepository.GetContextUserId(),
                 ParafMiImzaMi = Enums.ImzaTipi.Imza,
@@ -34,7 +35,7 @@ namespace EBYS.Application.Services
             {
                 foreach(var mId in createDto.Muhataplar)
                 {
-                    evrak.Muhataplar.Add(new EvrakMuhatap
+                    evrak.Muhataplar.Add(new GidenEvrakMuhatap
                     {
                         MuhatapId = mId.MuhatapId,
                         IsBilgi = mId.IsBilgi
@@ -50,7 +51,7 @@ namespace EBYS.Application.Services
             {
                 foreach (var adim in rota.ImzaRotaAdimlari.OrderBy(x=>x.SiraNo))
                 {
-                    evrak.AkisAdimlari.Add(new EvrakAkis
+                    evrak.AkisAdimlari.Add(new GidenEvrakAkis
                     {
                         KullaniciId = adim.KullaniciId,
                         ParafMiImzaMi = adim.ParafMiImzaMi,
@@ -67,7 +68,7 @@ namespace EBYS.Application.Services
             {
                 foreach (var i in createDto.Ilgiler)
                 {
-                    evrak.İlgiler.Add(new EvrakIlgi { IlgiMetni = i.IlgiMetni });
+                    evrak.İlgiler.Add(new GidenEvrakIlgi { IlgiMetni = i.IlgiMetni });
 
                 }
             }
@@ -80,7 +81,7 @@ namespace EBYS.Application.Services
                     // Eğer hem isim boş hem dosya boşsa bu satırı atla (Gereksiz kayıt oluşmasın)
                     if (string.IsNullOrEmpty(ekDto.Ad) && ekDto.Dosya == null) continue;
 
-                    var yeniEk = new EvrakEk();
+                    var yeniEk = new GidenEvrakEk();
 
                     // 1. İsim Mantığı: Kullanıcı ad girdiyse onu al, girmediyse dosya adını al
                     yeniEk.Ad = !string.IsNullOrEmpty(ekDto.Ad)
@@ -155,7 +156,7 @@ namespace EBYS.Application.Services
             {
                 foreach (var m in updateDto.Muhataplar)
                 {
-                    mevcutEvrak.Muhataplar.Add(new EvrakMuhatap
+                    mevcutEvrak.Muhataplar.Add(new GidenEvrakMuhatap
                     {
                         MuhatapId = m.MuhatapId,
                         IsBilgi = m.IsBilgi
@@ -169,7 +170,7 @@ namespace EBYS.Application.Services
             {
                 foreach (var i in updateDto.Ilgiler)
                 {
-                    mevcutEvrak.İlgiler.Add(new EvrakIlgi { IlgiMetni = i.IlgiMetni });
+                    mevcutEvrak.İlgiler.Add(new GidenEvrakIlgi { IlgiMetni = i.IlgiMetni });
                 }
             }
 
@@ -205,7 +206,7 @@ namespace EBYS.Application.Services
                         //  Kullanıcı güncelleme ekranında tamamen YENİ bir ek eklemiş
                         if (ekDto.Dosya != null || !string.IsNullOrEmpty(ekDto.Ad))
                         {
-                            var yeniEk = new EvrakEk { Ad = ekDto.Ad };
+                            var yeniEk = new GidenEvrakEk { Ad = ekDto.Ad };
                         
                                 using var ms = new MemoryStream();
                                 await ekDto.Dosya.CopyToAsync(ms);
@@ -243,7 +244,7 @@ namespace EBYS.Application.Services
             {
                 mevcutEvrak.AkisAdimlari.Clear();
 
-                mevcutEvrak.AkisAdimlari.Add(new EvrakAkis
+                mevcutEvrak.AkisAdimlari.Add(new GidenEvrakAkis
                 {
                     KullaniciId = evrakRepository.GetContextUserId(),
                     ParafMiImzaMi = Enums.ImzaTipi.Imza,
@@ -261,7 +262,7 @@ namespace EBYS.Application.Services
                 {
                     foreach (var adim in yeniRota.ImzaRotaAdimlari.OrderBy(x => x.SiraNo))
                     {
-                        mevcutEvrak.AkisAdimlari.Add(new EvrakAkis
+                        mevcutEvrak.AkisAdimlari.Add(new GidenEvrakAkis
                         {
                             KullaniciId = adim.KullaniciId,
                             ParafMiImzaMi = adim.ParafMiImzaMi,

@@ -15,4 +15,8 @@
     <ProjectReference Include="..\EBYS.Domain\EBYS.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\GelenEvrakService\" />
+  </ItemGroup>
+
 </Project>

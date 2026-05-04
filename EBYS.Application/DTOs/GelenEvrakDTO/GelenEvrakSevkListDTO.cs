@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EBYS.Application.DTOs.GelenEvrakDTO
+{
+    public class GelenEvrakSevkListDTO
+    {
+        public int Id { get; set; }
+
+        // Kimden geldi?
+        public string GonderenAdSoyad { get; set; }
+
+        // Kime gitti?
+        public string? AliciAdSoyad { get; set; }
+
+        // Ne zaman yapıldı?
+        public DateTime SevkTarihi { get; set; }
+
+        // Notu ne?
+        public string? Aciklama { get; set; }
+
+        // Ekstra: Hareket Tipi (Opsiyonel)
+        // "Sevk Edildi", "Teslim Alındı" gibi metinler basabilirsin.
+    }
+}
