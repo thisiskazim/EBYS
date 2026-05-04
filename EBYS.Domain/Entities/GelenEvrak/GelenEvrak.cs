@@ -2,6 +2,7 @@
 using EBYS.Domain.Enum;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace EBYS.Domain.Entities.GelenEvrak
 {
     public class GelenEvrak:BaseEntity
     {
-        // Temel Evrak Bilgileri
+        // Temel Evrak Bilgileri    
         public string Konu { get; set; }
         public string EvrakSayisi { get; set; } // Gönderen tarafın sayısı
         public DateTime EvrakTarihi { get; set; } // Gönderen tarafın tarihi
@@ -20,7 +21,9 @@ namespace EBYS.Domain.Entities.GelenEvrak
         // Tür ve Öncelik
         public bool DilekceMi { get; set; }
         public string KonuKodu { get; set; } // Desimal dosya kodu
-        public int GonderenMuhatapId { get; set; } // Rehberden çekilen kurum/şahıs
+  
+        public int MuhatapId { get; set; } // Rehberden çekilen kurum/şahıs
+        public virtual Muhatap Muhatap { get; set; }
         public Enums.GizlilikDerecesi GizlilikDerecesi { get; set; }
         public Enums.IvedilikDerecesi IvedilikDerecesi { get; set; }
 

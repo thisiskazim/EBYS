@@ -174,7 +174,7 @@ namespace EBYS.Application.Services.GidenEvrakService
                 }
             }
 
-            // 5. Ekleri Güncelle  // byte[] olduğu için dto ya koymadık çok veri kaplayabilir.manuel yapıyoruz
+            // 5. Ekleri Güncelle
             var eskiEkler = mevcutEvrak.Ekler.ToList();
 
             if (updateDto.Ekler != null)
@@ -183,44 +183,42 @@ namespace EBYS.Application.Services.GidenEvrakService
                 {
                     if (ekDto.Id > 0)
                     {
-                        //  Mevcut bir eki güncelliyoruz
+                        // MEVCUT EK GÜNCELLEME
                         var mevcutEk = eskiEkler.FirstOrDefault(x => x.Id == ekDto.Id);
                         if (mevcutEk != null)
                         {
-                            mevcutEk.Ad = ekDto.Ad; // İsmini güncelle
+                            mevcutEk.Ad = ekDto.Ad; // İsmini her zaman güncelle
 
-                            // Eğer kullanıcı yeni bir dosya yüklemişse (Dosya doluysa)
                             if (ekDto.Dosya != null)
                             {
-                                using var ms = new MemoryStream();
-                                await ekDto.Dosya.CopyToAsync(ms);
-                                mevcutEk.DosyaVerisi = ms.ToArray();
-                                mevcutEk.DosyaUzantisi = Path.GetExtension(ekDto.Dosya.FileName);
-                                mevcutEk.MimeType = ekDto.Dosya.ContentType;
+                                // Yardımcı metodu burada kullanıyoruz
+                                var fileData = await ProcessFileAsync(ekDto.Dosya);
+                                mevcutEk.DosyaVerisi = fileData.Data;
+                                mevcutEk.DosyaUzantisi = fileData.Extension;
+                                mevcutEk.MimeType = fileData.MimeType;
                             }
-                            // Dosya null ise veritabanındaki eski DosyaVerisi korunur, dokunmuyoruz.
                         }
                     }
                     else
                     {
-                        //  Kullanıcı güncelleme ekranında tamamen YENİ bir ek eklemiş
-                        if (ekDto.Dosya != null || !string.IsNullOrEmpty(ekDto.Ad))
+                        // YENİ EK EKLEME
+                        // Sadece dosya varsa ekleme yap (İsimsiz dosya olabilir ama dosyasız ek olmaz)
+                        if (ekDto.Dosya != null)
                         {
-                            var yeniEk = new GidenEvrakEk { Ad = ekDto.Ad };
-                        
-                                using var ms = new MemoryStream();
-                                await ekDto.Dosya.CopyToAsync(ms);
-                                yeniEk.DosyaVerisi = ms.ToArray();
-                                yeniEk.DosyaUzantisi = Path.GetExtension(ekDto.Dosya.FileName);
-                                yeniEk.MimeType = ekDto.Dosya.ContentType;
-                            
+                            var fileData = await ProcessFileAsync(ekDto.Dosya);
+                            var yeniEk = new GidenEvrakEk
+                            {
+                                Ad = ekDto.Ad ?? ekDto.Dosya.FileName, // Ad boşsa dosya adını al
+                                DosyaVerisi = fileData.Data,
+                                DosyaUzantisi = fileData.Extension,
+                                MimeType = fileData.MimeType
+                            };
                             mevcutEvrak.Ekler.Add(yeniEk);
                         }
                     }
                 }
 
-               
-                // DTO'dan gelen listede olmayan ID'leri veritabanından siliyoruz
+                // SİLME İŞLEMİ (Aynı mantık, tertemiz)
                 var gonderilenIdler = updateDto.Ekler.Where(x => x.Id > 0).Select(x => x.Id).ToList();
                 var silinecekEkler = eskiEkler.Where(x => !gonderilenIdler.Contains(x.Id)).ToList();
 
@@ -228,11 +226,6 @@ namespace EBYS.Application.Services.GidenEvrakService
                 {
                     mevcutEvrak.Ekler.Remove(silinecek);
                 }
-            }
-            else
-            {
-              
-                mevcutEvrak.Ekler.Clear();
             }
 
             // 2. DTO'dan gelen ekleri döngüye sokuyoruz (Create ile aynı mantık)

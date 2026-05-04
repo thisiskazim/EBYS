@@ -17,7 +17,9 @@ namespace EBYS.Domain.Entities
         public virtual Rol Rol { get; set; }
 
         [NotMapped]
-        public string AdSoyad => $"{Ad} {Soyad}"; 
+        public string AdSoyad => (string.IsNullOrEmpty(Ad) && string.IsNullOrEmpty(Soyad))
+                          ? "Bilinmeyen Kullanıcı"
+                          : $"{Ad} {Soyad}";
     }
 
     

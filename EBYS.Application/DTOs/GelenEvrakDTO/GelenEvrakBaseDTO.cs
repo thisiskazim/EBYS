@@ -1,4 +1,4 @@
-﻿using EBYS.Application.DTOs.EvrakDTO;
+﻿    using EBYS.Application.DTOs.EvrakDTO;
 using EBYS.Domain.Enum;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace EBYS.Application.DTOs.GelenEvrakDTO
         public string EvrakSayisi { get; set; } // Gönderen tarafın sayısı
         public DateTime EvrakTarihi { get; set; } // Gönderen tarafın tarihi
         public string KonuKodu { get; set; } // Desimal kod
-        public int GonderenMuhatapId { get; set; } // Rehberden seçilen kurum/şahıs
+        public int MuhatapId { get; set; } // Rehberden seçilen kurum/şahıs
         public bool DilekceMi { get; set; }
         public Enums.GizlilikDerecesi GizlilikDerecesi { get; set; }
         public Enums.IvedilikDerecesi IvedilikDerecesi { get; set; }
