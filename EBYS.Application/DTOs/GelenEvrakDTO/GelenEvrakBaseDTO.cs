@@ -12,7 +12,8 @@ namespace EBYS.Application.DTOs.GelenEvrakDTO
     {
         public string Konu { get; set; }
         public string EvrakSayisi { get; set; } // Gönderen tarafın sayısı
-        public DateTime EvrakTarihi { get; set; } // Gönderen tarafın tarihi
+        public DateTime EvrakTarihi { get; set; } = DateTime.Now; // Gönderen tarafın tarihi
+        public DateTime DefterTarihi { get; set; } = DateTime.Now;
         public string KonuKodu { get; set; } // Desimal kod
         public int MuhatapId { get; set; } // Rehberden seçilen kurum/şahıs
         public bool DilekceMi { get; set; }

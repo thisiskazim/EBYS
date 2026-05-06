@@ -12,9 +12,11 @@ namespace EBYS.Domain.Entities.GelenEvrak
 
         public int GelenEvrakId { get; set; }
         public virtual GelenEvrak GelenEvrak { get; set; }
-        public int KaydedenKullaniciId { get; set; } // Evrakı paslayan (veya kaydeden memur)
-        [ForeignKey("KaydedenKullaniciId")]
-        public virtual Kullanici KaydedenKullanici { get; set; }
+        // Evrakı bir sonraki kişiye sevk eden (Paslayan)
+        public int GonderenKullaniciId { get; set; }
+        [ForeignKey("GonderenKullaniciId")]
+        public virtual Kullanici GonderenKullanici { get; set; }
+
 
         public int? AlanKullaniciId { get; set; } // Evrakın gittiği personel
 

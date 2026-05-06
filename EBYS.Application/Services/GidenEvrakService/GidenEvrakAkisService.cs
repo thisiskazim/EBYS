@@ -1,11 +1,12 @@
 ﻿
 using AutoMapper;
 using EBYS.Application.DTOs.EvrakDTO;
+using EBYS.Application.Interfaces.IService.IGidenEvrakService;
 using EBYS.Application.Interfaces.Repository;
 using EBYS.Domain.Enum;
 using EBYS.Domain.Utilities;
 
-namespace EBYS.Application.Services.GidenEvrakService.GidenEvrakService
+namespace EBYS.Application.Services.GidenEvrakService
 {
     public class GidenEvrakAkisService(IGidenEvrakRepository evrakRepository, IMapper mapper) : IGidenEvrakAkisService
     {
@@ -15,9 +16,9 @@ namespace EBYS.Application.Services.GidenEvrakService.GidenEvrakService
             return await IslemBekleyenler(Enums.ImzaTipi.Imza);
         }
 
-        public Task<List<GidenEvrakAkisListeDTO>> ParafBekleyenleriGetirAsync()
+        public async Task<List<GidenEvrakAkisListeDTO>> ParafBekleyenleriGetirAsync()
         {
-            return IslemBekleyenler(Enums.ImzaTipi.Paraf);
+            return await IslemBekleyenler(Enums.ImzaTipi.Paraf);
         }
         public async Task<IslemSonuc> OnaylaAsync(int evrakId)
         {
@@ -50,7 +51,7 @@ namespace EBYS.Application.Services.GidenEvrakService.GidenEvrakService
                 {
                     entities.BelgeDurum = Enums.BelgeDurum.Tamamlandi;
 
-                    //entities.EvrakSayisi= entities.EvrakSayisi + 1;
+                    entities.EvrakSayisi= entities.EvrakSayisi + 1;
                     //onaylanma tarihini eklenecek
                 }
                 var saveResult = await evrakRepository.SaveAsync();

@@ -36,11 +36,6 @@ namespace EBYS.Domain.Entities.GidenEvrak
         public virtual ICollection<GidenEvrakIlgi> İlgiler { get; set; } = new HashSet<GidenEvrakIlgi>();
         public virtual ICollection<GidenEvrakEk> Ekler { get; set; } = new HashSet<GidenEvrakEk>();
         public virtual ICollection<GidenEvrakAkis> AkisAdimlari { get; set; } = new HashSet<GidenEvrakAkis>();
-
-
-
-
-
     }
 
    

@@ -219,7 +219,10 @@ namespace EBYS.Persistence
                     {
                         evrak.SetOlusturanId(_currentUserId);
                     }
-
+                    else if (entry.Entity is GelenEvrak gEvrak){
+                        gEvrak.SetOlusturanId(_currentUserId);
+                    }
+                    
 
                 }
                 else if (entry.State == EntityState.Modified)
@@ -227,6 +230,10 @@ namespace EBYS.Persistence
                     entry.Property("BaseKurumId").IsModified = false;
 
                     if (entry.Entity is GidenEvrak)
+                    {
+                        entry.Property("OlusturanId").IsModified = false;
+                    }
+                    else if (entry.Entity is GelenEvrak)
                     {
                         entry.Property("OlusturanId").IsModified = false;
                     }

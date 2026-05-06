@@ -21,7 +21,13 @@ namespace EBYS.Domain.Entities.GelenEvrak
         // Tür ve Öncelik
         public bool DilekceMi { get; set; }
         public string KonuKodu { get; set; } // Desimal dosya kodu
-  
+
+        // Navigation Properties (İlişkiler)
+        public int OlusturanId { get; private set; }
+        public virtual Kullanici Olusturan { get; set; }
+
+        public void SetOlusturanId(int userId) => OlusturanId = userId;
+
         public int MuhatapId { get; set; } // Rehberden çekilen kurum/şahıs
         public virtual Muhatap Muhatap { get; set; }
         public Enums.GizlilikDerecesi GizlilikDerecesi { get; set; }

@@ -3,6 +3,7 @@ using EBYS.Application.DTOs.EvrakDTO;
 using EBYS.Application.Interfaces.IService.IGidenEvrakService;
 using EBYS.Application.Interfaces.Repository;
 using EBYS.Domain.Entities;
+using EBYS.Domain.Entities.GelenEvrak;
 using EBYS.Domain.Entities.GidenEvrak;
 using EBYS.Domain.Enum;
 using Microsoft.AspNetCore.Http;
@@ -63,14 +64,12 @@ namespace EBYS.Application.Services.GidenEvrakService
                 }
             }
 
-            // İlgileri ekle
-            if (createDto.Ilgiler != null)
-            {
-                foreach (var i in createDto.Ilgiler)
-                {
-                    evrak.İlgiler.Add(new GidenEvrakIlgi { IlgiMetni = i.IlgiMetni });
+         
 
-                }
+            // 3. İlgileri İşle
+            if (createDto.Ilgiler != null && createDto.Ilgiler.Any())
+            {
+                evrak.İlgiler = mapper.Map<List<GidenEvrakIlgi>>(createDto.Ilgiler);
             }
 
             // Ekleri ekle

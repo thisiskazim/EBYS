@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using EBYS.Application.Interfaces.IService.IGidenEvrakService;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace EBYS.WebAPI.Controllers

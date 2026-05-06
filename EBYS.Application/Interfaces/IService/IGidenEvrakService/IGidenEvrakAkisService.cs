@@ -2,7 +2,7 @@
 using EBYS.Domain.Entities;
 using EBYS.Domain.Utilities;
 
-namespace EBYS.Application.Interfaces.IService.IGidenEvrakService.IGidenEvrakService
+namespace EBYS.Application.Interfaces.IService.IGidenEvrakService
 {
     public interface IGidenEvrakAkisService
     {
