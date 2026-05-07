@@ -136,8 +136,6 @@ namespace EBYS.Application.Services.GidenEvrakService
             return dto;
         }
 
-        
-
         public async Task UpdateAsync(GidenEvrakUpdateDTO updateDto)
         {
             // 1. Evrakı tüm detaylarıyla (Muhatap, Ek, Akış vb.) çekiyoruz

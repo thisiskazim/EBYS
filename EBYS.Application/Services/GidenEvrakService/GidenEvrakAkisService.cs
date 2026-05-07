@@ -30,9 +30,15 @@ namespace EBYS.Application.Services.GidenEvrakService
 
                 var suankiAdim = entities.AkisAdimlari.FirstOrDefault(a => a.SiradakiMi && a.AdimDurumu == Enums.AkisAdimDurumu.Bekliyor);
 
-                suankiAdim.AdimDurumu = Enums.AkisAdimDurumu.Onaylandi;
-                suankiAdim.SiradakiMi = false;
-                suankiAdim.creat_time = DateTime.Now;
+                if(suankiAdim != null)
+                {
+                    suankiAdim.AdimDurumu = Enums.AkisAdimDurumu.Onaylandi;
+                    suankiAdim.SiradakiMi = false;
+                    suankiAdim.creat_time = DateTime.Now;
+                }
+                else
+                    throw new Exception("Herhangi bir adım bulunamadı.");
+
 
                 var sonrakiAdim = entities.AkisAdimlari.FirstOrDefault(a => a.SiraNo == suankiAdim.SiraNo + 1);
 
@@ -51,7 +57,7 @@ namespace EBYS.Application.Services.GidenEvrakService
                 {
                     entities.BelgeDurum = Enums.BelgeDurum.Tamamlandi;
 
-                    entities.EvrakSayisi= entities.EvrakSayisi + 1;
+                    entities.EvrakSayisi++;
                     //onaylanma tarihini eklenecek
                 }
                 var saveResult = await evrakRepository.SaveAsync();
@@ -95,9 +101,6 @@ namespace EBYS.Application.Services.GidenEvrakService
 
                 var suankiAdim = e.AkisAdimlari.FirstOrDefault(a => a.SiradakiMi);
                 dto.SuAnKimde = suankiAdim?.Kullanici.AdSoyad ?? "Tamamlandı";
-
-
-
 
                 return dto;
 
