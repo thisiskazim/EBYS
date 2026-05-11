@@ -1,64 +1,84 @@
-﻿@{
-    ViewData["Title"] = "Evrak Oluştur";
+﻿
+@{
+    ViewData["Title"] = "Gelen Evrak Kayıt";
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="m-0"><span class="k-icon k-i-file-pdf"></span> Evrak Oluştur <small class="text-muted ms-2">Bilgileri doldurun</small></h4>
+    <h4 class="m-0">
+        <span class="k-icon k-i-file-pdf"></span> Gelen Evrak Kayıt
+        <small class="text-muted ms-2">Evrak bilgilerini ve asıl dosyayı sisteme dahil edin</small>
+    </h4>
     <input type="hidden" id="EvrakId" value="@ViewBag.EvrakId" />
     <div>
-        <button class="btn btn-warning me-2"><span class="k-icon k-i-save"></span> Taslak Olarak Kaydet</button>
-        <button id="evrakKaydet" class="btn btn-primary"><span class="k-icon k-i-file"></span> Evrak Oluştur</button>
+        <button class="btn btn-warning me-2"><span class="k-icon k-i-save"></span> Taslak Kaydet</button>
+        <button id="evrakKaydet" class="btn btn-primary"><span class="k-icon k-i-check"></span> Evrakı Kaydet</button>
     </div>
 </div>
 
-<div class="card">
-    <div class="card-body">
-        <ul class="nav nav-tabs mb-3" id="evrakTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="bilgiler-tab" data-bs-toggle="tab" data-bs-target="#bilgiler" type="button" role="tab">Bilgileri</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="alici-tab" data-bs-toggle="tab" data-bs-target="#alici" type="button" role="tab">Alıcı Ekle</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="ekler-tab" data-bs-toggle="tab" data-bs-target="#ekler" type="button" role="tab">Ekleri</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="ilgili-tab" data-bs-toggle="tab" data-bs-target="#ilgili" type="button" role="tab">İlgilileri</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="gorunum-tab" data-bs-toggle="tab" data-bs-target="#gorunum" type="button" role="tab">Evrak Görünüm</button>
-            </li>
-        </ul>
+<div class="row g-2">
+    <div class="col-md-5">
+        <div class="card" style="height: 78vh;">
+            <div class="card-body p-2">
+                <ul class="nav nav-tabs mb-3" id="evrakTabs" role="tablist">
+                    <li class="nav-item">
+                        <button class="nav-link active" id="bilgiler-tab" data-bs-toggle="tab" data-bs-target="#bilgiler" type="button">Evrak Bilgileri</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" id="ekler-tab" data-bs-toggle="tab" data-bs-target="#ekler" type="button">Ekleri</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" id="ilgili-tab" data-bs-toggle="tab" data-bs-target="#ilgili" type="button">İlgilileri</button>
+                    </li>
+                </ul>
 
-        <div class="tab-content">
-            <div class="tab-pane fade show active" id="bilgiler">
-                @await Html.PartialAsync("Components/GidenEvrak/_EvrakBilgileriPartial")
+                <div class="tab-content border p-2 rounded bg-white" style="height: 65vh; overflow-y: auto;">
+                    <div class="tab-pane fade show active" id="bilgiler">
+                        @await Html.PartialAsync("Components/GelenEvrak/_EvrakBilgileriPartial")
+                    </div>
+                    <div class="tab-pane fade" id="ekler">
+                        @await Html.PartialAsync("Components/GelenEvrak/_EklerPartial")
+                    </div>
+                    <div class="tab-pane fade" id="ilgili">
+                        @await Html.PartialAsync("Components/GelenEvrak/_IlgilerPartial")
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
 
-            <div class="tab-pane fade" id="alici">
-                @await Html.PartialAsync("Components/GidenEvrak/_AliciBilgileriPartial")
+    <div class="col-md-7">
+        <div class="card" style="height: 78vh;">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-1">
+                <span><i class="k-icon k-i-file-pdf"></i> ASIL EVRAK (ÜST YAZI)</span>
+                <div class="d-flex align-items-center">
+                    <input type="file" id="AsilEvrakDosya" style="display:none;" accept=".pdf" />
+
+                    <button class="btn btn-sm btn-primary me-2" onclick="$('#AsilEvrakDosya').click()">
+                        <i class="k-icon k-i-upload"></i> Üst Yazı Yükle
+                    </button>
+
+                    <button class="btn btn-sm btn-outline-info" title="Tarayıcıdan Tara">
+                        <i class="k-icon k-i-print"></i> Tara
+                    </button>
+                </div>
             </div>
+            <div class="card-body p-0 bg-secondary d-flex justify-content-center align-items-center position-relative">
 
-      
-            <div class="tab-pane fade" id="ekler">
-                @await Html.PartialAsync("Components/GidenEvrak/_EklerPartial")
+                <iframe id="pdf-preview-frame"
+                        src=""
+                        style="width:100%; height:100%; border:none; background-color: #525659; display:none;">
+                </iframe>
+
+                <div id="no-file-message" class="text-white text-center">
+                    <i class="k-icon k-i-file-pdf" style="font-size: 4rem; opacity: 0.5;"></i>
+                    <p>Lütfen önizlemek için bir dosya seçin</p>
+                </div>
+
             </div>
-
-            <div class="tab-pane fade" id="ilgili">
-                @await Html.PartialAsync("Components/GidenEvrak/_IlgilerPartial")
-            </div>
-            
-
-            <div class="tab-pane fade" id="gorunum">
-                @await Html.PartialAsync("Components/GidenEvrak/_GorunumPartial")
-            </div> 
-
-            
         </div>
     </div>
 </div>
-
-
+<script src="~/js/GelenEvrak/evrak-gorunum.js"></script>
+<script src="~/js/GelenEvrak/ekler.js"></script>
+<script src="~/js/GelenEvrak/ilgiler.js"></script>
 <script src="~/js/GelenEvrak/evrak-olustur.js"></script>
-

@@ -20,7 +20,7 @@ namespace EBYS.Application.Services.GidenEvrakService
             evrak.EvrakSayisi= 0;
             evrak.IsGelenEvrak = false;
 
-            // Oluşturan kullanıcıyı evrak nesnesine set et
+            // Oluşturan kullanıcıyı GidenEvrakAkis nesnesine set et
             evrak.AkisAdimlari.Add(new GidenEvrakAkis
             {
                 KullaniciId = evrakRepository.GetContextUserId(),
@@ -32,23 +32,20 @@ namespace EBYS.Application.Services.GidenEvrakService
             });
 
             // Muhatapları ekle
-            if (createDto.Muhataplar != null)
+            if (createDto.Muhataplar?.Any() == true)
             {
-                foreach(var mId in createDto.Muhataplar)
-                {
-                    evrak.Muhataplar.Add(new GidenEvrakMuhatap
-                    {
-                        MuhatapId = mId.MuhatapId,
-                        IsBilgi = mId.IsBilgi
-                    });
-                }
+                evrak.Muhataplar = mapper.Map<List<GidenEvrakMuhatap>>(createDto.Muhataplar);
             }
+
+            if (createDto.Ilgiler?.Any() == true)
+            {
+                evrak.İlgiler = mapper.Map<List<GidenEvrakIlgi>>(createDto.Ilgiler);
+            }
+
             // Seçilen rotanın detaylarını al
             var rota = await imzaRotaRepository.GetImzaRotaVeAdimlariDetay(createDto.ImzaRotaId);
 
-
-            // Rota adımlarını evrak akışına ekle
-            if (rota != null)
+            if (rota?.ImzaRotaAdimlari != null)
             {
                 foreach (var adim in rota.ImzaRotaAdimlari.OrderBy(x=>x.SiraNo))
                 {
@@ -66,26 +63,20 @@ namespace EBYS.Application.Services.GidenEvrakService
 
          
 
-            // 3. İlgileri İşle
-            if (createDto.Ilgiler != null && createDto.Ilgiler.Any())
-            {
-                evrak.İlgiler = mapper.Map<List<GidenEvrakIlgi>>(createDto.Ilgiler);
-            }
-
+          
             // Ekleri ekle
-            if (createDto.Ekler != null)
+            if (createDto.Ekler?.Any() == true)
             {
                 foreach (var ekDto in createDto.Ekler)
                 {
                     // Eğer hem isim boş hem dosya boşsa bu satırı atla (Gereksiz kayıt oluşmasın)
                     if (string.IsNullOrEmpty(ekDto.Ad) && ekDto.Dosya == null) continue;
 
-                    var yeniEk = new GidenEvrakEk();
+                    var yeniEk = mapper.Map<GidenEvrakEk>(ekDto);
 
                     // 1. İsim Mantığı: Kullanıcı ad girdiyse onu al, girmediyse dosya adını al
-                    yeniEk.Ad = !string.IsNullOrEmpty(ekDto.Ad)
-                                ? ekDto.Ad
-                                : ekDto.Dosya != null ? ekDto.Dosya.FileName : "Adsız Ek";
+                    if (string.IsNullOrEmpty(yeniEk.Ad))
+                        yeniEk.Ad = ekDto.Dosya?.FileName ?? "Adsız Ek";
 
                     // 2. Dosya Mantığı: Eğer dosya varsa işle
                     if (ekDto.Dosya != null)
@@ -147,81 +138,85 @@ namespace EBYS.Application.Services.GidenEvrakService
             // 2. Temel alanları DTO'dan Entity'ye aktar (Mapping)
             mapper.Map(updateDto, mevcutEvrak);
 
-            // 3. Muhatapları Güncelle (Eskileri temizle, yenileri ekle)
-            mevcutEvrak.Muhataplar.Clear();
-            if (updateDto.Muhataplar != null)
+
+           
+            var muhatapListesi = updateDto.Muhataplar ?? new List<GidenEvrakMuhatapSecimDTO>();
+            var dtoMuhatapIds = muhatapListesi.Where(x => x.MuhatapId > 0).Select(x => x.MuhatapId).ToList();
+            var silinecekMuhataplar = mevcutEvrak.Muhataplar.Where(x => !dtoMuhatapIds.Contains(x.MuhatapId)).ToList();
+
+            foreach (var sil in silinecekMuhataplar) mevcutEvrak.Muhataplar.Remove(sil);
+
+            foreach (var mDto in muhatapListesi)
             {
-                foreach (var m in updateDto.Muhataplar)
+                var mevcutMuhatap = mevcutEvrak.Muhataplar.FirstOrDefault(x => x.MuhatapId == mDto.MuhatapId);
+                if (mevcutMuhatap == null)
                 {
-                    mevcutEvrak.Muhataplar.Add(new GidenEvrakMuhatap
+                    mevcutEvrak.Muhataplar.Add(new GidenEvrakMuhatap { MuhatapId = mDto.MuhatapId, IsBilgi = mDto.IsBilgi });
+                }
+                else
+                {
+                    mevcutMuhatap.IsBilgi = mDto.IsBilgi;
+                }
+            }
+
+
+
+            var ilgiListesi = updateDto.Ilgiler ?? new List<GidenEvrakIlgiUpdateDTO>();
+            var dtoIlgiIds = ilgiListesi.Where(x => x.Id > 0).Select(x => x.Id).ToList();
+
+            var silinecekIlgiler = mevcutEvrak.İlgiler.Where(x => !dtoIlgiIds.Contains(x.Id)).ToList();
+            foreach (var sil in silinecekIlgiler) mevcutEvrak.İlgiler.Remove(sil);
+
+            foreach (var iDto in ilgiListesi)
+            {
+                if (iDto.Id == 0)
+                {
+                    mevcutEvrak.İlgiler.Add(new GidenEvrakIlgi { IlgiMetni = iDto.IlgiMetni });
+                }
+                else
+                {
+                    var mevcutIlgi = mevcutEvrak.İlgiler.FirstOrDefault(x => x.Id == iDto.Id);
+                    if (mevcutIlgi != null) mevcutIlgi.IlgiMetni = iDto.IlgiMetni;
+                }
+            }
+
+
+
+            var ekListesi = updateDto.Ekler ?? new List<GidenEvrakEkUpdateDTO>();
+            var dtoEkIds = ekListesi.Where(x => x.Id > 0).Select(x => x.Id).ToList();
+
+            // Silinecek Ekler
+            var silinecekEkler = mevcutEvrak.Ekler.Where(x => !dtoEkIds.Contains(x.Id)).ToList();
+            foreach (var sil in silinecekEkler) mevcutEvrak.Ekler.Remove(sil);
+
+            // Ekleme/Güncelleme
+            foreach (var ekDto in ekListesi)
+            {
+                if (ekDto.Id == 0 && ekDto.Dosya != null)
+                {
+                    var fileData = await ProcessFileAsync(ekDto.Dosya);
+                    mevcutEvrak.Ekler.Add(new GidenEvrakEk
                     {
-                        MuhatapId = m.MuhatapId,
-                        IsBilgi = m.IsBilgi
+                        Ad = ekDto.Ad ?? ekDto.Dosya.FileName,
+                        DosyaVerisi = fileData.Data,
+                        DosyaUzantisi = fileData.Extension,
+                        MimeType = fileData.MimeType
                     });
                 }
-            }
-
-            // 4. İlgileri Güncelle
-            mevcutEvrak.İlgiler.Clear();
-            if (updateDto.Ilgiler != null)
-            {
-                foreach (var i in updateDto.Ilgiler)
+                else if (ekDto.Id > 0)
                 {
-                    mevcutEvrak.İlgiler.Add(new GidenEvrakIlgi { IlgiMetni = i.IlgiMetni });
-                }
-            }
-
-            // 5. Ekleri Güncelle
-            var eskiEkler = mevcutEvrak.Ekler.ToList();
-
-            if (updateDto.Ekler != null)
-            {
-                foreach (var ekDto in updateDto.Ekler)
-                {
-                    if (ekDto.Id > 0)
+                    var mevcutEk = mevcutEvrak.Ekler.FirstOrDefault(x => x.Id == ekDto.Id);
+                    if (mevcutEk != null)
                     {
-                        // MEVCUT EK GÜNCELLEME
-                        var mevcutEk = eskiEkler.FirstOrDefault(x => x.Id == ekDto.Id);
-                        if (mevcutEk != null)
-                        {
-                            mevcutEk.Ad = ekDto.Ad; // İsmini her zaman güncelle
-
-                            if (ekDto.Dosya != null)
-                            {
-                                // Yardımcı metodu burada kullanıyoruz
-                                var fileData = await ProcessFileAsync(ekDto.Dosya);
-                                mevcutEk.DosyaVerisi = fileData.Data;
-                                mevcutEk.DosyaUzantisi = fileData.Extension;
-                                mevcutEk.MimeType = fileData.MimeType;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // YENİ EK EKLEME
-                        // Sadece dosya varsa ekleme yap (İsimsiz dosya olabilir ama dosyasız ek olmaz)
+                        mevcutEk.Ad = ekDto.Ad;
                         if (ekDto.Dosya != null)
                         {
                             var fileData = await ProcessFileAsync(ekDto.Dosya);
-                            var yeniEk = new GidenEvrakEk
-                            {
-                                Ad = ekDto.Ad ?? ekDto.Dosya.FileName, // Ad boşsa dosya adını al
-                                DosyaVerisi = fileData.Data,
-                                DosyaUzantisi = fileData.Extension,
-                                MimeType = fileData.MimeType
-                            };
-                            mevcutEvrak.Ekler.Add(yeniEk);
+                            mevcutEk.DosyaVerisi = fileData.Data;
+                            mevcutEk.DosyaUzantisi = fileData.Extension;
+                            mevcutEk.MimeType = fileData.MimeType;
                         }
                     }
-                }
-
-                // SİLME İŞLEMİ (Aynı mantık, tertemiz)
-                var gonderilenIdler = updateDto.Ekler.Where(x => x.Id > 0).Select(x => x.Id).ToList();
-                var silinecekEkler = eskiEkler.Where(x => !gonderilenIdler.Contains(x.Id)).ToList();
-
-                foreach (var silinecek in silinecekEkler)
-                {
-                    mevcutEvrak.Ekler.Remove(silinecek);
                 }
             }
 
@@ -232,8 +227,9 @@ namespace EBYS.Application.Services.GidenEvrakService
             // 6. Rota/Akış Değişikliği Kontrolü
             if (mevcutEvrak.ImzaRotaId != updateDto.ImzaRotaId)
             {
-                mevcutEvrak.AkisAdimlari.Clear();
+                mevcutEvrak.AkisAdimlari.Clear(); // Rota değişirse akış sıfırlanır, bu doğru.
 
+                // Kendisini 1. Adıma Ekle
                 mevcutEvrak.AkisAdimlari.Add(new GidenEvrakAkis
                 {
                     KullaniciId = evrakRepository.GetContextUserId(),
@@ -241,13 +237,9 @@ namespace EBYS.Application.Services.GidenEvrakService
                     SiraNo = 1,
                     AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
                     SiradakiMi = true
-
                 });
 
-
-
                 var yeniRota = await imzaRotaRepository.GetImzaRotaVeAdimlariDetay(updateDto.ImzaRotaId);
-
                 if (yeniRota != null)
                 {
                     foreach (var adim in yeniRota.ImzaRotaAdimlari.OrderBy(x => x.SiraNo))
@@ -256,7 +248,7 @@ namespace EBYS.Application.Services.GidenEvrakService
                         {
                             KullaniciId = adim.KullaniciId,
                             ParafMiImzaMi = adim.ParafMiImzaMi,
-                            SiraNo = adim.SiraNo+1,
+                            SiraNo = adim.SiraNo + 1,
                             AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
                             SiradakiMi = false
                         });
@@ -265,7 +257,7 @@ namespace EBYS.Application.Services.GidenEvrakService
             }
 
             // 7. Veritabanına Yansıt
-             evrakRepository.UpdateAsync(mevcutEvrak);
+            evrakRepository.UpdateAsync(mevcutEvrak);
             await evrakRepository.SaveAsync();
         }
 

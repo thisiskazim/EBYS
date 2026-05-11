@@ -1,24 +1,25 @@
 ﻿<div class="p-3">
+ 
     <div class="row g-2 mb-3 align-items-end">
         <div class="col-md-9">
-            <label class="form-label">Ek Bilgisi / Dosya Seçimi</label>
+            <label class="form-label">Ek Adı / Açıklama</label>
             <div class="input-group">
                 @(Html.Kendo().TextBox()
                                 .Name("EkAdi")
-                                .Placeholder("Ek adını girin veya dosya seçin...")
+                                .Placeholder("Ek adını girin...")
                                 .HtmlAttributes(new { style = "width: 70%", @class = "form-control", id = "EkAdi" }))
 
-                <input type="file" id="EkDosya" style="display: none;" onchange="EklerModule.dosyaSecildi(this)">
+                <input type="file" id="EkDosya" style="display: none;" onchange="GelenEklerModule.ekDosyaSecildi(this)">
 
-                <button type="button" onclick="$('#EkDosya').click()" class="btn btn-outline-secondary" title="Dosya Ekle">
-                    <i class="k-icon k-i-attachment-45"></i>
+                <button type="button" onclick="$('#EkDosya').click()" class="btn btn-outline-secondary" title="Dosya Seç">
+                    <i class="k-icon k-i-file-add"></i>
                 </button>
             </div>
-            <small id="secilenDosyaBilgisi" class="text-success fw-bold" style="display:none;"></small>
+            <small id="secilenEkDosyaBilgisi" class="text-info fw-bold" style="display:none;"></small>
         </div>
         <div class="col-md-3">
-            <button type="button" onclick="EklerModule.ekle()" class="btn btn-outline-primary w-100">
-                <i class="k-icon k-i-plus"></i> Ekle
+            <button type="button" onclick="GelenEklerModule.ekEkle()" class="btn btn-outline-primary w-100">
+                <i class="k-icon k-i-plus"></i> Listeye Ekle
             </button>
         </div>
     </div>

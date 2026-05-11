@@ -1,114 +1,110 @@
 ﻿<div class="tab-pane fade show active" id="bilgiler" role="tabpanel">
-    <div class="row">
-        <div class="col-md-5">
-            <div class="mb-3">
-                <label class="form-label">Konu Kodu *</label>
-                @(Html.Kendo().ComboBox()
-                                .Name("KonuKoduId") // Bu ID üzerinden veriyi çekeceğiz
-                                .Placeholder("Kod veya konu adı ile arayın...")
-                                .DataTextField("fullKod")
-                                .DataValueField("id")
-                                .Filter(FilterType.Contains)
-                                .AutoBind(true)
-                                .Suggest(true)
-                                .DataSource(ds => ds
-                                .Read(r => r.Url("https://localhost:7060/api/GidenEvrak/KonuKoduGet").Type(HttpVerbs.Get))
-                                )
-                                .HtmlAttributes(new { style = "width:100%", @class = "form-control" })
-                                )
+    <div class="card mt-3 shadow-sm">
+        <div class="card-header bg-white d-flex align-items-center justify-content-between">
+            <h5 class="mb-0">Evrak Bilgileri</h5>
+            <div class="form-check form-switch m-0">
+                <input class="form-check-input" type="checkbox" id="DilekceMi">
+                <label class="form-check-label ms-2" for="DilekceMi">Dilekçe Mi?</label>
             </div>
-
-            <div class="mb-3">
-                <label class="form-label text-danger">Konu Tırnak İşareti kullanmayınız! *</label>
-                <input class="form-control" id="konu" placeholder="Konu" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">İmza Rota *</label>
-                @(Html.Kendo().DropDownList()
-                                .Name("imzaRota")
-                                .HtmlAttributes(new { style = "width:100%", @class = "form-control", id = "ImzaRota" })
-                                .OptionLabel("Seçiniz")
-                                .DataTextField("rotaAdi")
-                                .DataValueField("id")
-                                .OptionLabel("Seçiniz")
-                                .DataSource(ds => ds.Read(r => r.Url("https://localhost:7060/api/ImzaRota/ImzaRotaListesi").Type(HttpVerbs.Get)))
-                                )
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Evrak Tarihi</label>
-                <input class="form-control" value="Otomatik" disabled />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Gizlilik Derecesi</label>
-                @(Html.Kendo().DropDownList()
-                                .Name("gizlilik")
-                                .BindTo(new[] { new { text = "TASNİF DIŞI", value = "0" }, new { text = "GİZLİ", value = "1" } })
-                                .DataTextField("text")
-                                .DataValueField("value")
-                                .HtmlAttributes(new { @class = "form-control" })
-                                )
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">İvedilik</label>
-                @(Html.Kendo().DropDownList()
-                                .Name("ivedilik")
-                                .BindTo(new[] { new { text = "NORMAL", value = "0" }, new { text = "ACİL", value = "1" } })
-                                .DataTextField("text")
-                                .DataValueField("value")
-                                .HtmlAttributes(new { @class = "form-control" })
-                                )
-            </div>
-
         </div>
-
-        <div class="col-md-7">
-            <div class="mb-2 d-flex justify-content-between align-items-center">
-                <div>
-                    <label class="form-label mb-0">Evrak İçeriği *</label>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-12 col-lg-6">
+                    <label class="form-label fw-bold"><i class="k-icon k-i-user me-1"></i> Evrak Üretici *</label>
+                    @(Html.Kendo().ComboBox()
+                        .Name("MuhatapId")
+                        .Placeholder("Rehberden gönderen seçiniz...")
+                        .DataTextField("adi")
+                        .DataValueField("id")
+                        .Filter(FilterType.Contains)
+                        .DataSource(ds => ds.Read(r => r.Url("https://localhost:7060/api/Muhatap/TumMuhataplar").Type(HttpVerbs.Get)))
+                        .HtmlAttributes(new { @class = "form-control" , style = "width:100%" })
+                    )
                 </div>
-                <div class="text-muted small">Yazı tipi, hizalama ve tablo seçenekleri kullanılabilir.</div>
-            </div>
 
-            @(Html.Kendo().Editor()
-                .Name("EvrakEditor")
-                .Tools(tools => tools
-                    .Clear().Bold().Italic().Underline().Separator()
-                    .InsertUnorderedList().InsertOrderedList().Separator()
-                    .JustifyLeft().JustifyCenter().JustifyRight().Separator()
-                    .FontName().FontSize()
-                )
-                .HtmlAttributes(new { style = "height:420px;", @class = "custom-editor" })
-            )
+                <div class="col-12 col-lg-6">
+                    <label class="form-label fw-bold">Konu Kodu (Desimal) *</label>
+                    @(Html.Kendo().ComboBox()
+                        .Name("KonuKodu")
+                        .Placeholder("Kod seçiniz...")
+                        .DataTextField("fullKod")
+                        .DataValueField("fullKod")
+                        .Filter(FilterType.Contains)
+                        .DataSource(ds => ds.Read(r => r.Url("https://localhost:7060/api/GidenEvrak/KonuKoduGet").Type(HttpVerbs.Get)))
+                        .HtmlAttributes(new { @class = "form-control", style = "width:100%" })
+                    )
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label fw-bold">Evrak Konusu *</label>
+                    <input class="form-control" id="Konu" placeholder="Evrakın konusunu giriniz..." />
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-3">
+                    <label class="form-label">Gelen Evrak Sayısı</label>
+                    <input class="form-control" id="EvrakSayisi" placeholder="Dış Kurum Sayısı" />
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-3">
+                    <label class="form-label">Gelen Evrak Tarihi</label>
+                    @(Html.Kendo().DatePicker()
+                        .Name("EvrakTarihi")
+                        .Value(DateTime.Now)
+                        .HtmlAttributes(new { @class = "form-control", style = "width:100%" })
+                    )
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-3">
+                    <label class="form-label text-primary fw-bold">Defter Tarihi (Sisteme Giriş)</label>
+                    @(Html.Kendo().DatePicker()
+                        .Name("DefterTarihi")
+                        .Value(DateTime.Now)
+                        .HtmlAttributes(new { @class = "form-control", style = "width:100%" })
+                    )
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-3">
+                    <label class="form-label">Cevap İstenen Tarih</label>
+                    @(Html.Kendo().DatePicker()
+                        .Name("CevapIstenenTarih")
+                        .HtmlAttributes(new { @class = "form-control", style = "width:100%" })
+                    )
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label">Gizlilik Derecesi</label>
+                    @(Html.Kendo().DropDownList()
+                        .Name("GizlilikDerecesi")
+                        .BindTo(new[] {
+                            new { text = "TASNİF DIŞI", value = 0 },
+                            new { text = "GİZLİ", value = 1 }
+                        })
+                        .DataTextField("text")
+                        .DataValueField("value")
+                        .HtmlAttributes(new { @class = "form-control", style = "width:100%" })
+                    )
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label">İvedilik Derecesi</label>
+                    @(Html.Kendo().DropDownList()
+                        .Name("IvedilikDerecesi")
+                        .BindTo(new[] {
+                            new { text = "NORMAL", value = 0 },
+                            new { text = "ACİL", value = 1 }
+                        })
+                        .DataTextField("text")
+                        .DataValueField("value")
+                        .HtmlAttributes(new { @class = "form-control", style = "width:100%" })
+                    )
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-muted small">
+            Zorunlu alanlar * ile belirtilmiştir.
         </div>
     </div>
 
-    <hr />
-
-    <div class="mb-3">
-        <label class="form-label">Ek Üstünde-İmza Altında Metin Girişi</label>
-        @(Html.Kendo().Editor()
-                .Name("AltMetinEditor")
-                .Tools(tools => tools
-                .Clear().Bold().Italic().Underline().Separator()
-                .InsertUnorderedList().InsertOrderedList().Separator()
-                .JustifyLeft().JustifyCenter().JustifyRight().Separator()
-                .FontName().FontSize()
-                )
-                .HtmlAttributes(new { style = "height:150px;" })
-                )
-    </div>
-
+    <script src="~/js/GidenEvrak/evrak-bilgileri.js"></script>
 </div>
-
-
-
-
-
-<script src="~/js/GidenEvrak/evrak-bilgileri.js"></script>
-
-                        
 

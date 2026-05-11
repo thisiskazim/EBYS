@@ -4,13 +4,9 @@ using EBYS.Application.DTOs.GelenEvrakDTO;
 using EBYS.Application.Interfaces.IService.IGelenEvrakService;
 using EBYS.Application.Interfaces.Repository;
 using EBYS.Domain.Entities.GelenEvrak;
-using EBYS.Domain.Entities.GidenEvrak;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+
 
 namespace EBYS.Application.Services.GelenEvrakService
 {
@@ -46,6 +42,31 @@ namespace EBYS.Application.Services.GelenEvrakService
             if (createDto.Ilgiler != null && createDto.Ilgiler.Any())
             {
                 evrak.Ilgileri = mapper.Map<List<GelenEvrakIlgi>>(createDto.Ilgiler);
+            }
+
+
+            if (createDto.Ekler?.Any() == true)
+            {
+                foreach (var ekDto in createDto.Ekler)
+                {
+                    // Eğer dosya yoksa ve isim de girilmemişse boş kayıt atmayalım
+                    if (ekDto.Dosya == null && string.IsNullOrEmpty(ekDto.Ad)) continue;
+
+                    var yeniEk = mapper.Map<GelenEvrakEk>(ekDto);
+
+                    if (ekDto.Dosya != null)
+                    {
+                        var fileResult = await ProcessFileAsync(ekDto.Dosya);
+                        yeniEk.DosyaVerisi = fileResult.Data;
+                        yeniEk.DosyaUzantisi = fileResult.Extension;
+                        yeniEk.MimeType = fileResult.MimeType;
+
+                        // İsim boşsa dosya adını varsayılan yap
+                        if (string.IsNullOrEmpty(yeniEk.Ad))
+                            yeniEk.Ad = ekDto.Dosya.FileName;
+                    }
+                    evrak.Ekler.Add(yeniEk);
+                }
             }
 
             // 4. İLK SEVK KAYDI (Evrakı kaydeden kişide başlar)
@@ -96,7 +117,7 @@ namespace EBYS.Application.Services.GelenEvrakService
 
         public async Task UpdateAsync(GelenEvrakUpdateDTO updateDto)
         {
-            
+
             var mevcutEvrak = await evrakRepository.DetayliGetirAsync(updateDto.Id);
 
             if (mevcutEvrak == null)
@@ -104,27 +125,25 @@ namespace EBYS.Application.Services.GelenEvrakService
                 throw new Exception("Güncellenecek evrak bulunamadı.");
             }
 
-       
             mapper.Map(updateDto, mevcutEvrak);
 
-  
-            var dtoIlgiIds = updateDto.Ilgiler.Where(x => x.Id > 0).Select(x => x.Id).ToList();
 
-        
+            var ilgiListesi = updateDto.Ilgiler ?? new List<GelenEvrakIlgiUpdateDTO>();
+            var dtoIlgiIds = ilgiListesi.Where(x => x.Id > 0).Select(x => x.Id).ToList();
+
             var silinecekIlgiler = mevcutEvrak.Ilgileri.Where(x => !dtoIlgiIds.Contains(x.Id)).ToList();
             foreach (var sil in silinecekIlgiler)
             {
                 mevcutEvrak.Ilgileri.Remove(sil);
             }
 
- 
-            foreach (var ilgiDto in updateDto.Ilgiler)
+            foreach (var ilgiDto in ilgiListesi)
             {
-                if (ilgiDto.Id == 0) 
+                if (ilgiDto.Id == 0)
                 {
                     mevcutEvrak.Ilgileri.Add(mapper.Map<GelenEvrakIlgi>(ilgiDto));
                 }
-                else 
+                else
                 {
                     var mevcutIlgi = mevcutEvrak.Ilgileri.FirstOrDefault(x => x.Id == ilgiDto.Id);
                     if (mevcutIlgi != null)
@@ -134,18 +153,17 @@ namespace EBYS.Application.Services.GelenEvrakService
                 }
             }
 
-     
-            var dtoEkIds = updateDto.Ekler.Where(x => x.Id > 0).Select(x => x.Id).ToList();
 
-     
+            var ekListesi = updateDto.Ekler ?? new List<GelenEvrakEkUpdateDTO>();
+            var dtoEkIds = ekListesi.Where(x => x.Id > 0).Select(x => x.Id).ToList();
+
             var silinecekEkler = mevcutEvrak.Ekler.Where(x => !dtoEkIds.Contains(x.Id)).ToList();
             foreach (var ek in silinecekEkler)
             {
                 mevcutEvrak.Ekler.Remove(ek);
             }
 
-        
-            foreach (var ekDto in updateDto.Ekler)
+            foreach (var ekDto in ekListesi)
             {
                 if (ekDto.Id == 0 && ekDto.Dosya != null)
                 {
@@ -154,13 +172,19 @@ namespace EBYS.Application.Services.GelenEvrakService
                     yeniEk.DosyaVerisi = fileResult.Data;
                     yeniEk.DosyaUzantisi = fileResult.Extension;
                     yeniEk.MimeType = fileResult.MimeType;
+
+                    if (string.IsNullOrEmpty(yeniEk.Ad))
+                        yeniEk.Ad = ekDto.Dosya.FileName;
+
                     mevcutEvrak.Ekler.Add(yeniEk);
                 }
+                else if (ekDto.Id > 0)
                 {
                     var mevcutEk = mevcutEvrak.Ekler.FirstOrDefault(x => x.Id == ekDto.Id);
                     if (mevcutEk != null)
                     {
-                        mevcutEk.Ad = ekDto.Ad; 
+                        mevcutEk.Ad = ekDto.Ad;
+
                         if (ekDto.Dosya != null)
                         {
                             var fileResult = await ProcessFileAsync(ekDto.Dosya);
@@ -171,6 +195,9 @@ namespace EBYS.Application.Services.GelenEvrakService
                     }
                 }
             }
+
+            evrakRepository.UpdateAsync(mevcutEvrak);
+            await evrakRepository.SaveAsync();
         }
 
         private async Task<(byte[] Data, string Extension, string MimeType)> ProcessFileAsync(IFormFile file)

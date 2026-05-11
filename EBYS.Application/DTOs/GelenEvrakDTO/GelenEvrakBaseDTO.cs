@@ -24,6 +24,7 @@ namespace EBYS.Application.DTOs.GelenEvrakDTO
 
     public class GelenEvrakCreateDTO : GelenEvrakBaseDTO
     {
+
         public List<GelenEvrakIlgiCreateDTO>? Ilgiler { get; set; } = new();
         public List<GelenEvrakEkCreateDTO>? Ekler { get; set; } = new();
     }
