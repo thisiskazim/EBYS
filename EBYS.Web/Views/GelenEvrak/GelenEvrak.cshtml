@@ -6,11 +6,10 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="m-0">
         <span class="k-icon k-i-file-pdf"></span> Gelen Evrak Kayıt
-        <small class="text-muted ms-2">Evrak bilgilerini ve asıl dosyayı sisteme dahil edin</small>
+        <small class="text-muted ms-2">Evrak bilgilerini ve Üst Yazıyı sisteme dahil edin</small>
     </h4>
     <input type="hidden" id="EvrakId" value="@ViewBag.EvrakId" />
     <div>
-        <button class="btn btn-warning me-2"><span class="k-icon k-i-save"></span> Taslak Kaydet</button>
         <button id="evrakKaydet" class="btn btn-primary"><span class="k-icon k-i-check"></span> Evrakı Kaydet</button>
     </div>
 </div>
@@ -31,7 +30,7 @@
                     </li>
                 </ul>
 
-                <div class="tab-content border p-2 rounded bg-white" style="height: 65vh; overflow-y: auto;">
+                <div class="tab-content p-2 rounded bg-white">
                     <div class="tab-pane fade show active" id="bilgiler">
                         @await Html.PartialAsync("Components/GelenEvrak/_EvrakBilgileriPartial")
                     </div>
@@ -57,9 +56,6 @@
                         <i class="k-icon k-i-upload"></i> Üst Yazı Yükle
                     </button>
 
-                    <button class="btn btn-sm btn-outline-info" title="Tarayıcıdan Tara">
-                        <i class="k-icon k-i-print"></i> Tara
-                    </button>
                 </div>
             </div>
             <div class="card-body p-0 bg-secondary d-flex justify-content-center align-items-center position-relative">
@@ -78,7 +74,8 @@
         </div>
     </div>
 </div>
-<script src="~/js/GelenEvrak/evrak-gorunum.js"></script>
-<script src="~/js/GelenEvrak/ekler.js"></script>
-<script src="~/js/GelenEvrak/ilgiler.js"></script>
-<script src="~/js/GelenEvrak/evrak-olustur.js"></script>
+<script src="~/js/GelenEvrak/gelenevrak-gorunum.js"></script>
+<script src="~/js/GelenEvrak/gelenevrak-bilgileri.js"></script>
+<script src="~/js/GelenEvrak/gelen-ekler.js"></script>
+<script src="~/js/GelenEvrak/gelen-ilgiler.js"></script>
+<script src="~/js/GelenEvrak/gelenevrak-olustur.js"></script>

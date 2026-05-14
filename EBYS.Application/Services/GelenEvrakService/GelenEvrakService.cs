@@ -17,72 +17,74 @@ namespace EBYS.Application.Services.GelenEvrakService
 
         public async Task AddAsync(GelenEvrakCreateDTO createDto)
         {
-            var evrak = mapper.Map<GelenEvrak>(createDto);
-            evrak.KayitNo = await KayitNumarasiOlustur();
 
-            // 2. Ekleri İşle (ProcessFileAsync Helper'ı kullanıyoruz)
-            if (createDto.Ekler != null && createDto.Ekler.Any())
+            try
             {
-                foreach (var ekDto in createDto.Ekler)
+                var evrak = mapper.Map<GelenEvrak>(createDto);
+                evrak.KayitNo = await KayitNumarasiOlustur();
+
+                // 3. İlgileri İşle
+                if (createDto.Ilgiler != null && createDto.Ilgiler.Any())
                 {
-                    if (ekDto.Dosya != null)
+                    evrak.Ilgileri = mapper.Map<List<GelenEvrakIlgi>>(createDto.Ilgiler);
+                }
+
+
+                if (createDto.Ekler?.Any() == true)
+                {
+
+                    if (evrak.Ekler == null)
                     {
-                        var fileResult = await ProcessFileAsync(ekDto.Dosya);
+                        evrak.Ekler = new List<GelenEvrakEk>();
+                    }
+                    foreach (var ekDto in createDto.Ekler)
+                    {
+                        // Eğer dosya yoksa ve isim de girilmemişse boş kayıt atmayalım
+                        if (ekDto.Dosya == null && string.IsNullOrEmpty(ekDto.Ad)) continue;
+
                         var yeniEk = mapper.Map<GelenEvrakEk>(ekDto);
-                        yeniEk.DosyaVerisi = fileResult.Data;
-                        yeniEk.DosyaUzantisi = fileResult.Extension;
-                        yeniEk.MimeType = fileResult.MimeType;
+
+                        if (ekDto.Dosya != null)
+                        {
+                            var fileResult = await ProcessFileAsync(ekDto.Dosya);
+                            yeniEk.DosyaVerisi = fileResult.Data;
+                            yeniEk.DosyaUzantisi = fileResult.Extension;
+                            yeniEk.MimeType = fileResult.MimeType;
+
+                            // İsim boşsa dosya adını varsayılan yap
+                            if (string.IsNullOrEmpty(yeniEk.Ad))
+                                yeniEk.Ad = ekDto.Dosya.FileName;
+                        }
                         evrak.Ekler.Add(yeniEk);
                     }
                 }
-            }
 
+                // 4. İLK SEVK KAYDI (Evrakı kaydeden kişide başlar)
 
-            // 3. İlgileri İşle
-            if (createDto.Ilgiler != null && createDto.Ilgiler.Any())
-            {
-                evrak.Ilgileri = mapper.Map<List<GelenEvrakIlgi>>(createDto.Ilgiler);
-            }
-
-
-            if (createDto.Ekler?.Any() == true)
-            {
-                foreach (var ekDto in createDto.Ekler)
+                if (evrak.Sevkler == null)
                 {
-                    // Eğer dosya yoksa ve isim de girilmemişse boş kayıt atmayalım
-                    if (ekDto.Dosya == null && string.IsNullOrEmpty(ekDto.Ad)) continue;
-
-                    var yeniEk = mapper.Map<GelenEvrakEk>(ekDto);
-
-                    if (ekDto.Dosya != null)
-                    {
-                        var fileResult = await ProcessFileAsync(ekDto.Dosya);
-                        yeniEk.DosyaVerisi = fileResult.Data;
-                        yeniEk.DosyaUzantisi = fileResult.Extension;
-                        yeniEk.MimeType = fileResult.MimeType;
-
-                        // İsim boşsa dosya adını varsayılan yap
-                        if (string.IsNullOrEmpty(yeniEk.Ad))
-                            yeniEk.Ad = ekDto.Dosya.FileName;
-                    }
-                    evrak.Ekler.Add(yeniEk);
+                    evrak.Sevkler = new List<GelenEvrakSevk>();
                 }
+
+                var ilkSevk = new GelenEvrakSevk
+                {
+                    GonderenKullaniciId = evrakRepository.GetContextUserId(),
+                    AlanKullaniciId = evrakRepository.GetContextUserId(), // İlk etapta kaydeden kişide görünür
+                    SevkTarihi = DateTime.Now,
+                    Aciklama = "Evrak Kayıt İşlemi Yapıldı."
+                };
+                evrak.Sevkler.Add(ilkSevk);
+
+
+                await evrakRepository.AddAsync(evrak);
+                await evrakRepository.SaveAsync();
             }
-
-            // 4. İLK SEVK KAYDI (Evrakı kaydeden kişide başlar)
-
-            var ilkSevk = new GelenEvrakSevk
+            catch (Exception ex)
             {
-                GonderenKullaniciId = evrakRepository.GetContextUserId(),
-                AlanKullaniciId = evrakRepository.GetContextUserId(), // İlk etapta kaydeden kişide görünür
-                SevkTarihi = DateTime.Now,
-                Aciklama = "Evrak Kayıt İşlemi Yapıldı."
-            };
-            evrak.Sevkler.Add(ilkSevk);
-
-
-            await evrakRepository.AddAsync(evrak);
-            await evrakRepository.SaveAsync();
+                // Debug modundayken ex.InnerException.Message kısmına bak abi
+                var message = ex.InnerException?.Message ?? ex.Message;
+                throw new Exception("Veritabanı Hatası: " + message);
+            }
         }
 
         public async Task DeleteAsync(int id)
@@ -99,7 +101,7 @@ namespace EBYS.Application.Services.GelenEvrakService
 
         public Task<List<GelenEvrakListDTO>> GetAllAsync()
         {
-            throw new NotImplementedException();
+           
         }
 
         public async Task<GelenEvrakUpdateDTO> GetByIdAsync(int id)

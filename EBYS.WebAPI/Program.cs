@@ -1,7 +1,14 @@
 using EBYS.Application.Common.Interface;
+using EBYS.Application.Interfaces.IService;
+using EBYS.Application.Interfaces.IService.IGelenEvrakService;
+using EBYS.Application.Interfaces.IService.IGidenEvrakService;
+using EBYS.Application.Interfaces.IService.IMuhatapService;
 using EBYS.Application.Interfaces.Repository;
 using EBYS.Application.Mapping;
 using EBYS.Application.Services;
+using EBYS.Application.Services.GelenEvrakService;
+using EBYS.Application.Services.GidenEvrakService;
+using EBYS.Application.Services.MuhatapService;
 using EBYS.Persistence;
 using EBYS.Persistence.Repository;
 using EBYS.Persistence.Services;
@@ -9,14 +16,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
-
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using EBYS.Application.Interfaces.IService;
-using EBYS.Application.Services.MuhatapService;
-using EBYS.Application.Interfaces.IService.IMuhatapService;
-using EBYS.Application.Services.GidenEvrakService;
-using EBYS.Application.Interfaces.IService.IGidenEvrakService;
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var builder =WebApplication.CreateBuilder(args);
@@ -54,6 +55,9 @@ builder.Services.AddScoped<IMuhatapKurumService,KurumService>();
 
 builder.Services.AddScoped<IMuhatapTuzelKisiService, TuzelKisiService>();
 
+
+builder.Services.AddScoped<IGelenEvrakService, GelenEvrakService>();
+builder.Services.AddScoped<IGelenEvrakRepository, GelenEvrakRepository>();
 
 
 

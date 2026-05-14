@@ -24,7 +24,7 @@
 
         kaydet: function () {
             var bilgiler = GelenEvrakBilgiModule.getData(); // GelenEvrakBaseDTO alanları
-            var ilgiler = IlgilerModule.getData();          // List<GelenEvrakIlgiCreateDTO>
+            var ilgiler = GelenIlgilerModule.getData();          // List<GelenEvrakIlgiCreateDTO>
             var yanEkler = GelenEklerModule.getData();
             var asilEvrak = GelenOnizlemeModule.getAsilEvrak();// List<GelenEvrakEkCreateDTO>
 
@@ -54,7 +54,7 @@
             var ekIndex = 0;
 
             if (asilEvrak) {
-                formData.append(`Ekler[${ekIndex}].Ad`, "Asıl Evrak"); // GelenEvrakEkCreateDTO.Ad
+                formData.append(`Ekler[${ekIndex}].Ad`, "Üst Yazı"); // GelenEvrakEkCreateDTO.Ad
                 formData.append(`Ekler[${ekIndex}].Dosya`, asilEvrak); // GelenEvrakEkCreateDTO.Dosya
                 ekIndex++;
             } else {
@@ -63,14 +63,17 @@
             }
 
             // Sonra Grid'deki yan ekleri listenin devamına (Ekler[1], Ekler[2]...) ekliyoruz
-            if (yanEkler != null) {
+            if (yanEkler && Array.isArray(yanEkler) && yanEkler.length > 0) {
                 yanEkler.forEach(function (ek) {
-                    formData.append(`Ekler[${ekIndex}].Ad`, ek.Ad);
-                    if (ek.Dosya) {
-                        formData.append(`Ekler[${ekIndex}].Dosya`, ek.Dosya);
+                    console.log("Gönderilen Ek:", ek.Ad, "Dosya Nesnesi:", ek.Dosya); // <--- BURAYA BAK
+                    if (ek.Ad) {
+                        formData.append(`Ekler[${ekIndex}].Ad`, ek.Ad);
+                        // Eğer ek.Dosya bir File nesnesi değilse bu satır hiçbir şey eklemez
+                        if (ek.Dosya) {
+                            formData.append(`Ekler[${ekIndex}].Dosya`, ek.Dosya);
+                        }
+                        ekIndex++;
                     }
-                    // Not: CreateDTO'da Id yok demiştin, o yüzden sadece Ad ve Dosya
-                    ekIndex++;
                 });
             }
 
@@ -93,7 +96,7 @@
      
                 $.get(_apiBaseUrl + "EvrakGetir/" + id, function (response) {
                     EvrakBilgiModule.setData(response);
-                    IlgilerModule.setData(response.ilgiler);
+                    GelenIlgilerModule.setData(response.ilgiler);
                     GelenEklerModule.setData(response.ekler);
                 });
             }
@@ -103,10 +106,10 @@
 
 
 $(document).ready(function () {
-    if (typeof EvrakBilgiModule !== "undefined") EvrakBilgiModule.init();
+    if (typeof GelenEvrakBilgiModule !== "undefined") GelenEvrakBilgiModule.init();
     if (typeof GelenEklerModule !== "undefined") GelenEklerModule.init();
     if (typeof GelenOnizlemeModule !== "undefined") GelenOnizlemeModule.init();
-    if (typeof IlgilerModule !== "undefined") IlgilerModule.init();
+    if (typeof GelenIlgilerModule !== "undefined") GelenIlgilerModule.init();
   
     EvrakOlustur.init();
 

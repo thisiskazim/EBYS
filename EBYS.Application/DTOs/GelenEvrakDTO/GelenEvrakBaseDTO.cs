@@ -43,6 +43,7 @@ namespace EBYS.Application.DTOs.GelenEvrakDTO
         public string KayitNo { get; set; } // Bizim verdiğimiz takip no (2026/1 gibi)
         public DateTime DefterTarihi { get; set; }
         public string GonderenMuhatapAdi { get; set; } // UI'da ID yerine isim göstermek için
+        public List<string> EkIsimleri { get; set; }
 
         // Evrakın o an kimin üzerinde olduğunu göstermek için
         public string SuAnKimde { get; set; }

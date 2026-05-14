@@ -1,0 +1,55 @@
+﻿<div class="card shadow-sm border-0">
+    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+        <h4 class="m-0 text-primary fw-bold">
+            <i class="fas fa-inbox me-2"></i>Gelen Evrak Kayıt Listesi
+        </h4>
+        <a href="/GelenEvrak/EvrakOlustur" class="btn btn-success btn-sm">
+            <i class="fas fa-plus me-1"></i>Yeni Gelen Evrak
+        </a>
+    </div>
+
+    <div class="bg-light border-top border-bottom px-3 py-3">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label small fw-bold text-muted text-uppercase">Oluşturan</label>
+                <input type="text" id="filterOlusturan" class="form-control form-control-sm border-2" placeholder="Personel adı...">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-bold text-muted text-uppercase">Konu</label>
+                <input type="text" id="filterKonu" class="form-control form-control-sm border-2" placeholder="Evrak konusu...">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-bold text-muted text-uppercase">Konu Kodu</label>
+                <input type="text" id="filterKonuKodu" class="form-control form-control-sm border-2" placeholder="Kod veya tanım...">
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-primary btn-sm w-100 fw-bold" onclick="GelenEvrakListModule.filterGrid()">
+                    <i class="fas fa-search me-1"></i> SORGULA
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+        <div id="gridGelenEvraklar"></div>
+    </div>
+</div>
+
+<div id="onizlemeDialog" style="display:none;">
+    <div class="d-flex" style="height: 720px; margin: -16px;">
+        <div class="bg-light border-end flex-shrink-0" style="width: 280px; overflow-y: auto;">
+            <div class="p-3 border-bottom fw-bold text-primary small bg-white sticky-top">
+                <i class="fas fa-paperclip me-2"></i>EVRAK VE EKLERİ
+            </div>
+            <div class="list-group list-group-flush" id="popupDosyaListesi"></div>
+        </div>
+        <div class="flex-grow-1 position-relative" style="background:#525659;">
+            <div id="onizleme-yukleniyor" class="text-center mt-5 text-white" style="display:none; position: absolute; width: 100%; z-index: 99;">
+                <div class="spinner-border text-light"></div><br>Yükleniyor...
+            </div>
+            <iframe id="pdf-frame-popup" style="width: 100%; height: 100%; border: none;"></iframe>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/GelenEvrak/gelenevrak-list.js"></script>

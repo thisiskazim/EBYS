@@ -12,5 +12,8 @@ namespace EBYS.Application.Interfaces.Repository
     {
         Task<int> KayitNumarasiOlustur(int year);
         Task<GelenEvrak> DetayliGetirAsync(int id);
+
+        GetAllGelenEvraklarAsync
+
     }
 }

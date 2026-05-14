@@ -1,61 +1,66 @@
 ﻿<div class="tab-pane fade show active" id="bilgiler" role="tabpanel">
-    <div class="card mt-3 shadow-sm">
-        <div class="card-header bg-white d-flex align-items-center justify-content-between">
-            <h5 class="mb-0">Evrak Bilgileri</h5>
-            <div class="form-check form-switch m-0">
-                <input class="form-check-input" type="checkbox" id="DilekceMi">
-                <label class="form-check-label ms-2" for="DilekceMi">Dilekçe Mi?</label>
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="DilekceMi" name="DilekceMi">
+                    <label class="form-check-label ms-2 text-muted" for="DilekceMi" style="font-weight:400;">Dilekçe Mi?</label>
+                </div>
             </div>
-        </div>
-        <div class="card-body">
-            <div class="row g-3">
-                <div class="col-12 col-lg-6">
-                    <label class="form-label fw-bold"><i class="k-icon k-i-user me-1"></i> Evrak Üretici *</label>
-                    @(Html.Kendo().ComboBox()
-                        .Name("MuhatapId")
-                        .Placeholder("Rehberden gönderen seçiniz...")
-                        .DataTextField("adi")
-                        .DataValueField("id")
-                        .Filter(FilterType.Contains)
-                        .DataSource(ds => ds.Read(r => r.Url("https://localhost:7060/api/Muhatap/TumMuhataplar").Type(HttpVerbs.Get)))
-                        .HtmlAttributes(new { @class = "form-control" , style = "width:100%" })
-                    )
+
+            <div class="mb-3">
+                <label class="form-label text-secondary" for="MuhatapId">Evrak Üretici</label>
+                @(Html.Kendo().ComboBox()
+                    .Name("MuhatapId")
+                    .Placeholder("Seçiniz...")
+                    .DataTextField("adi")
+                    .DataValueField("id")
+                    .Filter(FilterType.Contains)
+                    .DataSource(ds => ds.Read(r => r.Url("https://localhost:7060/api/Muhatap/TumMuhataplar").Type(HttpVerbs.Get)))
+                    .HtmlAttributes(new { @class = "form-control bg-white", style = "width:100%" })
+                )
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-secondary" for="KonuKodu">Konu Kodu</label>
+                @(Html.Kendo().ComboBox()
+                    .Name("KonuKodu")
+                    .Placeholder("Kod seçiniz...")
+                    .DataTextField("fullKod")
+                    .DataValueField("fullKod")
+                    .Filter(FilterType.Contains)
+                    .DataSource(ds => ds.Read(r => r.Url("https://localhost:7060/api/GidenEvrak/KonuKoduGet").Type(HttpVerbs.Get)))
+                    .HtmlAttributes(new { @class = "form-control bg-white", style = "width:100%" })
+                )
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-secondary" for="txtDocumentNumber">Sayı</label>
+                <input id="txtDocumentNumber" name="DocumentNumber" class="form-control bg-white" placeholder="Sayı kayıt edildikten sonra oluşturulacaktır." value="6570053" readonly />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-secondary" for="Konu">Konu</label>
+                <input class="form-control bg-white" id="Konu" name="Konu" placeholder="Konu giriniz..." />
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-6 mb-3">
+                    <label class="form-label text-secondary" for="EvrakSayisi">Gelen Evrak Sayısı</label>
+                    <input id="EvrakSayisi" name="EvrakSayisi" class="form-control bg-white" placeholder="Dış Kurum Sayısı" />
                 </div>
 
-                <div class="col-12 col-lg-6">
-                    <label class="form-label fw-bold">Konu Kodu (Desimal) *</label>
-                    @(Html.Kendo().ComboBox()
-                        .Name("KonuKodu")
-                        .Placeholder("Kod seçiniz...")
-                        .DataTextField("fullKod")
-                        .DataValueField("fullKod")
-                        .Filter(FilterType.Contains)
-                        .DataSource(ds => ds.Read(r => r.Url("https://localhost:7060/api/GidenEvrak/KonuKoduGet").Type(HttpVerbs.Get)))
-                        .HtmlAttributes(new { @class = "form-control", style = "width:100%" })
-                    )
-                </div>
-
-                <div class="col-12">
-                    <label class="form-label fw-bold">Evrak Konusu *</label>
-                    <input class="form-control" id="Konu" placeholder="Evrakın konusunu giriniz..." />
-                </div>
-
-                <div class="col-12 col-md-6 col-lg-3">
-                    <label class="form-label">Gelen Evrak Sayısı</label>
-                    <input class="form-control" id="EvrakSayisi" placeholder="Dış Kurum Sayısı" />
-                </div>
-
-                <div class="col-12 col-md-6 col-lg-3">
-                    <label class="form-label">Gelen Evrak Tarihi</label>
+                <div class="col-12 col-md-6 mb-3">
+                    <label class="form-label text-secondary" for="EvrakTarihi">Gelen Evrak Tarihi</label>
                     @(Html.Kendo().DatePicker()
                         .Name("EvrakTarihi")
                         .Value(DateTime.Now)
                         .HtmlAttributes(new { @class = "form-control", style = "width:100%" })
                     )
                 </div>
+            </div>
 
-                <div class="col-12 col-md-6 col-lg-3">
-                    <label class="form-label text-primary fw-bold">Defter Tarihi (Sisteme Giriş)</label>
+            <div class="row">
+                <div class="col-12 col-md-6 mb-3">
+                    <label class="form-label text-secondary" for="DefterTarihi">Defter Tarihi</label>
                     @(Html.Kendo().DatePicker()
                         .Name("DefterTarihi")
                         .Value(DateTime.Now)
@@ -63,48 +68,50 @@
                     )
                 </div>
 
-                <div class="col-12 col-md-6 col-lg-3">
-                    <label class="form-label">Cevap İstenen Tarih</label>
+                <div class="col-12 col-md-6 mb-3">
+                    <label class="form-label text-secondary" for="CevapIstenenTarih">Cevap İstenen Tarih</label>
                     @(Html.Kendo().DatePicker()
                         .Name("CevapIstenenTarih")
                         .HtmlAttributes(new { @class = "form-control", style = "width:100%" })
                     )
                 </div>
+            </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="form-label">Gizlilik Derecesi</label>
+            <div class="row">
+                <div class="col-12 col-md-6 mb-3">
+                    <label class="form-label text-secondary" for="GizlilikDerecesi">Gizlilik Derecesi</label>
                     @(Html.Kendo().DropDownList()
                         .Name("GizlilikDerecesi")
                         .BindTo(new[] {
+                         
                             new { text = "TASNİF DIŞI", value = 0 },
                             new { text = "GİZLİ", value = 1 }
                         })
                         .DataTextField("text")
                         .DataValueField("value")
-                        .HtmlAttributes(new { @class = "form-control", style = "width:100%" })
+                        .HtmlAttributes(new { @class = "form-control bg-white", style = "width:100%" })
                     )
                 </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="form-label">İvedilik Derecesi</label>
+                <div class="col-12 col-md-6 mb-3">
+                    <label class="form-label text-secondary" for="IvedilikDerecesi">Aciliyet Durumu</label>
                     @(Html.Kendo().DropDownList()
                         .Name("IvedilikDerecesi")
                         .BindTo(new[] {
+            
                             new { text = "NORMAL", value = 0 },
                             new { text = "ACİL", value = 1 }
                         })
                         .DataTextField("text")
                         .DataValueField("value")
-                        .HtmlAttributes(new { @class = "form-control", style = "width:100%" })
+                        .HtmlAttributes(new { @class = "form-control bg-white", style = "width:100%" })
                     )
                 </div>
             </div>
-        </div>
-        <div class="card-footer text-muted small">
-            Zorunlu alanlar * ile belirtilmiştir.
-        </div>
-    </div>
 
-    <script src="~/js/GidenEvrak/evrak-bilgileri.js"></script>
-</div>
+        </div>
+
+
+    <script src="~/js/GelenEvrak/gelenevrak-bilgileri.js"></script>
+
 

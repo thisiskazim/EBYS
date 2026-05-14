@@ -115,7 +115,6 @@
 var GelenEklerModule = (function () {
     var _grid = null;
     var _tempFile = null;
-    var _asilEvrakFile = null; // En üstteki mavi karttan gelen dosya
 
     return {
         init: function () {
@@ -142,14 +141,6 @@ var GelenEklerModule = (function () {
                 ],
                 dataSource: { data: [] }
             }).data("kendoGrid");
-        },
-
-        // MAVİ KART: Asıl evrak seçildiğinde
-        asilEvrakSecildi: function (input) {
-            if (input.files && input.files[0]) {
-                _asilEvrakFile = input.files[0];
-                $("#asilEvrakBilgisi").text("Seçildi: " + _asilEvrakFile.name).show();
-            }
         },
 
         // ALT KISIM: Yan ekler için dosya seçildiğinde (Giden evrakla aynı)
@@ -195,18 +186,14 @@ var GelenEklerModule = (function () {
 
        
         getData: function () {
-            var yanEkler = _grid.dataSource.data().map(function (item) {
+         
+            return _grid.dataSource.data().map(function (item) {
                 return {
                     Id: item.Id,
                     Ad: item.Ad,
-                    Dosya: item.DosyaObj
+                    Dosya: item.DosyaObj 
                 };
             });
-
-            return {
-                AsilEvrak: _asilEvrakFile, // Bunu formData.append("AsilEvrak", ...) için kullanacağız
-                YanEkler: yanEkler         // Bunu döngüyle append edeceğiz
-            };
         }
     };
 })();

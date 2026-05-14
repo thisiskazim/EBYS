@@ -1,3 +1,52 @@
-﻿giden evrak
-GelenEvrakSevkListDTO hareket tipleri ekle
-repositoryleri ekle// serviceleri ekle//  html tarafını oluştur // js kısmını yaz 
+﻿<div class="k-form-fieldset k-col-span-1">
+            <div class="k-form-field">
+                <label class="k-label">Dilekçe Mi?</label>
+                <div class="k-form-field-wrap">
+                    <input data-val="true" data-val-required="The IsPetition field is required." id="chkIsPetition" name="Information.IsPetition" type="checkbox" value="true" data-role="checkbox" class="k-checkbox k-checkbox-md k-rounded-md"><input id="chkIsPetition" name="Information.IsPetition" type="hidden" value="false"><script>kendo.syncReady(function(){jQuery("#chkIsPetition").kendoCheckBox({"checked":false});});</script>
+                </div>
+            </div>
+
+            <div class="k-form-field">
+                <label class="k-label">Evrak Üretici</label>
+                <div class="k-form-field-wrap">
+                    <span title="" class="k-picker k-dropdownlist k-picker-solid k-picker-md k-rounded-md" unselectable="on" role="combobox" aria-expanded="false" tabindex="0" aria-controls="ddlProducer_listbox" aria-disabled="false" aria-readonly="false" style="width: 100%;" aria-busy="false" aria-describedby="c45caf1e-9dcb-4e26-9f4b-6a2fe846d338"><span id="c45caf1e-9dcb-4e26-9f4b-6a2fe846d338" unselectable="on" class="k-input-inner"><span class="k-input-value-text">Seçiniz...</span></span><span role="button" class="k-input-button k-button k-button-md k-button-solid k-button-solid-base k-icon-button" aria-label="select" type="button"><span class="k-icon k-i-arrow-s k-button-icon"></span></span><input id="ddlProducer" name="Information.ProducerId" style="width: 100%; display: none;" type="text" value="" data-role="dropdownlist"></span><script>kendo.syncReady(function(){jQuery("#ddlProducer").kendoDropDownList({"change":onProducerChange,"dataTextField":"Text","dataValueField":"Id","optionLabel":"Seçiniz...","dataSource":{"transport":{"read":{"url":"/Shared/GetProducers"},"prefix":""},"schema":{"errors":"Errors"}}});});</script>
+                </div>
+            </div>
+
+            <div class="k-form-field">
+                <label class="k-label">Dosya Planı</label>
+                <div class="k-form-field-wrap">
+                    <div class="k-input k-input-md k-rounded-md k-input-solid w-100">
+                        <input id="hdnFilePlanId" name="Information.FilePlanId" type="hidden" value="">
+                        <input id="hdnFilePlanCode" name="Information.FilePlanCode" type="hidden" value="">
+                        <input type="text" id="txtFilePlanName" class="k-input-inner" readonly="" placeholder="Dosya planı seçmek için tıklayınız...">
+                        <button type="button" id="btnSelectFilePlan" class="k-input-button k-button k-button-md k-button-solid k-button-solid-base">
+                            <span class="k-icon k-i-search"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="k-form-field">
+                <label class="k-label">Sayı</label>
+                <div class="k-form-field-wrap">
+                    <span class="k-input k-textbox k-disabled k-no-click k-input-solid k-input-md k-rounded-md" style="width: 100%;"><input data-val="true" data-val-required="The DocumentNumber field is required." id="txtDocumentNumber" name="Information.DocumentNumber" placeholder="Sayı kayıt edildikten sonra son kayda göre oluşturulacaktır." style="width: 100%;" type="text" value="6570053" data-role="textbox" disabled="disabled" readonly="readonly" aria-disabled="true" class="k-input-inner" autocomplete="off"></span><script>kendo.syncReady(function(){jQuery("#txtDocumentNumber").kendoTextBox({"enable":false,"readonly":true,"value":"6570053"});});</script>
+                </div>
+            </div>
+
+            <div class="k-form-field">
+                <label class="k-label">Konu</label>
+                <div class="k-form-field-wrap">
+                    <span class="k-input k-textbox k-input-solid k-input-md k-rounded-md" style="width: 100%;"><input data-val="true" data-val-required="The Subject field is required." id="txtSubject" name="Information.Subject" placeholder="Konu giriniz..." style="width: 100%;" type="text" value="" data-role="textbox" aria-disabled="false" class="k-input-inner" autocomplete="off"></span><script>kendo.syncReady(function(){jQuery("#txtSubject").kendoTextBox({});});</script>
+                </div>
+            </div>
+
+            <div class="k-form-field">
+                <label class="k-label">Gizlilik Derecesi</label>
+                <div class="k-form-field-wrap">
+                    <span title="" class="k-picker k-dropdownlist k-picker-solid k-picker-md k-rounded-md" unselectable="on" role="combobox" aria-expanded="false" tabindex="0" aria-controls="ddlPrivacy_listbox" aria-disabled="false" aria-readonly="false" style="width: 100%;" aria-busy="false" aria-describedby="b9609bbe-5360-4482-b496-23fa585cd779"><span id="b9609bbe-5360-4482-b496-23fa585cd779" unselectable="on" class="k-input-inner"><span class="k-input-value-text">Seçiniz...</span></span><span role="button" class="k-input-button k-button k-button-md k-button-solid k-button-solid-base k-icon-button" aria-label="select" type="button"><span class="k-icon k-i-arrow-s k-button-icon"></span></span><input id="ddlPrivacy" name="Information.PrivacyDegreeId" style="width: 100%; display: none;" type="text" value="" data-role="dropdownlist"></span><script>kendo.syncReady(function(){jQuery("#ddlPrivacy").kendoDropDownList({"dataTextField":"Name","dataValueField":"Id","optionLabel":"Seçiniz...","dataSource":{"transport":{"read":{"url":"/Shared/GetPrivacyDegreeList"},"prefix":""},"schema":{"errors":"Errors"}}});});</script>
+                </div>
+            </div>
+
+            
+        </div>/  html tarafını oluştur // js kısmını yaz 

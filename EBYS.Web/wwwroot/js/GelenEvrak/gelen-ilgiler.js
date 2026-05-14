@@ -1,4 +1,4 @@
-﻿var IlgilerModule = (function () {
+﻿var GelenIlgilerModule = (function () {
     var _grid = null;
 
     return {
@@ -79,5 +79,5 @@
 
 // Sayfa hazır olduğunda grid'i başlat
 $(document).ready(function () {
-    IlgilerModule.init();
+    GelenIlgilerModule.init();
 });
