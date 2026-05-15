@@ -27,6 +27,22 @@ namespace EBYS.WebAPI.Controllers
         }
 
 
+        [HttpGet("EvrakListele")]
+        public async Task<IActionResult> EvrakListele()
+        {
+            try
+            {
+                var evraklar = await evrakServive.GetAllAsync();
+                return Ok(evraklar);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
+
 
 
     }

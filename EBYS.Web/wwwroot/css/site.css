@@ -696,3 +696,35 @@ tamam
     /* Scale yapýnca altta kalan hayalet boþluðu yok etmek için bunu artýr */
     margin-bottom: -350px;
 }
+
+.evrak-dosya-konteynir {
+    cursor: pointer;
+    user-select: none;
+}
+
+.ek-listesi-gizli {
+    display: none;
+    padding-left: 15px;
+    border-left: 1px dashed #ccc;
+    margin-top: 5px;
+}
+
+.evrak-ek-link:hover {
+    text-decoration: underline !important;
+    color: #0056b3 !important;
+}
+
+/* Grid hücrelerinin dropdown'ý kesmesini engeller */
+.k-grid-content, .k-grid-content-locked {
+    overflow: visible !important;
+}
+
+.k-grid td {
+    overflow: visible !important;
+    white-space: nowrap;
+}
+
+/* Dropdown menünün her zaman en üstte kalmasýný saðlar */
+.dropdown-menu {
+    z-index: 9999 !important;
+}

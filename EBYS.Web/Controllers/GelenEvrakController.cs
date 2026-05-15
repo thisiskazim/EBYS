@@ -6,7 +6,12 @@ namespace EBYS.Web.Controllers
     {
         public IActionResult GelenEvrak(int? id)
         {
-            ViewBag.Id = id;    
+            ViewBag.Id = id;
+            return View();
+        }
+
+        public IActionResult GelenEvrakListe()
+        {
             return View();
         }
     }

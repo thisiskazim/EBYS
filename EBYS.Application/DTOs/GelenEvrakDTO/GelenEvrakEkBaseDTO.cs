@@ -18,11 +18,18 @@ namespace EBYS.Application.DTOs.EvrakDTO
     public class GelenEvrakEkCreateDTO
     {
         public string? Ad { get; set; }
-        public IFormFile? Dosya { get; set; } // Upload edilen dosya
+        public IFormFile? Dosya { get; set; }
     }
 
     public class GelenEvrakEkUpdateDTO : GelenEvrakEkBaseDTO
     {
-        public IFormFile? Dosya { get; set; } // Eğer dosya değişecekse doldurulur
+        public IFormFile? Dosya { get; set; } 
+        
+    }
+
+    public class EvrakDosyaOnizlemeDTO: GelenEvrakEkBaseDTO
+    {
+   
+        public byte[] DosyaVerisi { get; set; }
     }
 }

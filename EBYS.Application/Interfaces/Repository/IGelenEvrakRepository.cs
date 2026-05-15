@@ -1,4 +1,5 @@
-﻿using EBYS.Domain.Entities.GelenEvrak;
+﻿using EBYS.Application.DTOs.GelenEvrakDTO;
+using EBYS.Domain.Entities.GelenEvrak;
 using EBYS.Domain.Entities.GidenEvrak;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,9 @@ namespace EBYS.Application.Interfaces.Repository
         Task<int> KayitNumarasiOlustur(int year);
         Task<GelenEvrak> DetayliGetirAsync(int id);
 
-        GetAllGelenEvraklarAsync
+      //  IQueryable<GelenEvrak> GelenEvrakList();
+
+        Task<List<GelenEvrakListDTO>> GelenEvrakListAsync();
 
     }
 }

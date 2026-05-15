@@ -52,4 +52,23 @@
     </div>
 </div>
 
+
+@* <div id="sevkWindow"></div>
+
+<script id="sevkTemplate" type="text/x-kendo-template">
+    <div class="p-3">
+        <label class="form-label small fw-bold">Sevk Edilecek Personel</label>
+        <input id="sevkPersonelListe" style="width: 100%;" />
+
+        <label class="form-label small fw-bold mt-3">Sevk Notu / Talimat</label>
+        <textarea id="sevkNotu" class="form-control" rows="3" placeholder="Talimatınızı buraya yazınız..."></textarea>
+
+        <div class="text-end mt-3">
+            <button class="btn btn-primary btn-sm" onclick="GelenEvrakListModule.sevkKaydet()">
+                <i class="fas fa-paper-plane me-1"></i> Sevk Et
+            </button>
+        </div>
+    </div>
+</script> *@
+
 <script src="~/js/GelenEvrak/gelenevrak-list.js"></script>

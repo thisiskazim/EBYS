@@ -93,10 +93,12 @@ namespace EBYS.Application.Mapping
             // =============================================================================
             CreateMap<GelenEvrak, GelenEvrakListDTO>()
                 .ForMember(dest => dest.GonderenMuhatapAdi, opt => opt.MapFrom(src => src.Muhatap.Adi))
+                .ForMember(dest => dest.Olusturan, opt => opt.MapFrom(src => src.Olusturan.AdSoyad))
+                .ForMember(dest => dest.Ekler, opt => opt.MapFrom(src => src.Ekler))
                 .ForMember(dest => dest.SuAnKimde, opt => opt.MapFrom(src =>
-                    src.Sevkler != null && src.Sevkler.Any()
-                    ? src.Sevkler.OrderByDescending(s => s.SevkTarihi).FirstOrDefault().AlanKullanici.AdSoyad
-                    : "Sevk Edilmedi"));
+                            src.Sevkler.OrderByDescending(s => s.SevkTarihi)
+                                       .Select(s => s.AlanKullanici.AdSoyad)
+                                       .FirstOrDefault() ?? "Sevk Edilmedi"));
 
             CreateMap<GelenEvrak, GelenEvrakUpdateDTO>()
                 .ForMember(dest => dest.Ekler, opt => opt.MapFrom(src => src.Ekler))
@@ -105,6 +107,7 @@ namespace EBYS.Application.Mapping
             // Alt listelerin okunabilmesi için:
             CreateMap<GelenEvrakEk, GelenEvrakEkUpdateDTO>();
             CreateMap<GelenEvrakIlgi, GelenEvrakIlgiUpdateDTO>();
+            CreateMap<GelenEvrakEk, GelenEvrakEkBaseDTO>();
 
 
             // =============================================================================
