@@ -3,4 +3,4 @@ dotnet ef database update --project EBYS.Persistence --startup-project EBYS.WebA
 
 
 //
-giden evrak liste dto yu oluştur 
+giden evrak liste dto yu oluştur d
