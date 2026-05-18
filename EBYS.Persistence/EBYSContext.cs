@@ -115,7 +115,7 @@ namespace EBYS.Persistence
                  .IsRequired() // 1. BU ÇOK ÖNEMLİ: EvrakId boş olamaz (Required)
                  .OnDelete(DeleteBehavior.Cascade); // 2. Evrak silinirse her şeyi sil
 
-            // Aynı işlemi İlgiler için de yap
+          
             modelBuilder.Entity<GidenEvrakIlgi>()
                 .HasOne(x => x.Evrak)
                 .WithMany(x => x.İlgiler)
@@ -123,19 +123,19 @@ namespace EBYS.Persistence
                 .IsRequired() // Null olamaz dedik
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Konu Kodu Koruması
+        
             modelBuilder.Entity<GidenEvrak>()
                 .HasOne(e => e.EvrakKonuKodu)
                 .WithMany()
                 .HasForeignKey(e => e.KonuKoduId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // İmza Rota Koruması
+           
             modelBuilder.Entity<GidenEvrak>()
                 .HasOne(e => e.ImzaRota)
                 .WithMany()
                 .HasForeignKey(e => e.ImzaRotaId)
-                .OnDelete(DeleteBehavior.Restrict); // Silinmesini engelle!
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<GidenEvrakMuhatap>()
                 .HasOne(em => em.Muhatap)
@@ -146,58 +146,58 @@ namespace EBYS.Persistence
                 .HasOne(e => e.Olusturan)
                 .WithMany()
                 .HasForeignKey(e => e.OlusturanId)
-                .OnDelete(DeleteBehavior.Restrict); // Kullanıcıyı sildirme!
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<GidenEvrak>()
+             .Property(e => e.Icerik)
+             .HasColumnType("text");
+
+            modelBuilder.Entity<GidenEvrak>()
+                .Property(e => e.ImzaAltindaOlanIcerik)
+                .HasColumnType("text");
 
 
             modelBuilder.Entity<GidenEvrakAkis>(entity =>
             {
-                // Bir evrak silinirse, o evraka ait akış adımları da silinsin (Cascade)
+               
                 entity.HasOne(d => d.Evrak)
                     .WithMany(p => p.AkisAdimlari)
                     .HasForeignKey(d => d.EvrakId)
                     .OnDelete(DeleteBehavior.Cascade);
 
 
-                // Bir kullanıcı silinirse, akış kayıtları silinmesin (Restrict) 
-                // Çünkü o imza geçmişi bir belgedir, kullanıcı gitse de imza kalmalı.
+             
                 entity.HasOne(d => d.Kullanici)
                     .WithMany()
                     .HasForeignKey(d => d.KullaniciId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
-            
-            modelBuilder.Entity<GidenEvrak>()
-                .Property(e => e.Icerik)
-                .HasColumnType("text");
-
-            modelBuilder.Entity<GidenEvrak>()
-                .Property(e => e.ImzaAltindaOlanIcerik)
-                .HasColumnType("text");
+         
 
             //gelen evrak
+
             // --- Gelen Evrak ve Ekler İlişkisi ---
             modelBuilder.Entity<GelenEvrakEk>()
                 .HasOne(x => x.GelenEvrak)
                 .WithMany(x => x.Ekler)
                 .HasForeignKey(x => x.GelenEvrakId)
-                .OnDelete(DeleteBehavior.Cascade); // Evrak silinirse ekler de silinir
+                .OnDelete(DeleteBehavior.Cascade); 
 
             // --- Gelen Evrak ve İlgiler İlişkisi ---
             modelBuilder.Entity<GelenEvrakIlgi>()
                 .HasOne(x => x.GelenEvrak)
                 .WithMany(x => x.Ilgileri)
                 .HasForeignKey(x => x.GelenEvrakId)
-                .OnDelete(DeleteBehavior.Cascade); // Evrak silinirse ilgiler de silinir
+                .OnDelete(DeleteBehavior.Cascade);
 
             // --- Gelen Evrak ve Sevkler (Akış) İlişkisi ---
             modelBuilder.Entity<GelenEvrakSevk>()
                 .HasOne(x => x.GelenEvrak)
                 .WithMany(x => x.Sevkler)
                 .HasForeignKey(x => x.GelenEvrakId)
-                .OnDelete(DeleteBehavior.Cascade); // Evrak silinirse sevk geçmişi de silinir
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // İPUCU: KayıtNo alanı için benzersizlik (Unique) kuralı ekleyebilirsin
             modelBuilder.Entity<GelenEvrak>()
                 .HasIndex(x => x.KayitNo)
                 .IsUnique();

@@ -25,32 +25,21 @@ var EvrakBekleyenListModule = (function () {
     // -------------------------------------------------------
     // Kendo Dialog'u başlat (sayfa yüklendiğinde bir kez)
     // -------------------------------------------------------
-    var _initDialog = function () {
-        _onizlemeDialog = $("#onizlemeDialog").kendoDialog({
-            width: "1200px", // Genişliği biraz artırdık ki A4 rahat sığsın
-            height: "750px",
-            title: "Evrak Önizleme",
-            closable: true,
-            modal: true,
-            visible: false,
-            actions: [
-                { text: "Kapat" },
-                {
-                    text: "PDF İndir",
-                    primary: true,
-                    action: function () {
-                        // PDF Reader içindeki dosyayı indirtiyoruz
-                        OnizlemeModule.pdfIndir();
-                        return false;
-                    }
-                }
-            ]
-        }).data("kendoDialog");
-    };
+    //var _initDialog = function () {
+    //    _onizlemeDialog = $("#onizlemeDialog").kendoDialog({
+    //        width: "1300px",
+    //        height: "800px", // İçerideki 720px'lik d-flex'i rahat taşısın
+    //        title: "Evrak Detay Önizleme",
+    //        closable: true,
+    //        modal: true,
+    //        visible: false,
+    //        actions: [{ text: "Kapat" }]
+    //    }).data("kendoDialog");
+    //};
 
     return {
         init: function () {
-            _initDialog();
+          /*  _initDialog();*/
             this.initGrid();
             this.loadData();
         },
@@ -100,16 +89,33 @@ var EvrakBekleyenListModule = (function () {
                     },
                     // ── YENİ: Dosyalar kolonu ──────────────────────────────────
                     {
-                        title: "Dosyalar",
-                        width: "90px",
-                        headerAttributes: { style: "text-align: center" },
-                        attributes: { style: "text-align: center" },
+                        title: "DOSYALAR",
+                        width: "200px",
                         template: function (dataItem) {
-                            return `<button class='btn btn-link btn-sm p-0'
-                                        title='Evrakı Önizle'
-                                        onclick='EvrakBekleyenListModule.onizle("${dataItem.Id}")'>
-                                        <i class='fas fa-file-alt text-secondary' style='font-size:18px;'></i>
-                                    </button>`;
+                            var ekListesi = dataItem.ekler || [];
+                            if (ekListesi.length === 0) return "<span class='text-muted small'>Dosya yok</span>";
+
+                            var html = `<div class='evrak-dosya-konteynir' onclick='EvrakBekleyenListModule.toggleEkler(this)'>
+                        <div class='small fw-bold text-primary'>
+                            <i class='fas fa-folder me-1'></i>${ekListesi.length} Adet Dosya
+                            <i class='fas fa-chevron-down float-end mt-1 small'></i>
+                        </div>
+                        <div class='ek-listesi-gizli'>`;
+
+                            ekListesi.forEach(function (ek) {
+                                var uzanti = ek.dosyaUzantisi || "";
+                                var icon = GelenEvrakListModule.getIconByExtension(uzanti);
+                                var action = uzanti.toLowerCase().includes("pdf")
+                                    ? `EvrakOnizlemeModule.ac(${ek.id}, 'giden')`
+                                    : `EvrakOnizlemeModule.dosyaIndir(${ek.id})`;
+
+                                html += `<div class='mb-1'>
+                        <a href='javascript:void(0)' onclick="event.stopPropagation(); ${action}" class='text-decoration-none text-dark small evrak-ek-link'>
+                            <i class='${icon} me-1'></i>${ek.ad}
+                        </a>
+                     </div>`;
+                            });
+                            return html + "</div></div>";
                         }
                     },
                     // ──────────────────────────────────────────────────────────
@@ -151,78 +157,6 @@ var EvrakBekleyenListModule = (function () {
                 _grid.dataSource.data(mappedList);
             });
         },
-
-        // -------------------------------------------------------
-        // Önizleme popup aç — DB'den veri çek, şablonu doldur
-        // -------------------------------------------------------
-        onizle: function (id) {
-            var self = this;
-            _onizlemeDialog.open(); // Pop-up'ı aç
-            $("#onizleme-yukleniyor").show();
-            $("#popupDosyaListesi").empty();
-            $("#pdf-frame-popup").attr("src", "about:blank");
-
-            $.get('https://localhost:7060/api/GidenEvrak/EvrakGetir/' + id, function (evrak) {
-                $("#onizleme-yukleniyor").hide();
-
-                // 1. LİSTEYE "ÜST YAZI"YI EKLE (Senin oluşturduğun şablon)
-                var btnUstYazi = $(`
-            <a href="#" class="list-group-item list-group-item-action active">
-                <div class="d-flex justify-content-between align-items-center">
-                    <span><i class="fas fa-file-alt me-2 text-primary"></i>Üst Yazı</span>
-                    <span class="badge bg-primary rounded-pill">Asıl</span>
-                </div>
-            </a>`);
-
-                btnUstYazi.click(function (e) {
-                    e.preventDefault();
-                    $(this).addClass("active").siblings().removeClass("active");
-                    // Senin o meşhur HTML-to-PDF motorunu popup'taki iframe için çalıştırır
-                    OnizlemeModule.verileriYukleDB(evrak, "#pdf-frame-popup");
-                });
-                $("#popupDosyaListesi").append(btnUstYazi);
-
-                // 2. LİSTEYE "EKLERİ" EKLE (Varsa)
-                if (evrak.ekler && evrak.ekler.length > 0) {
-                    evrak.ekler.forEach(function (ek, index) {
-                        var btnEk = $(`
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <i class="fas fa-paperclip me-2 text-secondary"></i>Ek-${index + 1}: ${ek.ad || ek.Ad}
-                    </a>`);
-
-                        btnEk.click(function (e) {
-                            e.preventDefault();
-                            $(this).addClass("active").siblings().removeClass("active");
-                            // Eklerin (PDF veya Resim) gösterimi
-                            self.ekOnizle(ek);
-                        });
-                        $("#popupDosyaListesi").append(btnEk);
-                    });
-                }
-
-                // 3. İLK AÇILIŞ: Varsayılan olarak "Üst Yazı"yı göster
-                OnizlemeModule.verileriYukleDB(evrak, "#pdf-frame-popup");
-
-            }).fail(function () {
-                alert("Evrak detayları alınamadı.");
-                $("#onizleme-yukleniyor").hide();
-            });
-        },
-        ekOnizle: function (ek) {
-            var base64Data = ek.dosyaIcerik || ek.DosyaIcerik;
-            if (!base64Data) return;
-
-            var contentType = ek.mimeType || ek.MimeType || "application/pdf";
-
-            // Eğer PDF ise direkt Iframe'e göm (Siyah barlı arayüz gelir)
-            if (contentType.includes("pdf")) {
-                $("#pdf-frame-popup").attr("src", "data:application/pdf;base64," + base64Data + "#toolbar=1");
-            } else {
-                // Resim ise Base64 URL oluşturup bas
-                $("#pdf-frame-popup").attr("src", "data:" + contentType + ";base64," + base64Data);
-            }
-        },
-
         onay: function (id) {
             if (!confirm("Seçili evrakı onaylamak istediğinize emin misiniz?")) return;
             _ajaxCall('Akis/Onayla/' + id, 'POST').done(function (response) {

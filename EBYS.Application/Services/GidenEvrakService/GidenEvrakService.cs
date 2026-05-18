@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EBYS.Application.DTOs;
 using EBYS.Application.DTOs.EvrakDTO;
 using EBYS.Application.Interfaces.IService.IGidenEvrakService;
 using EBYS.Application.Interfaces.Repository;
@@ -125,6 +126,27 @@ namespace EBYS.Application.Services.GidenEvrakService
             var dto = mapper.Map<GidenEvrakUpdateDTO>(getVeri);
 
             return dto;
+        }
+
+        public async Task<EvrakOnizlemeBaseDTO> GidenEvrakEkOnizlemeAsync(int ekId)
+        {
+            try
+            {
+                var getVeri = await evrakRepository.GidenEvrakEkDosyaByIdAsync(ekId);
+
+                if (getVeri == null)
+                {
+                    throw new Exception("Dosya bulunamadı");
+                }
+                var dto = mapper.Map<EvrakOnizlemeBaseDTO>(getVeri);
+                return dto;
+            }
+            catch (Exception ex)
+            {
+                var message = ex.InnerException?.Message ?? ex.Message;
+                throw new Exception("Veritabanı Hatası: " + message);
+            }
+
         }
 
         public async Task UpdateAsync(GidenEvrakUpdateDTO updateDto)
@@ -260,9 +282,6 @@ namespace EBYS.Application.Services.GidenEvrakService
             evrakRepository.UpdateAsync(mevcutEvrak);
             await evrakRepository.SaveAsync();
         }
-
-
-
         private async Task<(byte[] Data, string Extension, string MimeType)> ProcessFileAsync(IFormFile file)
         {
             using var memoryStream = new MemoryStream();

@@ -728,3 +728,14 @@ tamam
 .dropdown-menu {
     z-index: 9999 !important;
 }
+
+
+
+/* iframe'in konteynýrý doldurmasýný garanti altýna alalým */
+#pdf-frame-popup {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 750px !important;
+    background-color: #525659;
+    border: none;
+}

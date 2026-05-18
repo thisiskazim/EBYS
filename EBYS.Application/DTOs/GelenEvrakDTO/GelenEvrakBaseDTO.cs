@@ -11,14 +11,12 @@ namespace EBYS.Application.DTOs.GelenEvrakDTO
     public class GelenEvrakBaseDTO
     {
         public string Konu { get; set; }
-        public string EvrakSayisi { get; set; } // Gönderen tarafın sayısı
-        public DateTime EvrakTarihi { get; set; } = DateTime.Now; // Gönderen tarafın tarihi
-        public DateTime DefterTarihi { get; set; } = DateTime.Now;
+        public string EvrakSayisi { get; set; } 
+        public DateTime EvrakTarihi { get; set; } = DateTime.Now; 
         public string? Olusturan { get; set; }
-        public int OlusturanId { get; set; } // Bunu yetki kontrolü için ekleyelim
-
-        public string KonuKodu { get; set; } // Desimal kod
-        public int MuhatapId { get; set; } // Rehberden seçilen kurum/şahıs
+        public int OlusturanId { get; set; } 
+        public string KonuKodu { get; set; }
+        public int MuhatapId { get; set; }
         public bool DilekceMi { get; set; }
         public Enums.GizlilikDerecesi GizlilikDerecesi { get; set; }
         public Enums.IvedilikDerecesi IvedilikDerecesi { get; set; }
@@ -44,15 +42,11 @@ namespace EBYS.Application.DTOs.GelenEvrakDTO
     public class GelenEvrakListDTO : GelenEvrakBaseDTO
     {
         public int Id { get; set; }
-        public string KayitNo { get; set; } // Bizim verdiğimiz takip no (2026/1 gibi)
+        public string KayitNo { get; set; } 
         public DateTime DefterTarihi { get; set; }
-        public string GonderenMuhatapAdi { get; set; } // UI'da ID yerine isim göstermek için
+        public string GonderenMuhatapAdi { get; set; } 
         public bool EditYapabilirMi { get; set; }
-
-
-        // Evrakın o an kimin üzerinde olduğunu göstermek için
         public string SuAnKimde { get; set; }
-
         public List<GelenEvrakEkBaseDTO> Ekler { get; set; } = new List<GelenEvrakEkBaseDTO>();
     }
 

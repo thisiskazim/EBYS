@@ -42,6 +42,23 @@ namespace EBYS.WebAPI.Controllers
         }
 
 
+        [HttpGet("EvrakPdfGoruntule/{ekId}")]
+        public async Task<IActionResult> EvrakPdfGoruntule(int ekId)
+        {
+            try
+            {
+                var ek = await evrakServive.GelenEvrakEkOnizlemeAsync(ekId);
+
+                if (ek == null || ek.DosyaVerisi == null) return NotFound();
+
+                return File(ek.DosyaVerisi, "application/pdf");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
 
 
 

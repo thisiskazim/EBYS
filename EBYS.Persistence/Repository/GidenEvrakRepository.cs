@@ -1,4 +1,5 @@
 ﻿using EBYS.Application.Interfaces.Repository;
+using EBYS.Domain.Entities.GelenEvrak;
 using EBYS.Domain.Entities.GidenEvrak;
 using EBYS.Domain.Enum;
 using EBYS.Domain.Utilities;
@@ -71,6 +72,13 @@ namespace EBYS.Persistence.Repository
                 .ToListAsync();
         }
 
+        public async Task<GidenEvrakEk> GidenEvrakEkDosyaByIdAsync(int ekId)
+        {
+            return await _context.EvrakEkler
+                 .AsNoTracking()
+                 .FirstOrDefaultAsync(x => x.Id == ekId);
+        }
 
+   
     }
 }

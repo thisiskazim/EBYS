@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EBYS.Application.Interfaces.IService.IGelenEvrakService
 {
-    public interface IGelenEvrakListService
+    public interface IGelenEvrakAkisService
     {
 
     }

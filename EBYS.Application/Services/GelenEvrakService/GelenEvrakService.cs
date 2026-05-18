@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EBYS.Application.DTOs;
 using EBYS.Application.DTOs.EvrakDTO;
 using EBYS.Application.DTOs.GelenEvrakDTO;
 using EBYS.Application.Interfaces.IService.IGelenEvrakService;
@@ -13,8 +14,6 @@ namespace EBYS.Application.Services.GelenEvrakService
 {
     public class GelenEvrakService(IGelenEvrakRepository evrakRepository, IMapper mapper) : IGelenEvrakService
     {
-
-      
 
         public async Task AddAsync(GelenEvrakCreateDTO createDto)
         {
@@ -69,8 +68,7 @@ namespace EBYS.Application.Services.GelenEvrakService
 
                 var ilkSevk = new GelenEvrakSevk
                 {
-                    GonderenKullaniciId = evrakRepository.GetContextUserId(),
-                   
+                    SevkEdenKullaniciId = evrakRepository.GetContextUserId(),
                     SevkTarihi = DateTime.Now,
                     Aciklama = "Evrak Kayıt İşlemi Yapıldı."
                 };
@@ -258,8 +256,6 @@ namespace EBYS.Application.Services.GelenEvrakService
                 MimeType: file.ContentType
             );
         }
-
-     
         private async Task<string> KayitNumarasiOlustur()
         {
             int yil = DateTime.Now.Year;
@@ -269,5 +265,25 @@ namespace EBYS.Application.Services.GelenEvrakService
             return $"{yil}/{count + 1}";
         }
 
+        public async Task<EvrakOnizlemeBaseDTO> GelenEvrakEkOnizlemeAsync(int ekId)
+        {
+            try
+            {
+                var getVeri = await evrakRepository.GelenEvrakEkDosyaByIdAsync(ekId);
+
+                if (getVeri == null)
+                {
+                    throw new Exception("Dosya bulunamadı");
+                }
+                var dto = mapper.Map<EvrakOnizlemeBaseDTO>(getVeri);
+                return dto;
+            }
+            catch (Exception ex)
+            {
+                var message = ex.InnerException?.Message ?? ex.Message;
+                throw new Exception("Veritabanı Hatası: " + message);
+            }
+       
+        }
     }
 }

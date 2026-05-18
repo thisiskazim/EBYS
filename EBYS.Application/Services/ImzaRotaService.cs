@@ -98,8 +98,6 @@ namespace EBYS.Application.Services
             await imzaRotaRepository.SaveAsync();
         }
 
-
-
         public async Task<ImzaRotaUpdateDTO> GetByIdAsync(int id)
         {
             var getVeri = await imzaRotaRepository.GetImzaRotaVeAdimlariDetay(id);

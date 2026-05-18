@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace EBYS.Application.DTOs.GelenEvrakDTO
 {
-    public class GelenEvrakSevkListDTO
+    public class GelenEvrakSevkListDTO //sevk akışını göstermek için
     {
         public int Id { get; set; }
 
         // Kimden geldi?
-        public string GonderenAdSoyad { get; set; }
+        public string SevkEdenKullaniciAdSoyad { get; set; }
 
         // Kime gitti?
-        public string? AliciAdSoyad { get; set; }
+        public string? AlanKullaniciAdSoyad { get; set; }
 
         // Ne zaman yapıldı?
         public DateTime SevkTarihi { get; set; }

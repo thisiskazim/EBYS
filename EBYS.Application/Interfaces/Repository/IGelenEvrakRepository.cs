@@ -17,6 +17,7 @@ namespace EBYS.Application.Interfaces.Repository
       //  IQueryable<GelenEvrak> GelenEvrakList();
 
         Task<List<GelenEvrakListDTO>> GelenEvrakListAsync();
+        Task<GelenEvrakEk> GelenEvrakEkDosyaByIdAsync(int ekId);
 
     }
 }

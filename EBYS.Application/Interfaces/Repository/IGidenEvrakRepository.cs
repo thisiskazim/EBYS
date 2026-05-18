@@ -1,4 +1,5 @@
-﻿using EBYS.Domain.Entities.GidenEvrak;
+﻿using EBYS.Domain.Entities.GelenEvrak;
+using EBYS.Domain.Entities.GidenEvrak;
 using EBYS.Domain.Enum;
 
 namespace EBYS.Application.Interfaces.Repository
@@ -12,7 +13,7 @@ namespace EBYS.Application.Interfaces.Repository
         Task<List<GidenEvrakAkis>> EvrakHareketleriGetirAsync(int evrakId);
         Task<GidenEvrak> AkisAdimlariSorguAsync(int evrakId);
 
-
+        Task<GidenEvrakEk> GidenEvrakEkDosyaByIdAsync(int ekId);
 
     }
 }

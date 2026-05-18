@@ -27,7 +27,7 @@ namespace EBYS.Application.DTOs.EvrakDTO
         
     }
 
-    public class EvrakDosyaOnizlemeDTO: GelenEvrakEkBaseDTO
+    public class GelenEvrakDosyaOnizlemeDTO: GelenEvrakEkBaseDTO
     {
    
         public byte[] DosyaVerisi { get; set; }

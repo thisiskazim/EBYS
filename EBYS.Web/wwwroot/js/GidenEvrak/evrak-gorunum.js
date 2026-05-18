@@ -136,38 +136,6 @@ var OnizlemeModule = (function () {
             });
     };
 
-
-    //var _renderKendoPdf = function (targetIframeId) {
-    //    // Eğer popup içindeysek popup'ın loader'ını, değilsek ana sayfanınkini alalım
-    //    var loaderContainer = targetIframeId ? $("#onizlemeDialog") : $(".pdf-viewer-wrapper");
-
-    //    kendo.ui.progress(loaderContainer, true);
-
-    //    var elementToExport = $("#documentPreviewContent");
-
-    //    // Eğer dışarıdan bir ID gelirse onu kullan (popup için), gelmezse varsayılanı kullan
-    //    var iframeSelector = targetIframeId || "#pdf-frame";
-
-    //    kendo.drawing.drawDOM(elementToExport, {
-    //        paperSize: "A4",
-    //        scale: 0.75,
-    //        margin: { top: "0mm", bottom: "0mm", left: "0mm", right: "0mm" },
-    //        forcePageBreak: ".page-break"
-    //    })
-    //        .then(function (group) {
-    //            return kendo.drawing.exportPDF(group);
-    //        })
-    //        .then(function (dataURI) {
-    //            // PDF'i doğru iframe'e basıyoruz
-    //            $(iframeSelector).attr("src", dataURI);
-    //            kendo.ui.progress(loaderContainer, false);
-    //        })
-    //        .fail(function (err) {
-    //            console.error("PDF Hatası:", err);
-    //            kendo.ui.progress(loaderContainer, false);
-    //        });
-    //};
-
     // GidenEvrakUpdateDTO -> şablona bas
     var _doldur = function (evrak) {
         // Sayı

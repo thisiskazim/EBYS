@@ -31,6 +31,36 @@
                 sortable: true,
                 pageable: { pageSize: 10, buttonCount: 5 },
                 columns: [
+                      {
+                        title: "DOSYALAR",
+                        width: "200px",
+                        template: function (dataItem) {
+                            var ekListesi = dataItem.ekler || [];
+                            if (ekListesi.length === 0) return "<span class='text-muted small'>Dosya yok</span>";
+
+                            var html = `<div class='evrak-dosya-konteynir' onclick='EvrakBekleyenListModule.toggleEkler(this)'>
+                        <div class='small fw-bold text-primary'>
+                            <i class='fas fa-folder me-1'></i>${ekListesi.length} Adet Dosya
+                            <i class='fas fa-chevron-down float-end mt-1 small'></i>
+                        </div>
+                        <div class='ek-listesi-gizli'>`;
+
+                            ekListesi.forEach(function (ek) {
+                                var uzanti = ek.dosyaUzantisi || "";
+                                var icon = GelenEvrakListModule.getIconByExtension(uzanti);
+                                var action = uzanti.toLowerCase().includes("pdf")
+                                    ? `EvrakOnizlemeModule.ac(${ek.id}, 'giden')`
+                                    : `EvrakOnizlemeModule.dosyaIndir(${ek.id})`;
+
+                                html += `<div class='mb-1'>
+                        <a href='javascript:void(0)' onclick="event.stopPropagation(); ${action}" class='text-decoration-none text-dark small evrak-ek-link'>
+                            <i class='${icon} me-1'></i>${ek.ad}
+                        </a>
+                     </div>`;
+                            });
+                            return html + "</div></div>";
+                        }
+                    },
                     {
                         field: "Konu",
                         title: "Evrak Konusu",

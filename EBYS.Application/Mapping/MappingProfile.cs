@@ -49,12 +49,15 @@ namespace EBYS.Application.Mapping
             CreateMap<GidenEvrakEk, GidenEvrakEkBaseDTO>();
 
 
-          
+            CreateMap<GidenEvrakEk, EvrakOnizlemeBaseDTO>();
+
+
+
             // 2. YAZMA YÖNÜ (DTO -> Entity) - Ekrandan gelen veriyi DB'ye kaydederken
             // =============================================================================
 
             // --- YENİ KAYIT (Create) ---
-          
+
             CreateMap<GidenEvrakCreateDTO, GidenEvrak>()
                 .ForMember(dest => dest.İlgiler, opt => opt.Ignore())
                 .ForMember(dest => dest.Muhataplar, opt => opt.Ignore())
@@ -142,6 +145,9 @@ namespace EBYS.Application.Mapping
                 .ForMember(dest => dest.DosyaVerisi, opt => opt.Ignore())
                 .ForMember(dest => dest.DosyaUzantisi, opt => opt.Ignore())
                 .ForMember(dest => dest.MimeType, opt => opt.Ignore());
+
+
+            CreateMap<GelenEvrakEk, EvrakOnizlemeBaseDTO>();
 
             // İLGİ
             CreateMap<GelenEvrakIlgiCreateDTO, GelenEvrakIlgi>();

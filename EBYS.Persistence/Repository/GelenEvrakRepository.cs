@@ -18,7 +18,8 @@ namespace EBYS.Persistence.Repository
     {
 
         private readonly IMapper _mapper;
-        public GelenEvrakRepository(EBYSContext context, IMapper mapper) : base(context) {
+        public GelenEvrakRepository(EBYSContext context, IMapper mapper) : base(context)
+        {
             _mapper = mapper;
         }
 
@@ -42,10 +43,17 @@ namespace EBYS.Persistence.Repository
                     .AsNoTracking()
                     .Where(x => !x.isDelete)
                     .OrderByDescending(x => x.creat_time)
-                    .ProjectTo<GelenEvrakListDTO>(_mapper.ConfigurationProvider) // Mermi burada!
+                    .ProjectTo<GelenEvrakListDTO>(_mapper.ConfigurationProvider)
                     .ToListAsync();
             //projectto kullanarak direkt olarak veritabanından DTO'ya dönüşüm yapıyoruz, bu sayede gereksiz verilerin çekilmesini engelliyoruz ve performansı artırıyoruz.
 
+        }
+
+        public async Task<GelenEvrakEk> GelenEvrakEkDosyaByIdAsync(int ekId)
+        {
+            return await _context.GelenEvrakEkler
+                 .AsNoTracking()
+                 .FirstOrDefaultAsync(x => x.Id == ekId);
         }
     }
 }

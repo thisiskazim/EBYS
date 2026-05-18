@@ -13,17 +13,17 @@ namespace EBYS.Domain.Entities.GelenEvrak
         public int GelenEvrakId { get; set; }
         public virtual GelenEvrak GelenEvrak { get; set; }
         // Evrakı bir sonraki kişiye sevk eden (Paslayan)
-        public int GonderenKullaniciId { get; set; }
-        [ForeignKey("GonderenKullaniciId")]
-        public virtual Kullanici GonderenKullanici { get; set; }
+        public int SevkEdenKullaniciId { get; set; }
+        [ForeignKey("SevkEdenKullaniciId")]
+        public virtual Kullanici SevkEdenKullanici { get; set; }
 
 
-        public int? AlanKullaniciId { get; set; } // Evrakın gittiği personel
+        public int? AlanKullaniciId { get; set; } 
 
         [ForeignKey("AlanKullaniciId")]
         public virtual Kullanici AlanKullanici { get; set; }
 
-        public string? Aciklama { get; set; } // "Gereği yapılsın", "Bilginize" vb.
+        public string? Aciklama { get; set; } 
         public DateTime SevkTarihi { get; set; }
         public DateTime? OkunmaTarihi { get; set; }
     }

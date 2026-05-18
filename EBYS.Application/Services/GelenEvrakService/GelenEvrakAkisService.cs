@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EBYS.Application.Services.GelenEvrakService
 {
-    public class GelenEvrakListService
+    public class GelenEvrakAkisService
     {
     }
 }

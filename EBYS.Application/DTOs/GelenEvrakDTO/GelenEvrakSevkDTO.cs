@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace EBYS.Application.DTOs.GelenEvrakDTO
 {
-    public class GelenEvrakSevkDTO
+    public class GelenEvrakSevkDTO //gelen evrak başka birine sevk edilirken 
     {
-        public int GelenEvrakId { get; set; } // Hangi evrak sevk ediliyor?
+        public int GelenEvrakId { get; set; } 
 
-        public int KaydedenKullaniciId { get; set; } // Sevk eden kullanıcı
-        public int? AlanKullaniciId { get; set; } // Sevk edilen kullanıcı
+        public int SevkEdenKullaniciId { get; set; } 
+        public int? AlanKullaniciId { get; set; } 
 
-        public string? Aciklama { get; set; } // "Gereği yapılsın", "Arşivlensin" gibi notlar
+        public string? Aciklama { get; set; } 
         public DateTime SevkTarihi { get; set; } = DateTime.Now;
     }
 }

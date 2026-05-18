@@ -3,21 +3,21 @@
     var _onizlemeDialog = null;
     var _apiBaseUrl = "https://localhost:7060/api/GelenEvrak/";
 
-    var _initDialog = function () {
-        _onizlemeDialog = $("#onizlemeDialog").kendoDialog({
-            width: "1300px",
-            height: "850px",
-            title: "Evrak Detay Önizleme",
-            closable: true,
-            modal: true,
-            visible: false,
-            actions: [{ text: "Kapat" }]
-        }).data("kendoDialog");
-    };
+    //var _initDialog = function () {
+    //    _onizlemeDialog = $("#onizlemeDialog").kendoDialog({
+    //        width: "1300px",
+    //        height: "800px", // İçerideki 720px'lik d-flex'i rahat taşısın
+    //        title: "Evrak Detay Önizleme",
+    //        closable: true,
+    //        modal: true,
+    //        visible: false,
+    //        actions: [{ text: "Kapat" }]
+    //    }).data("kendoDialog");
+    //};
 
     return {
         init: function () {
-            _initDialog();
+          /*  _initDialog();*/
             this.initGrid();
             this.loadData();
         },
@@ -86,8 +86,8 @@
                                 var uzanti = ek.dosyaUzantisi || "";
                                 var icon = GelenEvrakListModule.getIconByExtension(uzanti);
                                 var action = uzanti.toLowerCase().includes("pdf")
-                                    ? `GelenEvrakListModule.onizle(${dataItem.id})`
-                                    : `GelenEvrakListModule.dosyaIndir(${ek.id})`;
+                                    ? `EvrakOnizlemeModule.ac(${ek.id}, 'gelen')`
+                                    : `EvrakOnizlemeModule.dosyaIndir(${ek.id})`;
 
                                 html += `<div class='mb-1'>
                         <a href='javascript:void(0)' onclick="event.stopPropagation(); ${action}" class='text-decoration-none text-dark small evrak-ek-link'>
@@ -125,53 +125,6 @@
                 kendo.ui.progress($("#gridGelenEvraklar"), false);
             });
         },
-
-        onizle: function (id) {
-            _onizlemeDialog.open();
-            $("#onizleme-yukleniyor").show();
-            $("#popupDosyaListesi").empty();
-            $("#pdf-frame-popup").attr("src", "about:blank");
-
-            $.get(_apiBaseUrl + "EvrakGetir/" + id, function (evrak) {
-                $("#onizleme-yukleniyor").hide();
-
-                var ekListesi = evrak.ekler || evrak.Ekler || [];
-                if (ekListesi.length > 0) {
-                    ekListesi.forEach(function (ek, index) {
-                        var isMain = (index === 0);
-                        var icon = isMain ? "fa-file-signature text-primary" : "fa-paperclip text-secondary";
-                        var label = isMain ? "Üst Yazı (Asıl)" : (ek.ad || ek.Ad);
-
-                        var btn = $(`
-                            <a href="#" class="list-group-item list-group-item-action ${isMain ? 'active' : ''}">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas ${icon} me-2"></i>
-                                    <span class="small fw-bold">${label}</span>
-                                </div>
-                            </a>`);
-
-                        btn.click(function (e) {
-                            e.preventDefault();
-                            $(this).addClass("active").siblings().removeClass("active");
-                            GelenEvrakListModule.pdfGoster(ek.dosyaVerisi || ek.DosyaVerisi, ek.mimeType || ek.MimeType);
-                        });
-                        $("#popupDosyaListesi").append(btn);
-
-                        if (isMain) GelenEvrakListModule.pdfGoster(ek.dosyaVerisi || ek.DosyaVerisi, ek.mimeType || ek.MimeType);
-                    });
-                }
-            });
-        },
-
-        pdfGoster: function (base64, mimeType) {
-            if (!base64) {
-                $("#pdf-frame-popup").attr("src", "");
-                return;
-            }
-            var type = mimeType || "application/pdf";
-            $("#pdf-frame-popup").attr("src", `data:${type};base64,${base64}#toolbar=1`);
-        },
-
         dosyaIndir: function (ekId) {
             // Backend'de "DosyaIndir/{id}" şeklinde bir endpoint olmalı
             window.location.href = _apiBaseUrl + "DosyaIndir/" + ekId;
