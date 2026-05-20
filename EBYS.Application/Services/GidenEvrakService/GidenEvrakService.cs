@@ -62,33 +62,29 @@ namespace EBYS.Application.Services.GidenEvrakService
                 }
             }
 
-         
-
-          
-            // Ekleri ekle
             if (createDto.Ekler?.Any() == true)
             {
+
+                if (evrak.Ekler == null)
+                {
+                    evrak.Ekler = new List<GidenEvrakEk>();
+                }
                 foreach (var ekDto in createDto.Ekler)
                 {
-                    // Eğer hem isim boş hem dosya boşsa bu satırı atla (Gereksiz kayıt oluşmasın)
-                    if (string.IsNullOrEmpty(ekDto.Ad) && ekDto.Dosya == null) continue;
+                    if (ekDto.Dosya == null && string.IsNullOrEmpty(ekDto.Ad)) continue;
 
                     var yeniEk = mapper.Map<GidenEvrakEk>(ekDto);
 
-                    // 1. İsim Mantığı: Kullanıcı ad girdiyse onu al, girmediyse dosya adını al
-                    if (string.IsNullOrEmpty(yeniEk.Ad))
-                        yeniEk.Ad = ekDto.Dosya?.FileName ?? "Adsız Ek";
-
-                    // 2. Dosya Mantığı: Eğer dosya varsa işle
                     if (ekDto.Dosya != null)
                     {
                         var fileResult = await ProcessFileAsync(ekDto.Dosya);
                         yeniEk.DosyaVerisi = fileResult.Data;
                         yeniEk.DosyaUzantisi = fileResult.Extension;
                         yeniEk.MimeType = fileResult.MimeType;
-                    }
 
-                    // 3. Evrak nesnesine ekle (EF otomatik olarak EvrakId'yi bağlayacak)
+                        if (string.IsNullOrEmpty(yeniEk.Ad))
+                            yeniEk.Ad = ekDto.Dosya.FileName;
+                    }
                     evrak.Ekler.Add(yeniEk);
                 }
             }

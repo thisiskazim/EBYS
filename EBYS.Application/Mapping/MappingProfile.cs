@@ -24,12 +24,16 @@ namespace EBYS.Application.Mapping
             CreateMap<GidenEvrak, GidenEvrakAkisListeDTO>()
                 .ForMember(dest => dest.OlusturanKullaniciId, opt => opt.MapFrom(src => src.OlusturanId))
                 .ForMember(dest => dest.OlusturanKullanici, opt => opt.MapFrom(src => src.Olusturan.AdSoyad))
+                .ForMember(dest => dest.Ekler, opt => opt.MapFrom(src => src.Ekler))
                 .ForMember(dest => dest.SuAnKimde, opt => opt.MapFrom(src => src.AkisAdimlari.FirstOrDefault(a => a.SiradakiMi).Kullanici.AdSoyad ?? "Tamamlandı"))
                 .ForMember(dest => dest.FullKonuKodu, opt => opt.MapFrom(src => $"{src.EvrakKonuKodu.KodNumber} - {src.EvrakKonuKodu.KodAdi}"));
 
             // --- AKIŞ GEÇMİŞİ (Loglar) ---
             CreateMap<GidenEvrakAkis, GidenEvrakAkisHareketleriDTO>()
                 .ForMember(dest => dest.KullaniciAdSoyad, opt => opt.MapFrom(src => src.Kullanici.AdSoyad));
+            CreateMap<GidenEvrakAkis, AkisAdimDTO>()
+                .ForMember(dest => dest.KullaniciAdSoyad, opt => opt.MapFrom(src => src.Kullanici.AdSoyad));
+
 
             // --- DÜZENLEME (Edit) FORMU DOLDURMA ---
             // Kullanıcı "Düzenle" dediğinde DB'deki veriyi UpdateDTO'ya doldurur
@@ -51,6 +55,7 @@ namespace EBYS.Application.Mapping
 
             CreateMap<GidenEvrakEk, EvrakOnizlemeBaseDTO>();
 
+      
 
 
             // 2. YAZMA YÖNÜ (DTO -> Entity) - Ekrandan gelen veriyi DB'ye kaydederken
@@ -111,6 +116,13 @@ namespace EBYS.Application.Mapping
             CreateMap<GelenEvrakEk, GelenEvrakEkUpdateDTO>();
             CreateMap<GelenEvrakIlgi, GelenEvrakIlgiUpdateDTO>();
             CreateMap<GelenEvrakEk, GelenEvrakEkBaseDTO>();
+
+            CreateMap<GelenEvrakSevk, GelenEvrakSevkListDTO>()
+              
+                .ForMember(dest => dest.SevkEdenKullaniciAdSoyad, opt => opt.MapFrom(src => src.SevkEdenKullanici.AdSoyad))
+                .ForMember(dest => dest.AlanKullaniciAdSoyad, opt => opt.MapFrom(src => src.AlanKullanici != null ? src.AlanKullanici.AdSoyad : null))
+                .ForMember(dest => dest.SevkTarihi, opt => opt.MapFrom(src => src.SevkTarihi))
+                .ForMember(dest => dest.Aciklama, opt => opt.MapFrom(src => src.Aciklama));
 
 
             // =============================================================================

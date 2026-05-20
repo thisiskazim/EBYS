@@ -41,6 +41,84 @@ namespace EBYS.WebAPI.Controllers
             }
         }
 
+         [HttpPost("EvrakGuncelle")]
+        public async Task<IActionResult> EvrakGuncelle([FromForm] GelenEvrakUpdateDTO evrakUpdateDTO)
+        {
+
+            try
+            {
+                await evrakServive.UpdateAsync(evrakUpdateDTO);
+                return Ok("Evrak başarıyla güncellendi");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+
+        }
+
+        [HttpGet("EvrakGetir/{id}")]
+        public async Task<IActionResult> EvrakGetirGetById(int id)
+        {
+
+            try
+            {
+                var gelenVeri = await evrakServive.GetByIdAsync(id);
+
+                if (gelenVeri == null)
+                {
+                    return NotFound("Böyle bir evrak bulunamadı.");
+                }
+
+                return Ok(gelenVeri);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+        }
+
+
+        [HttpGet("evrak-sevk-hareketleri/{id}")]
+        public async Task<IActionResult> EvrakSevkHareketleri(int id)
+        {
+
+            try
+            {
+                var gelenVeri = await evrakServive.GelenEvrakHareketleri(id);
+
+                if (gelenVeri == null)
+                {
+                    return NotFound("Evrak Hareketleri Bulunamadı");
+                }
+
+                return Ok(gelenVeri);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+        }
+
+
+        [HttpPost("SahsimaTeslimAl/{id}")]
+        public async Task<IActionResult> SahsimaTeslimAl(int id)
+        {
+
+            try
+            {
+                var teslimAl = await evrakServive.SahsimaTeslimAl(id);
+                return Ok(teslimAl);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+        }
 
         [HttpGet("EvrakPdfGoruntule/{ekId}")]
         public async Task<IActionResult> EvrakPdfGoruntule(int ekId)

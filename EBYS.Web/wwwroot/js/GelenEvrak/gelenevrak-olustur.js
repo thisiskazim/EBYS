@@ -77,7 +77,7 @@
                 });
             }
 
-            // 4. Action Belirle ve Gönder
+         
             var action = bilgiler.Id > 0 ? "EvrakGuncelle" : "EvrakOlustur";
 
             _ajaxCallFormData(action, formData).done(function (response) {
@@ -95,7 +95,7 @@
             if (id && id !== "0" && id !== "") {
      
                 $.get(_apiBaseUrl + "EvrakGetir/" + id, function (response) {
-                    EvrakBilgiModule.setData(response);
+                    GelenEvrakBilgiModule.setData(response);
                     GelenIlgilerModule.setData(response.ilgiler);
                     GelenEklerModule.setData(response.ekler);
                 });

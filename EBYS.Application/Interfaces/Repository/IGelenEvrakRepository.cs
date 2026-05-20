@@ -13,11 +13,10 @@ namespace EBYS.Application.Interfaces.Repository
     {
         Task<int> KayitNumarasiOlustur(int year);
         Task<GelenEvrak> DetayliGetirAsync(int id);
-
-      //  IQueryable<GelenEvrak> GelenEvrakList();
-
         Task<List<GelenEvrakListDTO>> GelenEvrakListAsync();
         Task<GelenEvrakEk> GelenEvrakEkDosyaByIdAsync(int ekId);
+        Task<List<GelenEvrakSevkListDTO>> GelenEvrakSevkHareketleriAsync(int gelenEvrakId);
+        Task<GelenEvrakSevk> SevkGetirByIdAsync(int gelenEvrakId);
 
     }
 }

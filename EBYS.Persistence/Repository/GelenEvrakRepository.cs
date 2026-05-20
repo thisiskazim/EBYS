@@ -55,5 +55,23 @@ namespace EBYS.Persistence.Repository
                  .AsNoTracking()
                  .FirstOrDefaultAsync(x => x.Id == ekId);
         }
+
+        public async Task<List<GelenEvrakSevkListDTO>> GelenEvrakSevkHareketleriAsync(int gelenEvrakId)
+        {
+                    return await _context.GelenEvrakSevkler 
+                            .Where(x => x.GelenEvrakId == gelenEvrakId && !x.isDelete) 
+                            .OrderBy(x => x.SevkTarihi) 
+                            .AsNoTracking()
+                            .ProjectTo<GelenEvrakSevkListDTO>(_mapper.ConfigurationProvider) 
+                            .ToListAsync();
+        }
+
+        public async Task<GelenEvrakSevk> SevkGetirByIdAsync(int gelenEvrakId)
+        {
+            return await _context.GelenEvrakSevkler
+                    .Where(x => x.GelenEvrakId == gelenEvrakId && x.AlanKullaniciId == null && !x.isDelete)
+                    .OrderByDescending(x => x.SevkTarihi)
+                    .FirstOrDefaultAsync();
+        }
     }
 }

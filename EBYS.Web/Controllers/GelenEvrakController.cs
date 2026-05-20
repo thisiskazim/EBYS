@@ -4,9 +4,9 @@ namespace EBYS.Web.Controllers
 {
     public class GelenEvrakController : Controller
     {
-        public IActionResult GelenEvrak(int? id)
+        public IActionResult GelenEvrak(int? EvrakId)
         {
-            ViewBag.Id = id;
+            ViewBag.EvrakId = EvrakId;
             return View();
         }
 

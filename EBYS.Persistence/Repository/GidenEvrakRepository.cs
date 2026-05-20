@@ -1,4 +1,7 @@
-﻿using EBYS.Application.Interfaces.Repository;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using EBYS.Application.DTOs.EvrakDTO;
+using EBYS.Application.Interfaces.Repository;
 using EBYS.Domain.Entities.GelenEvrak;
 using EBYS.Domain.Entities.GidenEvrak;
 using EBYS.Domain.Enum;
@@ -14,7 +17,11 @@ namespace EBYS.Persistence.Repository
 {
     public class GidenEvrakRepository : GenericRepository<GidenEvrak>, IGidenEvrakRepository
     {
-        public GidenEvrakRepository(EBYSContext context) : base(context) { }
+
+        private readonly IMapper _mapper;
+        public GidenEvrakRepository(EBYSContext context,IMapper mapper) : base(context) {
+            _mapper = mapper;
+        }
 
         public async Task<GidenEvrak> AkisAdimlariSorguAsync(int evrakId)
         {
@@ -28,13 +35,13 @@ namespace EBYS.Persistence.Repository
         public async Task<GidenEvrak> DetayliGetirAsync(int id)
         {
             return await _context.Evraklar
-         .Include(x => x.Muhataplar)
-            .ThenInclude(m => m.Muhatap)
-         .Include(x => x.İlgiler)
-         .Include(x => x.Ekler)
-         .Include(x => x.AkisAdimlari)
-         .Include(x => x.EvrakKonuKodu)
-         .FirstOrDefaultAsync(x => x.Id == id);
+                 .Include(x => x.Muhataplar)
+                    .ThenInclude(m => m.Muhatap)
+                 .Include(x => x.İlgiler)
+                 .Include(x => x.Ekler)
+                 .Include(x => x.AkisAdimlari)
+                 .Include(x => x.EvrakKonuKodu)
+                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<List<GidenEvrakAkis>> EvrakHareketleriGetirAsync(int evrakId)
@@ -47,15 +54,14 @@ namespace EBYS.Persistence.Repository
                     .ToListAsync();
         }
 
-        public async Task<List<GidenEvrak>> ImzayaGonderdigimEvraklarAsync(int userId)
+        public async Task<List<GidenEvrakAkisListeDTO>> ImzayaGonderdigimEvraklarAsync(int userId)
         {
-            return await _context.Evraklar
-                .Include(x => x.EvrakKonuKodu)
-                .Include(x => x.Olusturan)
-                .Include(x => x.AkisAdimlari)
-                        .ThenInclude(a => a.Kullanici)//şu an kimde
-                .Where(e => e.BelgeDurum == Enums.BelgeDurum.Imzada && e.AkisAdimlari.Any(a => a.KullaniciId == userId && a.AdimDurumu == Enums.AkisAdimDurumu.Onaylandi))
+                    return await _context.Evraklar
+                .Where(e => e.BelgeDurum == Enums.BelgeDurum.Imzada &&
+                            e.AkisAdimlari.Any(a => a.KullaniciId == userId && a.AdimDurumu == Enums.AkisAdimDurumu.Onaylandi))
+                .OrderByDescending(e => e.creat_time) // En yeni evraklar üstte gelsin
                 .AsNoTracking()
+                .ProjectTo<GidenEvrakAkisListeDTO>(_mapper.ConfigurationProvider) // Mermi satır
                 .ToListAsync();
         }
 
@@ -79,6 +85,13 @@ namespace EBYS.Persistence.Repository
                  .FirstOrDefaultAsync(x => x.Id == ekId);
         }
 
-   
+        public async Task<List<GidenEvrakAkisListeDTO>> IslemBekleyenler(int userId,Enums.ImzaTipi imzaTipi)
+        {   
+            return await _context.Evraklar.Where(e => (e.BelgeDurum == Enums.BelgeDurum.Taslak || e.BelgeDurum == Enums.BelgeDurum.Imzada) && !e.isDelete &&
+                           (e.AkisAdimlari.Any(a => a.KullaniciId == userId && a.SiradakiMi && a.ParafMiImzaMi == imzaTipi)))
+                            .AsNoTracking()
+                            .ProjectTo<GidenEvrakAkisListeDTO>(_mapper.ConfigurationProvider) 
+                            .ToListAsync();
+        }
     }
 }

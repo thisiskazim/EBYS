@@ -92,17 +92,16 @@ namespace EBYS.Application.Services.GidenEvrakService
 
             return entities.Select(e =>
             {
-                var dto = mapper.Map<GidenEvrakAkisListeDTO>(e);
 
                 var benimAdimim = e.AkisAdimlari.FirstOrDefault(a => a.KullaniciId == userId);
                 var sonrakiAdim = e.AkisAdimlari.FirstOrDefault(a => a.SiraNo == benimAdimim?.SiraNo + 1);
 
-                dto.GeriCekilebilirMi = sonrakiAdim != null && sonrakiAdim.SiradakiMi;
+                e.GeriCekilebilirMi = sonrakiAdim != null && sonrakiAdim.SiradakiMi;
 
                 var suankiAdim = e.AkisAdimlari.FirstOrDefault(a => a.SiradakiMi);
-                dto.SuAnKimde = suankiAdim?.Kullanici.AdSoyad ?? "Tamamlandı";
+                e.SuAnKimde = suankiAdim?.KullaniciAdSoyad ?? "Tamamlandı";
 
-                return dto;
+                return e;
 
 
             }).ToList();
@@ -175,18 +174,15 @@ namespace EBYS.Application.Services.GidenEvrakService
             var userId = evrakRepository.GetContextUserId();
 
             // 1. Veriyi Repository'den Entity olarak çekiyoruz
-            var entities = await evrakRepository.IslemBekleyenlenKullaniciSorguAsync(userId, imzaTipi);
-
-            // 2. AutoMapper ile Entity -> DTO dönüşümü (MAPPING)
-            var dtoList = mapper.Map<List<GidenEvrakAkisListeDTO>>(entities);
+            var entities = await evrakRepository.IslemBekleyenler(userId, imzaTipi);
 
             // 3. Özel iş kuralını (CanEdit) döngüyle veya mapping sırasında set edebiliriz
-            foreach (var dto in dtoList)
+            foreach (var dto in entities)
             {
                 dto.EditYapabilirMi = dto.OlusturanKullaniciId == userId;
             }
 
-            return dtoList;
+            return entities;
         }
     }
 }

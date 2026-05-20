@@ -38,7 +38,7 @@
                             var ekListesi = dataItem.ekler || [];
                             if (ekListesi.length === 0) return "<span class='text-muted small'>Dosya yok</span>";
 
-                            var html = `<div class='evrak-dosya-konteynir' onclick='EvrakBekleyenListModule.toggleEkler(this)'>
+                            var html = `<div class='evrak-dosya-konteynir' onclick='EvrakOnizlemeModule.toggleEkler(this)'>
                         <div class='small fw-bold text-primary'>
                             <i class='fas fa-folder me-1'></i>${ekListesi.length} Adet Dosya
                             <i class='fas fa-chevron-down float-end mt-1 small'></i>
@@ -47,7 +47,7 @@
 
                             ekListesi.forEach(function (ek) {
                                 var uzanti = ek.dosyaUzantisi || "";
-                                var icon = GelenEvrakListModule.getIconByExtension(uzanti);
+                                var icon = EvrakOnizlemeModule.getIconByExtension(uzanti);
                                 var action = uzanti.toLowerCase().includes("pdf")
                                     ? `EvrakOnizlemeModule.ac(${ek.id}, 'giden')`
                                     : `EvrakOnizlemeModule.dosyaIndir(${ek.id})`;
@@ -62,34 +62,34 @@
                         }
                     },
                     {
-                        field: "Konu",
+                        field: "konu",
                         title: "Evrak Konusu",
                         width: "250px",
-                        template: "<strong>#: Konu #</strong>"
+                        template: "<strong>#: konu #</strong>"
                     },
                     {
-                        field: "FullKonuKodu",
+                        field: "fullKonuKodu",
                         title: "Konu Kodu",
                         width: "150px",
-                        template: "<span class='badge bg-light text-dark border'>#: FullKonuKodu #</span>"
+                        template: "<span class='badge bg-light text-dark border'>#: fullKonuKodu #</span>"
                     },
                     {
-                        field: "SuAnKimde",
+                        field: "suAnKimde",
                         title: "Durum / Şu An Kimde",
                         width: "180px",
-                        template: "<i class='fas fa-user-clock text-primary me-2'></i>#: SuAnKimde #"
+                        template: "<i class='fas fa-user-clock text-primary me-2'></i>#: suAnKimde #"
                     },
                     {
-                        field: "CreatTime",
+                        field: "creat_time",
                         title: "Gönderim Tarihi",
                         width: "150px",
-                        template: "#= kendo.toString(kendo.parseDate(CreatTime), 'dd.MM.yyyy HH:mm') #"
+                        template: "#= kendo.toString(kendo.parseDate(creat_time), 'dd.MM.yyyy HH:mm') #"
                     },
                     {
                         title: "Geçmiş",
                         width: "120px",
                         attributes: { style: "text-align: center" },
-                        template: `<button class='btn btn-outline-info btn-sm' onclick='EvrakGonderdiklerimModule.history("#: Id #")'>
+                        template: `<button class='btn btn-outline-info btn-sm' onclick='EvrakGonderdiklerimModule.history("#: id #")'>
                                     <i class='fas fa-history'></i> Hareketler
                                    </button>`
                     },
@@ -98,9 +98,9 @@
                         width: "100px",
                         attributes: { style: "text-align: center" },
                         template: function (dataItem) {
-                            if (dataItem.GeriCekilebilirMi) {
+                            if (dataItem.geriCekilebilirMi) {
                                 // DİKKAT: dataItem.id değil, dataItem.Id (Büyük I)
-                                return `<button class='btn btn-warning btn-sm' onclick='EvrakGonderdiklerimModule.geriCek("${dataItem.Id}")'>
+                                return `<button class='btn btn-warning btn-sm' onclick='EvrakGonderdiklerimModule.geriCek("${dataItem.id}")'>
                                               <i class='fas fa-undo'></i> Geri Çek
                                          </button>`;
                             }
@@ -112,19 +112,33 @@
             }).data("kendoGrid");
         },
 
+        //loadData: function () {
+        //    _ajaxCall('imzaya-gonderdiklerim', 'GET').done(function (res) {
+        //        var list = Array.isArray(res) ? res : (res.data || []);
+        //        var mappedList = list.map(x => ({
+        //            Id: x.id || x.Id,
+        //            Konu: x.konu || x.Konu,
+        //            FullKonuKodu: x.fullKonuKodu || x.FullKonuKodu,
+        //            CreatTime: x.creat_time || x.CreatTime,
+        //            SuAnKimde: x.suAnKimde || x.SuAnKimde,
+        //            GeriCekilebilirMi: x.geriCekilebilirMi || x.GeriCekilebilirMi
+        //        }));
+        //        _grid.dataSource.data(mappedList);
+        //    });
+        //},
         loadData: function () {
-            _ajaxCall('imzaya-gonderdiklerim', 'GET').done(function (res) {
-                var list = Array.isArray(res) ? res : (res.data || []);
-                var mappedList = list.map(x => ({
-                    Id: x.id || x.Id,
-                    Konu: x.konu || x.Konu,
-                    FullKonuKodu: x.fullKonuKodu || x.FullKonuKodu,
-                    CreatTime: x.creat_time || x.CreatTime,
-                    SuAnKimde: x.suAnKimde || x.SuAnKimde,
-                    GeriCekilebilirMi: x.geriCekilebilirMi || x.GeriCekilebilirMi
-                }));
-                _grid.dataSource.data(mappedList);
-            });
+            var $gridEl = $("#gridGonderdiklerim"); // Selector adını doğrula abi
+            kendo.ui.progress($gridEl, true); // Yükleniyor efektini aç
+
+            // Kendi ortak fonksiyonunu tetikliyorsun, ne .map() ameleliği var ne tek tek elle yazma
+            _ajaxCall('imzaya-gonderdiklerim', 'GET')
+                .done(function (res) {
+                    // API doğrudan DTO listesi döndüğü için gelen veriyi direkt basıyoruz
+                    _grid.dataSource.data(res);
+                })
+                .always(function () {
+                    kendo.ui.progress($gridEl, false); // İşlem bitince (başarılı veya başarısız) loading'i kapat
+                });
         },
 
         history: function (id) {    

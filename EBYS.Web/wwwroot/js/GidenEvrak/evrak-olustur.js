@@ -118,7 +118,7 @@
 
 
 $(document).ready(function () {
-    // 1. Modülleri Başlat
+
     if (typeof AliciModule !== "undefined") AliciModule.init();
     if (typeof EvrakBilgiModule !== "undefined") EvrakBilgiModule.init();
     if (typeof EklerModule !== "undefined") EklerModule.init();

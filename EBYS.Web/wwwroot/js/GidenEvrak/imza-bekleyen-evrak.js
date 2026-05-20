@@ -56,38 +56,38 @@ var EvrakBekleyenListModule = (function () {
                         headerAttributes: { style: "text-align: center" },
                         attributes: { style: "text-align: center" },
                         template: function (dataItem) {
-                            var editHtml = dataItem.CanEdit
-                                ? `<li><a class='dropdown-item py-2' href='#' onclick='EvrakBekleyenListModule.edit("${dataItem.Id}")'><i class='fas fa-edit text-primary me-2'></i>Düzenle</a></li>`
+                          
+                            var editHtml = dataItem.editYapabilirMi
+                                ? `<li><a class='dropdown-item py-2' href='#' onclick='EvrakBekleyenListModule.edit("${dataItem.id}")'><i class='fas fa-edit text-primary me-2'></i>Düzenle</a></li>`
                                 : `<li><a class='dropdown-item disabled text-muted py-2' href='#'><i class='fas fa-lock me-2'></i>Düzenle <small>(Yetki Yok)</small></a></li>`;
 
-                            var deleteHtml = dataItem.CanEdit
-                                ? `<li><a class='dropdown-item py-2 text-danger' href='#' onclick='EvrakBekleyenListModule.cancel("${dataItem.Id}")'><i class='fas fa-trash-alt me-2'></i>Sil</a></li>`
+                            var deleteHtml = dataItem.editYapabilirMi
+                                ? `<li><a class='dropdown-item py-2 text-danger' href='#' onclick='EvrakBekleyenListModule.cancel("${dataItem.id}")'><i class='fas fa-trash-alt me-2'></i>Sil</a></li>`
                                 : `<li><a class='dropdown-item disabled text-muted py-2' href='#'><i class='fas fa-lock me-2'></i>Sil <small>(Yetki Yok)</small></a></li>`;
 
                             return `
-                                <div class='dropdown'>
-                                    <button class='btn btn-link btn-sm p-0 border-0'
-                                            type='button'
-                                            data-bs-toggle='dropdown'
-                                            data-bs-popper-config='{"strategy":"fixed"}'
-                                            aria-expanded='false'
-                                            style='text-decoration: none;'>
-                                        <i class='fas fa-cog text-primary' style='font-size: 18px;'></i>
-                                    </button>
-                                    <ul class='dropdown-menu dropdown-menu-end shadow-lg border-0' style='border-radius: 12px; min-width: 160px;'>
-                                        <li>
-                                            <a class='dropdown-item py-2' href='#' onclick='EvrakBekleyenListModule.onay("${dataItem.Id}")'>
-                                                <i class='fas fa-file-signature text-success me-2'></i>İmzala
-                                            </a>
-                                        </li>
-                                        ${editHtml}
-                                        <li><hr class='dropdown-divider opacity-50'></li>
-                                        ${deleteHtml}
-                                    </ul>
-                                </div>`;
+                        <div class='dropdown'>
+                            <button class='btn btn-link btn-sm p-0 border-0'
+                                    type='button'
+                                    data-bs-toggle='dropdown'
+                                    data-bs-popper-config='{"strategy":"fixed"}'
+                                    aria-expanded='false'
+                                    style='text-decoration: none;'>
+                                <i class='fas fa-cog text-primary' style='font-size: 18px;'></i>
+                            </button>
+                            <ul class='dropdown-menu dropdown-menu-end shadow-lg border-0' style='border-radius: 12px; min-width: 160px;'>
+                                <li>
+                                    <a class='dropdown-item py-2' href='#' onclick='EvrakBekleyenListModule.onay("${dataItem.id}")'>
+                                        <i class='fas fa-file-signature text-success me-2'></i>İmzala
+                                    </a>
+                                </li>
+                                ${editHtml}
+                                <li><hr class='dropdown-divider opacity-50'></li>
+                                ${deleteHtml}
+                            </ul>
+                        </div>`;
                         }
                     },
-                    // ── YENİ: Dosyalar kolonu ──────────────────────────────────
                     {
                         title: "DOSYALAR",
                         width: "200px",
@@ -95,68 +95,91 @@ var EvrakBekleyenListModule = (function () {
                             var ekListesi = dataItem.ekler || [];
                             if (ekListesi.length === 0) return "<span class='text-muted small'>Dosya yok</span>";
 
-                            var html = `<div class='evrak-dosya-konteynir' onclick='EvrakBekleyenListModule.toggleEkler(this)'>
-                        <div class='small fw-bold text-primary'>
-                            <i class='fas fa-folder me-1'></i>${ekListesi.length} Adet Dosya
-                            <i class='fas fa-chevron-down float-end mt-1 small'></i>
-                        </div>
-                        <div class='ek-listesi-gizli'>`;
+                            var html = `<div class='evrak-dosya-konteynir' onclick='EvrakOnizlemeModule.toggleEkler(this)'>
+                                <div class='small fw-bold text-primary'>
+                                    <i class='fas fa-folder me-1'></i>${ekListesi.length} Adet Dosya
+                                    <i class='fas fa-chevron-down float-end mt-1 small'></i>
+                                </div>
+                                <div class='ek-listesi-gizli'>`;
 
                             ekListesi.forEach(function (ek) {
                                 var uzanti = ek.dosyaUzantisi || "";
-                                var icon = GelenEvrakListModule.getIconByExtension(uzanti);
+                                var icon = EvrakOnizlemeModule.getIconByExtension(uzanti);
                                 var action = uzanti.toLowerCase().includes("pdf")
                                     ? `EvrakOnizlemeModule.ac(${ek.id}, 'giden')`
                                     : `EvrakOnizlemeModule.dosyaIndir(${ek.id})`;
 
                                 html += `<div class='mb-1'>
-                        <a href='javascript:void(0)' onclick="event.stopPropagation(); ${action}" class='text-decoration-none text-dark small evrak-ek-link'>
-                            <i class='${icon} me-1'></i>${ek.ad}
-                        </a>
-                     </div>`;
+                                <a href='javascript:void(0)' onclick="event.stopPropagation(); ${action}" class='text-decoration-none text-dark small evrak-ek-link'>
+                                    <i class='${icon} me-1'></i>${ek.ad}
+                                </a>
+                             </div>`;
                             });
                             return html + "</div></div>";
                         }
                     },
-                    // ──────────────────────────────────────────────────────────
                     {
-                        field: "OlusturanKullanici",
+                        field: "olusturanKullanici", // JSON'daki gibi küçük harfle başlar
                         title: "Oluşturan",
-                        template: "<div class='d-flex align-items-center'>#: OlusturanKullanici #</div>",
+                        template: "<div class='d-flex align-items-center'>#: olusturanKullanici #</div>",
                         width: "120px"
                     },
-                    { field: "Konu", title: "Konu", width: "200px" },
                     {
-                        field: "FullKonuKodu",
-                        title: "Konu Kodu",
+                        field: "konu", // 'Konu' yerine 'konu' yapıldı
+                        title: "Konu",
                         width: "200px",
-                        template: "<span class='badge bg-light text-dark border'>#: FullKonuKodu #</span>"
+                        template: "<div>#: konu #</div>" // Hata almamak için template'i de küçük harfe çektik
                     },
                     {
-                        field: "CreatTime",
+                        field: "fullKonuKodu", // JSON'daki gibi küçük harfle başlar
+                        title: "Konu Kodu",
+                        width: "200px",
+                        template: "<span class='badge bg-light text-dark border'>#: fullKonuKodu #</span>"
+                    },
+                    {
+                        field: "creat_time", // JSON'dan gelen gerçek isim 'creat_time' yapıldı
                         title: "Oluşturma Zamanı",
                         width: "250px",
-                        template: "#= kendo.toString(kendo.parseDate(CreatTime), 'dd.MM.yyyy HH:mm') #"
+                        template: "#= creat_time ? kendo.toString(kendo.parseDate(creat_time), 'dd.MM.yyyy HH:mm') : '' #"
                     }
                 ],
                 dataSource: { data: [] }
             }).data("kendoGrid");
         },
 
+        //loadData: function () {
+        //    _ajaxCall('Akis/imza-bekleyen-listele', 'GET').done(function (res) {
+        //        var list = Array.isArray(res) ? res : (res.data || []);
+        //        var mappedList = list.map(x => ({
+        //            Id: x.id || x.Id,
+        //            OlusturanKullanici: x.olusturanKullanici,
+        //            Konu: x.konu,
+        //            FullKonuKodu: x.fullKonuKodu,
+        //            CreatTime: x.creat_time,
+        //            CanEdit: x.editYapabilirMi
+        //        }));
+        //        _grid.dataSource.data(mappedList);
+        //    });
+        //},
+
         loadData: function () {
-            _ajaxCall('Akis/imza-bekleyen-listele', 'GET').done(function (res) {
-                var list = Array.isArray(res) ? res : (res.data || []);
-                var mappedList = list.map(x => ({
-                    Id: x.id || x.Id,
-                    OlusturanKullanici: x.olusturanKullanici,
-                    Konu: x.konu,
-                    FullKonuKodu: x.fullKonuKodu,
-                    CreatTime: x.creat_time,
-                    CanEdit: x.editYapabilirMi
-                }));
-                _grid.dataSource.data(mappedList);
-            });
+            var $gridEl = $("#gridBekleyenler"); // Selector adını doğrula abi
+            kendo.ui.progress($gridEl, true); // Yükleniyor efektini aç
+
+            // Kendi ortak fonksiyonunu tetikliyorsun, ne .map() ameleliği var ne tek tek elle yazma
+            _ajaxCall('Akis/imza-bekleyen-listele', 'GET')
+                .done(function (res) {
+                    // API doğrudan DTO listesi döndüğü için gelen veriyi direkt basıyoruz
+                    _grid.dataSource.data(res);
+                })
+                .always(function () {
+                    kendo.ui.progress($gridEl, false); // İşlem bitince (başarılı veya başarısız) loading'i kapat
+                });
         },
+
+
+
+
         onay: function (id) {
             if (!confirm("Seçili evrakı onaylamak istediğinize emin misiniz?")) return;
             _ajaxCall('Akis/Onayla/' + id, 'POST').done(function (response) {

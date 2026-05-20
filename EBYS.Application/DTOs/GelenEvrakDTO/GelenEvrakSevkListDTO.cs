@@ -8,7 +8,7 @@ namespace EBYS.Application.DTOs.GelenEvrakDTO
 {
     public class GelenEvrakSevkListDTO //sevk akışını göstermek için
     {
-        public int Id { get; set; }
+        public int GelenEvrakId { get; set; }
 
         // Kimden geldi?
         public string SevkEdenKullaniciAdSoyad { get; set; }

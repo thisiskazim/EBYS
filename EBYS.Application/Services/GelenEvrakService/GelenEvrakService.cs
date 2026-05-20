@@ -39,7 +39,7 @@ namespace EBYS.Application.Services.GelenEvrakService
                     }
                     foreach (var ekDto in createDto.Ekler)
                     {
-                        // Eğer dosya yoksa ve isim de girilmemişse boş kayıt atmayalım
+                       
                         if (ekDto.Dosya == null && string.IsNullOrEmpty(ekDto.Ad)) continue;
 
                         var yeniEk = mapper.Map<GelenEvrakEk>(ekDto);
@@ -51,7 +51,7 @@ namespace EBYS.Application.Services.GelenEvrakService
                             yeniEk.DosyaUzantisi = fileResult.Extension;
                             yeniEk.MimeType = fileResult.MimeType;
 
-                            // İsim boşsa dosya adını varsayılan yap
+                          
                             if (string.IsNullOrEmpty(yeniEk.Ad))
                                 yeniEk.Ad = ekDto.Dosya.FileName;
                         }
@@ -59,7 +59,6 @@ namespace EBYS.Application.Services.GelenEvrakService
                     }
                 }
 
-                // 4. İLK SEVK KAYDI (Evrakı kaydeden kişide başlar)
 
                 if (evrak.Sevkler == null)
                 {
@@ -80,7 +79,6 @@ namespace EBYS.Application.Services.GelenEvrakService
             }
             catch (Exception ex)
             {
-                // Debug modundayken ex.InnerException.Message kısmına bak abi
                 var message = ex.InnerException?.Message ?? ex.Message;
                 throw new Exception("Veritabanı Hatası: " + message);
             }
@@ -284,6 +282,51 @@ namespace EBYS.Application.Services.GelenEvrakService
                 throw new Exception("Veritabanı Hatası: " + message);
             }
        
+        }
+
+        public async Task<List<GelenEvrakSevkListDTO>> GelenEvrakHareketleri(int evrakId)
+        {
+            try
+            {
+                var getVeri = await evrakRepository.GelenEvrakSevkHareketleriAsync(evrakId);
+
+                if (getVeri is null)
+                {
+                    throw new Exception("Evrak Hareketi Bulunamadı");
+                }
+
+                return getVeri;
+            }
+            catch (Exception ex)
+            {
+                var message = ex.InnerException?.Message ?? ex.Message;
+                throw new Exception("Veritabanı Hatası: " + message);
+            }
+           
+
+
+
+        }
+
+        public async Task<GelenEvrakSevk> SahsimaTeslimAl(int evrakId)
+        {
+            var currentUserId = evrakRepository.GetContextUserId();
+            var sevkEntity = await evrakRepository.SevkGetirByIdAsync(evrakId);
+
+            if(sevkEntity is null)
+            {
+                throw new Exception("Bu evrak daha önce başka bir kullanıcı tarafından teslim alınmış.");
+            }
+
+            // 4. GÜNCELLEME: Entity'nin içindeki boş alanları dolduruyoruz
+            sevkEntity.AlanKullaniciId = currentUserId;
+            sevkEntity.SevkTarihi = DateTime.Now; // Veritabanında property varsa set et abi
+            sevkEntity.Aciklama = "Teslim Alındı";
+
+            await evrakRepository.SaveAsync();
+
+            return sevkEntity;
+
         }
     }
 }

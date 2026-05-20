@@ -16,7 +16,7 @@
 
         }
     };
-
+ 
     return {
         ac: function (ekId, evrakTipi) {
             _init();
@@ -52,6 +52,22 @@
                 }
             };
             xhr.send();
+        },
+         getIconByExtension : function (ext) {
+            if (!ext) return "fas fa-file text-secondary";
+            ext = ext.toLowerCase();
+            if (ext.includes("pdf")) return "fas fa-file-pdf text-danger";
+            if (ext.includes("xls")) return "fas fa-file-excel text-success";
+            if (ext.includes("doc")) return "fas fa-file-word text-primary";
+            if (ext.includes("jpg") || ext.includes("png")) return "fas fa-file-image text-warning";
+            return "fas fa-file text-secondary";
+        },
+        toggleEkler: function (element) {
+            var list = $(element).find('.ek-listesi-gizli');
+            var icon = $(element).find('.fa-chevron-down, .fa-chevron-up');
+
+            list.slideToggle('fast');
+            icon.toggleClass('fa-chevron-down fa-chevron-up');
         },
     };
 })();
