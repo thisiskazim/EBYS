@@ -1,4 +1,4 @@
-﻿dotnet ef migrations add UpdateGelenEvrakSevk --project EBYS.Persistence --startup-project EBYS.WebAPI
+﻿dotnet ef migrations add UpdateGelenEvrakSevk1 --project EBYS.Persistence --startup-project EBYS.WebAPI
 dotnet ef database update --project EBYS.Persistence --startup-project EBYS.WebAPI
 
 

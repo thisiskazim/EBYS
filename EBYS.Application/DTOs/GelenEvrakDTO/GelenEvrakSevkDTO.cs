@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EBYS.Domain.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,5 +16,6 @@ namespace EBYS.Application.DTOs.GelenEvrakDTO
 
         public string? Aciklama { get; set; } 
         public DateTime SevkTarihi { get; set; } = DateTime.Now;
+        public Enums.GelenEvrakDurumu GelenEvrakDurumEnum { get; set; }
     }
 }

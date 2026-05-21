@@ -39,7 +39,7 @@
                             if (ekListesi.length === 0) return "<span class='text-muted small'>Dosya yok</span>";
 
                             var html = `<div class='evrak-dosya-konteynir' onclick='EvrakOnizlemeModule.toggleEkler(this)'>
-                        <div class='small fw-bold text-primary'>
+                        <div class='small fw-bold text-info'>
                             <i class='fas fa-folder me-1'></i>${ekListesi.length} Adet Dosya
                             <i class='fas fa-chevron-down float-end mt-1 small'></i>
                         </div>

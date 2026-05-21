@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EBYS.Domain.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,26 @@ namespace EBYS.Application.DTOs.GelenEvrakDTO
         // Notu ne?
         public string? Aciklama { get; set; }
 
-        // Ekstra: Hareket Tipi (Opsiyonel)
-        // "Sevk Edildi", "Teslim Alındı" gibi metinler basabilirsin.
+        public Enums.GelenEvrakDurumu GelenEvrakDurumEnum { get; set; }
+
+
+        public string DurumStr
+        {
+            get
+            {
+                return GelenEvrakDurumEnum switch
+                {
+                    Enums.GelenEvrakDurumu.Kaydedildi => "Kaydedildi",
+                    Enums.GelenEvrakDurumu.IadeEdildi => "İade Edildi",
+                    Enums.GelenEvrakDurumu.SevkEdildi => "Sevk Edildi",
+                    Enums.GelenEvrakDurumu.TeslimAlindi => "Teslim Alındı",
+                    Enums.GelenEvrakDurumu.Cevaplandi => "Cevaplandı",
+                    _ => "Bilinmiyor"
+                };
+            }
+        }
+
+
+
     }
 }

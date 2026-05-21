@@ -30,13 +30,12 @@
   @if (!(ViewData["HideMenu"] as bool? ?? false))
         {
 <nav class="navbar navbar-expand navbar-light bg-white shadow-sm ebys-top-nav">
-    <div class="container-fluid px-4">
-        <div class="d-flex align-items-center">
-            <div class="logo-text">
-                <span class="fw-bold fs-5 text-black" style="letter-spacing: 1px;">E-iMZA</span>
-                <span class="d-block text-black-50" style="font-size: 10px; margin-top: -5px;">BELGE YÖNETİM SİSTEMİ</span>
-            </div>
-        </div>
+    <div class="container-fluid px-4" style="padding-left: 3.5rem !important;">
+<div class="d-flex align-items-center position-relative" style="min-width: 200px; height: 100%;">
+    <div class="logo-wrapper position-absolute" style="top: 50%; transform: translateY(-50%); z-index: 10;">
+        <img src="~/images/ebys-logo.png" alt="EBYS Logo" class="img-fluid" style="height: 150px; width: auto; object-fit: contain;" />
+    </div>
+</div>
         
         <ul class="navbar-nav ms-auto align-items-center">
             <li class="nav-item">

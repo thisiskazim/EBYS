@@ -5,6 +5,7 @@ using EBYS.Application.DTOs.GelenEvrakDTO;
 using EBYS.Application.Interfaces.IService.IGelenEvrakService;
 using EBYS.Application.Interfaces.Repository;
 using EBYS.Domain.Entities.GelenEvrak;
+using EBYS.Domain.Enum;
 using Microsoft.AspNetCore.Http;
 using System.Runtime.InteropServices;
 
@@ -69,7 +70,6 @@ namespace EBYS.Application.Services.GelenEvrakService
                 {
                     SevkEdenKullaniciId = evrakRepository.GetContextUserId(),
                     SevkTarihi = DateTime.Now,
-                    Aciklama = "Evrak Kayıt İşlemi Yapıldı."
                 };
                 evrak.Sevkler.Add(ilkSevk);
 
@@ -96,13 +96,13 @@ namespace EBYS.Application.Services.GelenEvrakService
             await evrakRepository.SaveAsync();
         }
 
-        public async Task<List<GelenEvrakListDTO>> GetAllAsync()
+        public async Task<List<GelenEvrakListDTO>> GelenEvraklariFiltreliListeleAsync(Enums.GelenEvrakDurumu? durum)
         {
             try
             {
                 var olusturanId = evrakRepository.GetContextUserId();
 
-                var getVeri = await evrakRepository.GelenEvrakListAsync();
+                var getVeri = await evrakRepository.FiltreliEvrakGetirAsync(olusturanId,durum);
 
                 if (getVeri is null)
                 {
@@ -112,6 +112,8 @@ namespace EBYS.Application.Services.GelenEvrakService
                 foreach (var veri in getVeri)
                 {
                     veri.EditYapabilirMi = veri.OlusturanId == olusturanId;
+                    veri.IslemSirasiBendeMi = veri.AlanKullaniciId == olusturanId;
+
 
                 }
 
@@ -132,7 +134,7 @@ namespace EBYS.Application.Services.GelenEvrakService
         {
             try
             {
-                var getVeri = await evrakRepository.DetayliGetirAsync(id);
+                var getVeri = await evrakRepository.DetayliGetirByIdAsync(id);
 
                 if (getVeri is null)
                 {
@@ -154,7 +156,7 @@ namespace EBYS.Application.Services.GelenEvrakService
         {
             try
             {
-                var mevcutEvrak = await evrakRepository.DetayliGetirAsync(updateDto.Id);
+                var mevcutEvrak = await evrakRepository.DetayliGetirByIdAsync(updateDto.Id);
 
                 if (mevcutEvrak == null)
                 {
@@ -243,26 +245,6 @@ namespace EBYS.Application.Services.GelenEvrakService
 
         }
 
-        private async Task<(byte[] Data, string Extension, string MimeType)> ProcessFileAsync(IFormFile file)
-        {
-            using var memoryStream = new MemoryStream();
-            await file.CopyToAsync(memoryStream);
-
-            return (
-                Data: memoryStream.ToArray(),
-                Extension: Path.GetExtension(file.FileName),
-                MimeType: file.ContentType
-            );
-        }
-        private async Task<string> KayitNumarasiOlustur()
-        {
-            int yil = DateTime.Now.Year;
-
-            int count = await evrakRepository.KayitNumarasiOlustur(yil);
-
-            return $"{yil}/{count + 1}";
-        }
-
         public async Task<EvrakOnizlemeBaseDTO> GelenEvrakEkOnizlemeAsync(int ekId)
         {
             try
@@ -318,15 +300,38 @@ namespace EBYS.Application.Services.GelenEvrakService
                 throw new Exception("Bu evrak daha önce başka bir kullanıcı tarafından teslim alınmış.");
             }
 
-            // 4. GÜNCELLEME: Entity'nin içindeki boş alanları dolduruyoruz
             sevkEntity.AlanKullaniciId = currentUserId;
-            sevkEntity.SevkTarihi = DateTime.Now; // Veritabanında property varsa set et abi
-            sevkEntity.Aciklama = "Teslim Alındı";
+            sevkEntity.SevkTarihi = DateTime.Now; 
+            sevkEntity.GelenEvrakDurumEnum = Enums.GelenEvrakDurumu.TeslimAlindi;
 
             await evrakRepository.SaveAsync();
 
             return sevkEntity;
 
+        }
+        private async Task<(byte[] Data, string Extension, string MimeType)> ProcessFileAsync(IFormFile file)
+        {
+            using var memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream);
+
+            return (
+                Data: memoryStream.ToArray(),
+                Extension: Path.GetExtension(file.FileName),
+                MimeType: file.ContentType
+            );
+        }
+        private async Task<string> KayitNumarasiOlustur()
+        {
+            int yil = DateTime.Now.Year;
+
+            int count = await evrakRepository.KayitNumarasiOlustur(yil);
+
+            return $"{yil}/{count + 1}";
+        }
+
+        public Task<List<GelenEvrakListDTO>> GetAllAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

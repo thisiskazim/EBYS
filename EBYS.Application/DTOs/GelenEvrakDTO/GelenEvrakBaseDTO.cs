@@ -47,6 +47,8 @@ namespace EBYS.Application.DTOs.GelenEvrakDTO
         public string GonderenMuhatapAdi { get; set; } 
         public bool EditYapabilirMi { get; set; }
         public string SuAnKimde { get; set; }
+        public bool IslemSirasiBendeMi { get; set; }
+        public int? AlanKullaniciId { get; set; }
         public List<GelenEvrakEkBaseDTO> Ekler { get; set; } = new List<GelenEvrakEkBaseDTO>();
     }
 

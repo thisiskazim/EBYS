@@ -3,6 +3,7 @@ using EBYS.Application.DTOs.GelenEvrakDTO;
 using EBYS.Application.Interfaces.IService;
 using EBYS.Application.Interfaces.IService.IGelenEvrakService;
 using EBYS.Application.Interfaces.IService.IGidenEvrakService;
+using EBYS.Domain.Enum;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,12 +28,12 @@ namespace EBYS.WebAPI.Controllers
         }
 
 
-        [HttpGet("EvrakListele")]
-        public async Task<IActionResult> EvrakListele()
+        [HttpPost("EvrakListele")]
+        public async Task<IActionResult> EvrakListele([FromForm] Enums.GelenEvrakDurumu? durum)
         {
             try
             {
-                var evraklar = await evrakServive.GetAllAsync();
+                var evraklar = await evrakServive.GelenEvraklariFiltreliListeleAsync(durum);
                 return Ok(evraklar);
             }
             catch (Exception e)

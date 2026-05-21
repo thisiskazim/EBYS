@@ -103,6 +103,11 @@ namespace EBYS.Application.Mapping
                 .ForMember(dest => dest.GonderenMuhatapAdi, opt => opt.MapFrom(src => src.Muhatap.Adi))
                 .ForMember(dest => dest.Olusturan, opt => opt.MapFrom(src => src.Olusturan.AdSoyad))
                 .ForMember(dest => dest.Ekler, opt => opt.MapFrom(src => src.Ekler))
+                .ForMember(dest => dest.AlanKullaniciId, opt => opt.MapFrom(src =>
+                            src.Sevkler.OrderByDescending(s => s.SevkTarihi)
+                                       .Select(s => s.AlanKullaniciId)
+                                       .FirstOrDefault()))
+
                 .ForMember(dest => dest.SuAnKimde, opt => opt.MapFrom(src =>
                             src.Sevkler.OrderByDescending(s => s.SevkTarihi)
                                        .Select(s => s.AlanKullanici.AdSoyad)

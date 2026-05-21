@@ -73,7 +73,7 @@ var EvrakBekleyenListModule = (function () {
                                     data-bs-popper-config='{"strategy":"fixed"}'
                                     aria-expanded='false'
                                     style='text-decoration: none;'>
-                                <i class='fas fa-cog text-primary' style='font-size: 18px;'></i>
+                                <i class='fas fa-ellipsis-v text-info' style='font-size: 18px;'></i>
                             </button>
                             <ul class='dropdown-menu dropdown-menu-end shadow-lg border-0' style='border-radius: 12px; min-width: 160px;'>
                                 <li>
@@ -96,7 +96,7 @@ var EvrakBekleyenListModule = (function () {
                             if (ekListesi.length === 0) return "<span class='text-muted small'>Dosya yok</span>";
 
                             var html = `<div class='evrak-dosya-konteynir' onclick='EvrakOnizlemeModule.toggleEkler(this)'>
-                                <div class='small fw-bold text-primary'>
+                                <div class='small fw-bold text-info'>
                                     <i class='fas fa-folder me-1'></i>${ekListesi.length} Adet Dosya
                                     <i class='fas fa-chevron-down float-end mt-1 small'></i>
                                 </div>

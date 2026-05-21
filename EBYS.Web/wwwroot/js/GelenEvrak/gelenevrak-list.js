@@ -2,8 +2,14 @@
     var _grid = null;
     var _onizlemeDialog = null;
     var _apiBaseUrl = "https://localhost:7060/api/GelenEvrak/";
+    var _aktifOlanFiltre = null;
 
-
+    var _enumMap = {
+        'tum': null,
+        'adima': 3,   
+        'iade': 4,    
+        'cevap': 5   
+    };
 
     var _ajaxCall = function (url, type, data) {
         return $.ajax({
@@ -57,6 +63,7 @@
                         template: function (dataItem) {
                             var canEdit = dataItem.editYapabilirMi;
 
+                            // 1. Düzenle ve Sil butonları (Kaydeden kişiye göre yetki kontrolü)
                             var editHtml = canEdit
                                 ? `<li><a class='dropdown-item py-2' href='#' onclick='GelenEvrakListModule.edit("${dataItem.id}")'><i class='fas fa-edit text-warning me-2'></i>Düzenle</a></li>`
                                 : `<li><a class='dropdown-item disabled text-muted py-2' href='#'><i class='fas fa-lock me-2'></i>Düzenle <small>(Yetki Yok)</small></a></li>`;
@@ -65,29 +72,47 @@
                                 ? `<li><a class='dropdown-item py-2 text-danger' href='#' onclick='GelenEvrakListModule.delete("${dataItem.id}")'><i class='fas fa-trash-alt me-2'></i>Sil</a></li>`
                                 : `<li><a class='dropdown-item disabled text-muted py-2' href='#'><i class='fas fa-lock me-2'></i>Sil <small>(Yetki Yok)</small></a></li>`;
 
+                            // 2. SATIR BAZLI AKIŞ KONTROLÜ (İster tüm listede olsun ister şahsıma gelenlerde 🎯)
+                            var akisButonlariHtml = "";
+                            if (dataItem.islemSirasiBendeMi) {
+                                akisButonlariHtml = `
+                                <li><a class='dropdown-item py-2 text-danger' href='#' onclick='GelenEvrakListModule.iadeEt("${dataItem.id}")'><i class='fas fa-undo me-2'></i>İade Et</a></li>
+                                <li><a class='dropdown-item py-2 text-success' href='#' onclick='GelenEvrakListModule.cevapla("${dataItem.id}")'><i class='fas fa-reply me-2'></i>Cevapla</a></li>
+                            `;
+                            }
+                            // 2. Durum: Evrak henüz kimse tarafından alınmamışsa, ortak havuzdaysa (alanKullaniciId null ise)
+                            else if (dataItem.alanKullaniciId === null) {
+                                akisButonlariHtml = `
+                                <li><a class='dropdown-item py-2 text-primary' href='#' onclick='GelenEvrakListModule.teslimAl("${dataItem.id}")'><i class='fas fa-hand-holding-check me-2'></i>Teslim Al</a></li>
+                            `   ;
+                            }
+                           
+
+
+                      
                             return `
-                                <div class='dropdown'>
-                                    <button class='btn btn-link btn-sm p-0 border-0'
-                                            type='button'
-                                            data-bs-toggle='dropdown'
-                                            data-bs-popper-config='{"strategy":"fixed"}'
-                                            aria-expanded='false'
-                                            style='text-decoration: none;'>
-                                        <i class='fas fa-ellipsis-v text-primary' style='font-size: 18px;'></i>
-                                    </button>
-                                    <ul class='dropdown-menu dropdown-menu-end shadow-lg border-0' style='border-radius: 12px; min-width: 200px; z-index: 9999;'>
-                                        <li><h6 class="dropdown-header text-uppercase small fw-bold">Evrak Yönetimi</h6></li>
-                                        <li><a class='dropdown-item py-2' href='#' onclick='GelenEvrakListModule.evrakAdimlari("${dataItem.id}")'><i class='fas fa-shoe-prints text-info me-2'></i>Evrak Hareketleri</a></li>
-                                        ${editHtml}
-                                        <li><hr class='dropdown-divider opacity-50'></li>
-                                        <li><h6 class="dropdown-header text-uppercase small fw-bold">Akış İşlemleri</h6></li>
-                                        <li><a class='dropdown-item py-2' href='#' onclick='GelenEvrakListModule.teslimAl("${dataItem.id}")'><i class='fas fa-hand-holding-check text-success me-2'></i>Teslim Al</a></li>
-                                        <li><hr class='dropdown-divider opacity-50'></li>
-                                        ${deleteHtml}
-                                    </ul>
-                                </div>`;
+                <div class='dropdown'>
+                    <button class='btn btn-link btn-sm p-0 border-0'
+                            type='button'
+                            data-bs-toggle='dropdown'
+                            data-bs-popper-config='{"strategy":"fixed"}'
+                            aria-expanded='false'
+                            style='text-decoration: none;'>
+                        <i class='fas fa-ellipsis-v text-info' style='font-size: 18px;'></i>
+                    </button>
+                    <ul class='dropdown-menu dropdown-menu-end shadow-lg border-0' style='border-radius: 12px; min-width: 200px; z-index: 9999;'>
+                        <li><h6 class="dropdown-header text-uppercase small fw-bold">Evrak Yönetimi</h6></li>
+                        <li><a class='dropdown-item py-2' href='#' onclick='GelenEvrakListModule.evrakAdimlari("${dataItem.id}")'><i class='fas fa-shoe-prints text-info me-2'></i>Evrak Hareketleri</a></li>
+                        ${editHtml}
+                        <li><hr class='dropdown-divider opacity-50'></li>
+                        ${akisButonlariHtml}           
+                        <li><hr class='dropdown-divider opacity-50'></li>
+                        ${deleteHtml}
+                    </ul>
+                </div>`;
                         }
                     },
+                   
                     {
                         title: "DOSYALAR",
                         width: "200px",
@@ -96,7 +121,7 @@
                             if (ekListesi.length === 0) return "<span class='text-muted small'>Dosya yok</span>";
 
                             var html = `<div class='evrak-dosya-konteynir' onclick='GelenEvrakListModule.toggleEkler(this)'>
-                        <div class='small fw-bold text-primary'>
+                        <div class='small fw-bold text-info'>
                             <i class='fas fa-folder me-1'></i>${ekListesi.length} Adet Dosya
                             <i class='fas fa-chevron-down float-end mt-1 small'></i>
                         </div>
@@ -140,32 +165,42 @@
 
         loadData: function () {
             kendo.ui.progress($("#gridGelenEvraklar"), true);
-            $.get(_apiBaseUrl + "EvrakListele", function (res) {
-                _grid.dataSource.data(res);
-                kendo.ui.progress($("#gridGelenEvraklar"), false);
+            var formData = new FormData();
+
+            if (_aktifOlanFiltre !== null) {
+                formData.append("durum", _aktifOlanFiltre);
+            }
+
+            $.ajax({
+                url: _apiBaseUrl + "EvrakListele",
+                type: "POST",
+                data: formData, // 🎯 Hazırladığın formData'yı buraya veriyoruz!
+                processData: false, // jQuery'nin veriyi string'e çevirmesini engelliyoruz
+                contentType: false, // Tarayıcının content-type sınırlarını belirlemesine izin veriyoruz
+                success: function (response) {
+                    $("#gridGelenEvraklar").data("kendoGrid").dataSource.data(response);
+                },
+                error: function (xhr) {
+                    alert("Hata oluştu: " + xhr.responseText);
+                },
+                complete: function () {
+                    kendo.ui.progress($("#gridGelenEvraklar"), false);
+                }
             });
+
+
+
+            //$.get(_apiBaseUrl + "EvrakListele", function (res) {
+            //    _grid.dataSource.data(res);
+            //    kendo.ui.progress($("#gridGelenEvraklar"), false);
+            //});
         },
         dosyaIndir: function (ekId) {
             // Backend'de "DosyaIndir/{id}" şeklinde bir endpoint olmalı
             window.location.href = _apiBaseUrl + "DosyaIndir/" + ekId;
         },
 
-        getIconByExtension: function (ext) {
-            if (!ext) return "fas fa-file text-secondary";
-            ext = ext.toLowerCase();
-            if (ext.includes("pdf")) return "fas fa-file-pdf text-danger";
-            if (ext.includes("xls")) return "fas fa-file-excel text-success";
-            if (ext.includes("doc")) return "fas fa-file-word text-primary";
-            if (ext.includes("jpg") || ext.includes("png")) return "fas fa-file-image text-warning";
-            return "fas fa-file text-secondary";
-        },
-        toggleEkler: function (element) {
-            var list = $(element).find('.ek-listesi-gizli');
-            var icon = $(element).find('.fa-chevron-down, .fa-chevron-up');
-
-            list.slideToggle('fast');
-            icon.toggleClass('fa-chevron-down fa-chevron-up');
-        },
+      
        
 
         evrakAdimlari: function (id) {
@@ -297,6 +332,31 @@
             // Burada bir Kendo Window veya Modal açıp personel seçtireceğiz
             console.log("Sevk edilecek Evrak ID: " + id);
             // Örn: SevkModule.open(id);
+        },
+
+        tabFiltrele: function (tabKey) {
+            _aktifOlanFiltre = _enumMap[tabKey];
+            GelenEvrakListModule.loadData();
+        },
+
+
+
+
+        getIconByExtension: function (ext) {
+            if (!ext) return "fas fa-file text-secondary";
+            ext = ext.toLowerCase();
+            if (ext.includes("pdf")) return "fas fa-file-pdf text-danger";
+            if (ext.includes("xls")) return "fas fa-file-excel text-success";
+            if (ext.includes("doc")) return "fas fa-file-word text-primary";
+            if (ext.includes("jpg") || ext.includes("png")) return "fas fa-file-image text-warning";
+            return "fas fa-file text-secondary";
+        },
+        toggleEkler: function (element) {
+            var list = $(element).find('.ek-listesi-gizli');
+            var icon = $(element).find('.fa-chevron-down, .fa-chevron-up');
+
+            list.slideToggle('fast');
+            icon.toggleClass('fa-chevron-down fa-chevron-up');
         }
     };
 })();

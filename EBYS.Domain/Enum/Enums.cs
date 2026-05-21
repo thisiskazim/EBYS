@@ -50,5 +50,14 @@ namespace EBYS.Domain.Enum
             Bekliyor = 2,
             IadeEdildi= 3
         }
+        public enum GelenEvrakDurumu
+        {
+            Kaydedildi = 1,      // Evrak sisteme girildi ama henüz hiçbir yere sevk edilmedi (Boşta)
+            SevkEdildi = 2,      // Bir birime veya kişiye gönderildi, alıcının önünde bekliyor
+            TeslimAlindi = 3,    // Alıcı personel evrakı kendi üzerine zimmetledi (İşleme aldı)
+            IadeEdildi = 4,      // Evrakı sevk eden kişiye geri iade etti
+            Cevaplandi = 5       // Evraka karşılık giden evrak yazılarak süreç kapatıldı
+        }
+
     }
 }

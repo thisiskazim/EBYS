@@ -11,7 +11,7 @@
     max-width: 85vw;
     flex-shrink: 0;
     /* Arka plan rengini buraya ekliyoruz */
-    background-color: #083651 !important;
+    background-color: #066a9b !important;
     color: white !important;
 }
 
@@ -738,4 +738,74 @@ tamam
     min-height: 750px !important;
     background-color: #525659;
     border: none;
+}
+
+
+/* Aktif sekme çizgisi tasarýmý */
+#evrakTabs .nav-link {
+    border: none;
+    background: none;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+    #evrakTabs .nav-link:hover {
+        color: #3b82f6 !important;
+    }
+
+    #evrakTabs .nav-link.active {
+        color: #2563eb !important;
+    }
+
+        #evrakTabs .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 24px;
+            right: 24px;
+            height: 3px;
+            background-color: #2563eb;
+            border-radius: 3px 3px 0 0;
+        }
+/* Kendo Grid Kurumsal Softlaþtýrma */
+.k-grid {
+    font-family: inherit;
+    border: none !important;
+}
+
+.k-grid-header {
+    background-color: #f1f5f9 !important;
+    border-bottom: 2px solid #e2e8f0 !important;
+}
+
+    .k-grid-header th.k-header {
+        background: none !important;
+        color: #475569 !important;
+        font-weight: 700 !important;
+        text-uppercase: uppercase;
+        font-size: 11px;
+        letter-spacing: 0.5px;
+        padding: 14px !important;
+    }
+
+.k-grid td {
+    padding: 12px 14px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    color: #334155 !important;
+}
+/* Badge Tasarýmlarý */
+.badge {
+    padding: 6px 10px !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+}
+
+.bg-info {
+    background-color: #e0f2fe !important;
+    color: #0369a1 !important;
+}
+
+.bg-warning {
+    background-color: #fef3c7 !important;
+    color: #b45309 !important;
 }

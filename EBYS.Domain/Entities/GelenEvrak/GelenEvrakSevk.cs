@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EBYS.Domain.Enum;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -17,12 +18,12 @@ namespace EBYS.Domain.Entities.GelenEvrak
         [ForeignKey("SevkEdenKullaniciId")]
         public virtual Kullanici SevkEdenKullanici { get; set; }
 
-
         public int? AlanKullaniciId { get; set; } 
 
         [ForeignKey("AlanKullaniciId")]
         public virtual Kullanici AlanKullanici { get; set; }
 
+        public Enums.GelenEvrakDurumu GelenEvrakDurumEnum { get; set; } = Enums.GelenEvrakDurumu.Kaydedildi;
         public string? Aciklama { get; set; } 
         public DateTime SevkTarihi { get; set; }
         public DateTime? OkunmaTarihi { get; set; }

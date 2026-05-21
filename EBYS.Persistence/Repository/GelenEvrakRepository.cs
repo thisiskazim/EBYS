@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static EBYS.Domain.Enum.Enums;
 
 namespace EBYS.Persistence.Repository
 {
@@ -28,7 +29,7 @@ namespace EBYS.Persistence.Repository
             return await _context.GelenEvraklar.CountAsync(x => x.DefterTarihi.Year == yil);
         }
 
-        public async Task<GelenEvrak> DetayliGetirAsync(int id)
+        public async Task<GelenEvrak> DetayliGetirByIdAsync(int id)
         {
             return await _context.GelenEvraklar
                  .Include(x => x.Ilgileri)
@@ -37,14 +38,44 @@ namespace EBYS.Persistence.Repository
                  .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<List<GelenEvrakListDTO>> GelenEvrakListAsync()
+        public async Task<List<GelenEvrakListDTO>> FiltreliEvrakGetirAsync(int? currentUserId, GelenEvrakDurumu? evrakDurumu)
         {
-            return await _context.GelenEvraklar
-                    .AsNoTracking()
-                    .Where(x => !x.isDelete)
-                    .OrderByDescending(x => x.creat_time)
-                    .ProjectTo<GelenEvrakListDTO>(_mapper.ConfigurationProvider)
-                    .ToListAsync();
+
+            var query = _context.GelenEvraklar.Where(x => !x.isDelete);
+
+            if (evrakDurumu.HasValue)
+            {
+                switch (evrakDurumu.Value)
+                {
+     
+                    case GelenEvrakDurumu.TeslimAlindi:
+                        query = query.Where(x => x.Sevkler
+                            .OrderByDescending(s => s.SevkTarihi)
+                            .FirstOrDefault().AlanKullaniciId == currentUserId);
+                        break;
+
+                    case GelenEvrakDurumu.IadeEdildi:
+                        query = query.Where(x => x.Sevkler
+                            .OrderByDescending(s => s.SevkTarihi)
+                            .FirstOrDefault().GelenEvrakDurumEnum == GelenEvrakDurumu.IadeEdildi
+                            && x.Sevkler.OrderByDescending(s => s.SevkTarihi).FirstOrDefault().AlanKullaniciId == null);
+                        break;
+
+                    case GelenEvrakDurumu.Cevaplandi:
+                        query = query.Where(x => x.Sevkler
+                            .OrderByDescending(s => s.SevkTarihi)
+                            .FirstOrDefault().GelenEvrakDurumEnum == GelenEvrakDurumu.Cevaplandi);
+                        break;
+
+                }
+            }
+
+
+
+            return await query
+             .OrderByDescending(x => x.creat_time)
+             .ProjectTo<GelenEvrakListDTO>(_mapper.ConfigurationProvider)
+             .ToListAsync();
             //projectto kullanarak direkt olarak veritabanından DTO'ya dönüşüm yapıyoruz, bu sayede gereksiz verilerin çekilmesini engelliyoruz ve performansı artırıyoruz.
 
         }
