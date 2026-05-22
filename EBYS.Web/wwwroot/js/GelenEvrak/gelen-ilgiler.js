@@ -45,7 +45,7 @@
                 return;
             }
 
-            // Grid'e yeni satır ekle
+           
 
             _grid.dataSource.add({
                 IlgiMetni: input.trim()
@@ -57,15 +57,13 @@
             if (_grid && Array.isArray(ilgiler)) {
                 var mappedData = ilgiler.map(function (item) {
                     return {
-                        // API'den gelen 'ilgiMetni' (küçük i) 
-                        // Grid field'ı olan 'IlgiMetni' (Büyük I) ile eşleşmeli
                         IlgiMetni: item.ilgiMetni || item.IlgiMetni
                     };
                 });
                 _grid.dataSource.data(mappedData);
             }
         },
-        // Servise gönderilecek veriyi toplamak için
+     
         getData: function () {
             var data = _grid.dataSource.data();
             return data.map(function (item) {
@@ -77,7 +75,7 @@
     };
 })();
 
-// Sayfa hazır olduğunda grid'i başlat
+
 $(document).ready(function () {
     GelenIlgilerModule.init();
 });

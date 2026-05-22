@@ -14,16 +14,16 @@ namespace EBYS.Domain.Entities.GidenEvrak
         public int KonuKoduId { get; set; } = 1;
         public virtual EvrakKonuKodu EvrakKonuKodu { get; set; }
 
-        public string Icerik { get; set; } // Rich Text Editor'den gelen HTML/Text
+        public string Icerik { get; set; } 
         public string? ImzaAltindaOlanIcerik { get; set; }
-        public int? EvrakSayisi { get; set; }//int olarak değiştirelim.bu belge durumu tamamlandı olduğunda oluşacak bir property.
-        public bool IsGelenEvrak { get; set; } // True ise Gelen, False ise Giden
-        public Enums.BelgeDurum BelgeDurum { get; set;} // Taslak, İmzada, Tamamlandı vb.
+        public int? EvrakSayisi { get; set; }
+        public bool IsGelenEvrak { get; set; } 
+        public Enums.BelgeDurum BelgeDurum { get; set;} 
 
         public Enums.GizlilikDerecesi GizlilikDerecesi { get; set;}
         public Enums.IvedilikDerecesi IvedilikDerecesi { get; set;}
 
-        // Navigation Properties (İlişkiler)
+
         public int OlusturanId { get; private set; }
         public virtual Kullanici Olusturan { get; set; }
 

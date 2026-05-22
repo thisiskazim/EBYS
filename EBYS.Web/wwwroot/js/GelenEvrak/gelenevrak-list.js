@@ -10,7 +10,6 @@
         'iade': 4,    
         'cevap': 5   
     };
-
     var _ajaxCall = function (url, type, data) {
         return $.ajax({
             url: _apiBaseUrl + url,
@@ -29,21 +28,8 @@
         });
     };
 
-    //var _initDialog = function () {
-    //    _onizlemeDialog = $("#onizlemeDialog").kendoDialog({
-    //        width: "1300px",
-    //        height: "800px", // İçerideki 720px'lik d-flex'i rahat taşısın
-    //        title: "Evrak Detay Önizleme",
-    //        closable: true,
-    //        modal: true,
-    //        visible: false,
-    //        actions: [{ text: "Kapat" }]
-    //    }).data("kendoDialog");
-    //};
-
     return {
         init: function () {
-          /*  _initDialog();*/
             this.initGrid();
             this.loadData();
         },
@@ -63,7 +49,7 @@
                         template: function (dataItem) {
                             var canEdit = dataItem.editYapabilirMi;
 
-                            // 1. Düzenle ve Sil butonları (Kaydeden kişiye göre yetki kontrolü)
+                      
                             var editHtml = canEdit
                                 ? `<li><a class='dropdown-item py-2' href='#' onclick='GelenEvrakListModule.edit("${dataItem.id}")'><i class='fas fa-edit text-warning me-2'></i>Düzenle</a></li>`
                                 : `<li><a class='dropdown-item disabled text-muted py-2' href='#'><i class='fas fa-lock me-2'></i>Düzenle <small>(Yetki Yok)</small></a></li>`;
@@ -72,7 +58,7 @@
                                 ? `<li><a class='dropdown-item py-2 text-danger' href='#' onclick='GelenEvrakListModule.delete("${dataItem.id}")'><i class='fas fa-trash-alt me-2'></i>Sil</a></li>`
                                 : `<li><a class='dropdown-item disabled text-muted py-2' href='#'><i class='fas fa-lock me-2'></i>Sil <small>(Yetki Yok)</small></a></li>`;
 
-                            // 2. SATIR BAZLI AKIŞ KONTROLÜ (İster tüm listede olsun ister şahsıma gelenlerde 🎯)
+                        
                             var akisButonlariHtml = "";
                             if (dataItem.islemSirasiBendeMi) {
                                 akisButonlariHtml = `
@@ -80,16 +66,13 @@
                                 <li><a class='dropdown-item py-2 text-success' href='#' onclick='GelenEvrakListModule.cevapla("${dataItem.id}")'><i class='fas fa-reply me-2'></i>Cevapla</a></li>
                             `;
                             }
-                            // 2. Durum: Evrak henüz kimse tarafından alınmamışsa, ortak havuzdaysa (alanKullaniciId null ise)
+                
                             else if (dataItem.alanKullaniciId === null) {
                                 akisButonlariHtml = `
                                 <li><a class='dropdown-item py-2 text-primary' href='#' onclick='GelenEvrakListModule.teslimAl("${dataItem.id}")'><i class='fas fa-hand-holding-check me-2'></i>Teslim Al</a></li>
                             `   ;
                             }
                            
-
-
-                      
                             return `
                 <div class='dropdown'>
                     <button class='btn btn-link btn-sm p-0 border-0'
@@ -174,9 +157,9 @@
             $.ajax({
                 url: _apiBaseUrl + "EvrakListele",
                 type: "POST",
-                data: formData, // 🎯 Hazırladığın formData'yı buraya veriyoruz!
-                processData: false, // jQuery'nin veriyi string'e çevirmesini engelliyoruz
-                contentType: false, // Tarayıcının content-type sınırlarını belirlemesine izin veriyoruz
+                data: formData, 
+                processData: false, 
+                contentType: false, 
                 success: function (response) {
                     $("#gridGelenEvraklar").data("kendoGrid").dataSource.data(response);
                 },
@@ -187,21 +170,11 @@
                     kendo.ui.progress($("#gridGelenEvraklar"), false);
                 }
             });
-
-
-
-            //$.get(_apiBaseUrl + "EvrakListele", function (res) {
-            //    _grid.dataSource.data(res);
-            //    kendo.ui.progress($("#gridGelenEvraklar"), false);
-            //});
+   
         },
         dosyaIndir: function (ekId) {
-            // Backend'de "DosyaIndir/{id}" şeklinde bir endpoint olmalı
             window.location.href = _apiBaseUrl + "DosyaIndir/" + ekId;
         },
-
-      
-       
 
         evrakAdimlari: function (id) {
             var self = this;
@@ -294,7 +267,7 @@
                     }
                 })
                 .always(function () {
-                    kendo.ui.progress($("#gridGelenEvraklar"), false); // İşlem bitince loading kapat
+                    kendo.ui.progress($("#gridGelenEvraklar"), false);
                 });
         },
        
@@ -314,12 +287,11 @@
         },
 
         teslimAl: function (id) {
-            // Çift tıklamayı veya işlem sırasında beklemeyi yönetmek için progress açıyoruz
+           
             kendo.ui.progress($("#gridGelenEvraklar"), true);
 
             _ajaxCall("SahsimaTeslimAl/" + id, "POST")
                 .done(function (res) {
-                    // Başarılıysa bildirim ver ve ana grid'i tazele
                     showNotification("Evrak üzerinize başarıyla alındı.", "success");
                     GelenEvrakListModule.loadData();
                 })
@@ -327,19 +299,16 @@
                     kendo.ui.progress($("#gridGelenEvraklar"), false);
                 });
         },
-
         personeleSevkEt: function (id) {
-            // Burada bir Kendo Window veya Modal açıp personel seçtireceğiz
+          
             console.log("Sevk edilecek Evrak ID: " + id);
-            // Örn: SevkModule.open(id);
+        
         },
 
         tabFiltrele: function (tabKey) {
             _aktifOlanFiltre = _enumMap[tabKey];
             GelenEvrakListModule.loadData();
         },
-
-
 
 
         getIconByExtension: function (ext) {

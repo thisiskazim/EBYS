@@ -24,7 +24,7 @@ namespace EBYS.Application.Services.GelenEvrakService
                 var evrak = mapper.Map<GelenEvrak>(createDto);
                 evrak.KayitNo = await KayitNumarasiOlustur();
 
-                // 3. İlgileri İşle
+          
                 if (createDto.Ilgiler != null && createDto.Ilgiler.Any())
                 {
                     evrak.Ilgileri = mapper.Map<List<GelenEvrakIlgi>>(createDto.Ilgiler);

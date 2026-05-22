@@ -61,7 +61,7 @@ namespace EBYS.Persistence.Repository
                             e.AkisAdimlari.Any(a => a.KullaniciId == userId && a.AdimDurumu == Enums.AkisAdimDurumu.Onaylandi))
                 .OrderByDescending(e => e.creat_time) // En yeni evraklar üstte gelsin
                 .AsNoTracking()
-                .ProjectTo<GidenEvrakAkisListeDTO>(_mapper.ConfigurationProvider) // Mermi satır
+                .ProjectTo<GidenEvrakAkisListeDTO>(_mapper.ConfigurationProvider) 
                 .ToListAsync();
         }
 

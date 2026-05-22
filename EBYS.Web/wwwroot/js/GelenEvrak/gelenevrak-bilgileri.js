@@ -7,20 +7,20 @@
         setData: function (data) {
             if (!data) return;
 
-            // 1. Normal Inputlar ve Checkbox
+          
             $("#EvrakId").val(data.id || data.Id || 0);
             $("#Konu").val(data.konu || data.Konu || "");
             $("#EvrakSayisi").val(data.evrakSayisi || data.EvrakSayisi || "");
             $("#DilekceMi").prop('checked', data.dilekceMi || data.DilekceMi || false);
 
-            // 2. Kendo ComboBoxes (Muhatap ve Konu Kodu)
+          
             var cbMuhatap = $("#MuhatapId").data("kendoComboBox");
             if (cbMuhatap) cbMuhatap.value(data.muhatapId || data.MuhatapId || "");
 
             var cbKonuKodu = $("#KonuKodu").data("kendoComboBox");
             if (cbKonuKodu) cbKonuKodu.value(data.konuKodu || data.KonuKodu || "");
 
-            // 3. Kendo DatePickers
+           
             var dpEvrakTarihi = $("#EvrakTarihi").data("kendoDatePicker");
             if (dpEvrakTarihi) dpEvrakTarihi.value(data.evrakTarihi || data.EvrakTarihi || new Date());
 
@@ -30,7 +30,7 @@
             var dpCevapIstenen = $("#CevapIstenenTarih").data("kendoDatePicker");
             if (dpCevapIstenen) dpCevapIstenen.value(data.cevapIstenenTarih || data.CevapIstenenTarih || null);
 
-            // 4. Kendo DropDownLists (Gizlilik ve İvedilik)
+           
             var ddlGizlilik = $("#GizlilikDerecesi").data("kendoDropDownList");
             if (ddlGizlilik) ddlGizlilik.value(data.gizlilikDerecesi ?? data.GizlilikDerecesi ?? 0);
 
@@ -39,7 +39,7 @@
         },
 
         getData: function () {
-            // Kendo nesnelerini al
+          
             var cbMuhatap = $("#MuhatapId").data("kendoComboBox");
             var cbKonuKodu = $("#KonuKodu").data("kendoComboBox");
             var dpEvrakTarihi = $("#EvrakTarihi").data("kendoDatePicker");

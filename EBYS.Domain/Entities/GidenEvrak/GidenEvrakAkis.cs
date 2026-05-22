@@ -16,12 +16,10 @@ namespace EBYS.Domain.Entities.GidenEvrak
         public virtual Kullanici Kullanici { get; set; }
 
         public int SiraNo { get; set; }
-        public Enums.ImzaTipi ParafMiImzaMi { get; set; } // Paraf mı İmza mı?
+        public Enums.ImzaTipi ParafMiImzaMi { get; set; } 
 
-        public bool SiradakiMi { get; set; } // "İmza Bekleyenler" listesi için anahtar
-
-        // Kişinin özel durumu
+        public bool SiradakiMi { get; set; } 
         public Enums.AkisAdimDurumu AdimDurumu { get; set; }
-        public string? Not { get; set; } // Red ederse "Eksik bilgi var" gibi not yazması için
+        public string? Not { get; set; } 
     }
 }

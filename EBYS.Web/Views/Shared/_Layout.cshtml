@@ -204,13 +204,13 @@
             }
         },
 
-        // 2. Bilgileri HTML'e basan fonksiyon
+   
        updateUserInfo: function () {
             var claims = this.getClaims();
-            console.log("Token İçeriği:", claims); // Konsoldan kontrol etmek için ekledik
+            console.log("Token İçeriği:", claims); 
     
             if (claims) {
-                // Tüm ihtimalleri deniyoruz:
+ 
                var adSoyad = claims["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] || "Kullanıcı";
                 var rolText = claims["RolAdi"] || "Yetki Yok";
 

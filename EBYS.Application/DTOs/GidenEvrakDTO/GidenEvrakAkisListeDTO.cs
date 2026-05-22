@@ -6,13 +6,13 @@ namespace EBYS.Application.DTOs.EvrakDTO
     {
         public int Id { get; set; }
         public string OlusturanKullanici { get; set; }
-        public int OlusturanKullaniciId { get; set; } // Bunu yetki kontrolü için ekleyelim
+        public int OlusturanKullaniciId { get; set; } 
         public string Konu { get; set; }
         public string FullKonuKodu { get; set; }
         public string SuAnKimde { get; set; }
         
         public DateTime creat_time { get; set; }
-        public bool EditYapabilirMi { get; set; } // UI'da butonu gösterip gizlemek için
+        public bool EditYapabilirMi { get; set; } 
         public bool GeriCekilebilirMi { get; set; }
         public List<GidenEvrakEkBaseDTO> Ekler { get; set; } = new List<GidenEvrakEkBaseDTO>();
         public List<AkisAdimDTO> AkisAdimlari { get; set; } = new List<AkisAdimDTO>();

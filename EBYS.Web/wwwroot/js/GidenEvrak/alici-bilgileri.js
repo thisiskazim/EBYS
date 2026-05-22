@@ -40,7 +40,7 @@ var AliciModule = (function () {
             }
 
             selectedDataItems.forEach(function (item) {
-                // grid.dataSource'un varlığını burada da kontrol ediyoruz
+              
                 if (grid.dataSource) {
                     var exists = grid.dataSource.data().some(x => x.MuhatapId === item.id);
                     if (!exists) {
@@ -58,7 +58,7 @@ var AliciModule = (function () {
         setData: function (muhataplar) {
             var grid = _grid || $("#muhatapGrid").data("kendoGrid");
             if (grid && Array.isArray(muhataplar)) {
-                // Mevcut veriyi temizleyip yenisini ekliyoruz
+             
                 var mappedData = muhataplar.map(function (item) {
                     return {
                         MuhatapId: item.muhatapId || item.MuhatapId,

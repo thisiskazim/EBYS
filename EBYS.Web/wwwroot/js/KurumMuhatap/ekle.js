@@ -14,11 +14,11 @@
         });
     };
 
-    // FORM DOLDURMA (Update için)
+
     var _fillForm = function (data) {
         if (!data) return;
 
-        // Kendo TextBox değerini set etme yolu budur:
+       
 
         $("#Adi").data("kendoTextBox").value(data.adi);
         $("#Telefon").data("kendoTextBox").value(data.telefon);

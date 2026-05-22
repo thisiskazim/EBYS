@@ -36,7 +36,7 @@
                                 Id: { type: "number", defaultValue: 0 },
                                 Ad: { type: "string" },
                                 DosyaAdi: { type: "string" },
-                                DosyaObj: { nullable: true } // IFormFile için dosya objesi
+                                DosyaObj: { nullable: true } 
                             }
                         }
                     }
@@ -49,7 +49,7 @@
                 _tempFile = input.files[0];
                 $("#secilenDosyaBilgisi").text("Seçilen: " + _tempFile.name).show();
 
-                // Eğer input boşsa dosya adını otomatik yaz
+                
                 if (!$("#EkAdi").val()) {
                     $("#EkAdi").val(_tempFile.name);
                 }
@@ -68,17 +68,17 @@
                 Id: 0,
                 Ad: ad || (_tempFile ? _tempFile.name : ""),
                 DosyaAdi: _tempFile ? _tempFile.name : "",
-                DosyaObj: _tempFile // Asıl dosya verisi burada
+                DosyaObj: _tempFile 
             });
 
-            // Temizlik
+  
             $("#EkAdi").val("");
             $("#EkDosya").val("");
             $("#secilenDosyaBilgisi").hide();
             _tempFile = null;
         },
 
-        // Update aşamasında mevcut ekleri yüklemek için
+    
         setData: function (ekler) {
             if (_grid && Array.isArray(ekler)) {
                 var mapped = ekler.map(function (item) {
@@ -86,20 +86,19 @@
                         Id: item.id || item.Id,
                         Ad: item.ad || item.Ad,
                         DosyaAdi: item.dosyaUzantisi ? (item.ad + item.dosyaUzantisi) : "",
-                        DosyaObj: null // Mevcut dosyalar DB'den byte[] olarak gelecek, IFormFile değil
+                        DosyaObj: null 
                     };
                 });
                 _grid.dataSource.data(mapped);
             }
         },
 
-        // Kaydetme anında FormData'ya basılacak veriyi hazırlar
         getData: function () {
             return _grid.dataSource.data().map(function (item) {
                 return {
                     Id: item.Id,
                     Ad: item.Ad,
-                    Dosya: item.DosyaObj // FormData append edilirken kullanılacak
+                    Dosya: item.DosyaObj
                 };
             });
         }

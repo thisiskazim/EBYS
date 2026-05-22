@@ -112,32 +112,19 @@
             }).data("kendoGrid");
         },
 
-        //loadData: function () {
-        //    _ajaxCall('imzaya-gonderdiklerim', 'GET').done(function (res) {
-        //        var list = Array.isArray(res) ? res : (res.data || []);
-        //        var mappedList = list.map(x => ({
-        //            Id: x.id || x.Id,
-        //            Konu: x.konu || x.Konu,
-        //            FullKonuKodu: x.fullKonuKodu || x.FullKonuKodu,
-        //            CreatTime: x.creat_time || x.CreatTime,
-        //            SuAnKimde: x.suAnKimde || x.SuAnKimde,
-        //            GeriCekilebilirMi: x.geriCekilebilirMi || x.GeriCekilebilirMi
-        //        }));
-        //        _grid.dataSource.data(mappedList);
-        //    });
-        //},
+      
         loadData: function () {
-            var $gridEl = $("#gridGonderdiklerim"); // Selector adını doğrula abi
-            kendo.ui.progress($gridEl, true); // Yükleniyor efektini aç
+            var $gridEl = $("#gridGonderdiklerim");
+            kendo.ui.progress($gridEl, true); 
 
-            // Kendi ortak fonksiyonunu tetikliyorsun, ne .map() ameleliği var ne tek tek elle yazma
+          
             _ajaxCall('imzaya-gonderdiklerim', 'GET')
                 .done(function (res) {
-                    // API doğrudan DTO listesi döndüğü için gelen veriyi direkt basıyoruz
+               
                     _grid.dataSource.data(res);
                 })
                 .always(function () {
-                    kendo.ui.progress($gridEl, false); // İşlem bitince (başarılı veya başarısız) loading'i kapat
+                    kendo.ui.progress($gridEl, false); 
                 });
         },
 
@@ -145,7 +132,7 @@
             var self = this;
             _ajaxCall('evrak-hareketleri/' + id, 'GET').done(function (res) {
 
-                // 1. Önce Window'u al veya oluştur
+             
                 var winElement = $("#historyWindow");
                 var win = winElement.data("kendoWindow");
 
@@ -159,14 +146,14 @@
                     }).data("kendoWindow");
                 }
 
-                // 2. KRİTİK NOKTA: Eğer grid daha önce oluşturulmuşsa verisini temizle/yok et
+             
                 var gridElement = $("#historyGrid");
                 if (gridElement.data("kendoGrid")) {
-                    gridElement.data("kendoGrid").destroy(); // Eski grid yapısını tamamen sil
-                    gridElement.empty(); // İçindeki HTML kalıntılarını temizle
+                    gridElement.data("kendoGrid").destroy(); 
+                    gridElement.empty(); 
                 }
 
-                // 3. Grid'i taptaze verilerle yeniden oluştur
+               
                 gridElement.kendoGrid({
                     dataSource: {
                         data: res,

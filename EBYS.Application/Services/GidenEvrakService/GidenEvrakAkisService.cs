@@ -69,7 +69,6 @@ namespace EBYS.Application.Services.GidenEvrakService
             }
             catch (Exception ex)
             {
-                // Burada loglama yapabilirsin
                 return new IslemSonuc(false, $"Beklenmedik bir hata: {ex.Message}");
             }
         }
@@ -173,10 +172,10 @@ namespace EBYS.Application.Services.GidenEvrakService
         {
             var userId = evrakRepository.GetContextUserId();
 
-            // 1. Veriyi Repository'den Entity olarak çekiyoruz
+          
             var entities = await evrakRepository.IslemBekleyenler(userId, imzaTipi);
 
-            // 3. Özel iş kuralını (CanEdit) döngüyle veya mapping sırasında set edebiliriz
+          
             foreach (var dto in entities)
             {
                 dto.EditYapabilirMi = dto.OlusturanKullaniciId == userId;

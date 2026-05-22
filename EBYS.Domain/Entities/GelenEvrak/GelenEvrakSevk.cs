@@ -13,7 +13,7 @@ namespace EBYS.Domain.Entities.GelenEvrak
 
         public int GelenEvrakId { get; set; }
         public virtual GelenEvrak GelenEvrak { get; set; }
-        // Evrakı bir sonraki kişiye sevk eden (Paslayan)
+    
         public int SevkEdenKullaniciId { get; set; }
         [ForeignKey("SevkEdenKullaniciId")]
         public virtual Kullanici SevkEdenKullanici { get; set; }

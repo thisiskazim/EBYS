@@ -1,12 +1,11 @@
 ﻿
 var ImzaRotaModule = (function () {
-    // --- Private Variables (Kapsülleme) ---
+
     var _grid = null;
     var _apiBaseUrl = "https://localhost:7060/api/ImzaRota/";
 
-    // --- Private Methods (İş Mantığı) ---
 
-    // API İsteklerini Merkezi Yöneten Fonksiyon
+
     var _ajaxCall = function (url, type, data) {
         return $.ajax({
             url: _apiBaseUrl + url,
@@ -20,15 +19,14 @@ var ImzaRotaModule = (function () {
         });
     };
 
-    // Formu ve Grid'i Veriyle Dolduran Fonksiyon
+
     var _fillForm = function (data) {
         if (!data) return;
 
-        // Rota Adı (Kendo UI Check)
+
         var rotaAdiTxt = $("#RotaAdi").data("kendoTextBox");
         if (rotaAdiTxt) rotaAdiTxt.value(data.rotaAdi);
 
-        // Backend'den gelen veriyi Grid formatına güvenli eşleme (Mapping)
         var gridData = (data.rotaAdimlari || []).map(function (x) {
             return {
                 Id: x.id,
@@ -44,7 +42,7 @@ var ImzaRotaModule = (function () {
         _grid.dataSource.data(gridData);
     };
 
-    // Validasyon Kuralları (Merkezi Kontrol)
+
     var _validatePayload = function (items, rotaAdi) {
         if (!rotaAdi || rotaAdi.trim() === "") return "Rota adı boş olamaz.";
         if (!items || items.length === 0) return "En az bir kişi ekleyin.";
@@ -54,10 +52,10 @@ var ImzaRotaModule = (function () {
         var sonImzaTuru = parseInt(items[sonIndex].ImzaTuru);
         if (sonImzaTuru === 0) return 'İmza rotasında son kişi mutlaka "İmza" tipinde olmalıdır.';
 
-        return null; // Hata yoksa null döner
+        return null; 
     };
 
-    // --- Public Methods (Dışarıya Açık Fonksiyonlar) ---
+   
     return {
         init: function () {
             this.initGrid();
@@ -87,10 +85,10 @@ var ImzaRotaModule = (function () {
                 editable: false,
                 dataSource: {
                     data: [],
-                    schema: { model: { id: "Id" } } // DB'deki gerçek Id'yi takip eder
+                    schema: { model: { id: "Id" } } 
                 },
                 dataBound: function () {
-                    // Sürükle-Bırak (Sortable) Entegrasyonu
+       
                     var tbody = this.tbody;
                     if (!tbody.data('kendoSortable')) {
                         tbody.kendoSortable({
@@ -112,7 +110,7 @@ var ImzaRotaModule = (function () {
         initEvents: function () {
             var self = this;
 
-            // EKLE BUTONU
+    
             $("#btnEkle").on('click', function () {
                 var ddl = $("#Personel").data('kendoDropDownList');
                 var dataItem = ddl ? ddl.dataItem() : null;
@@ -132,7 +130,7 @@ var ImzaRotaModule = (function () {
                 var imzaVal = parseInt($("input[name='ImzaTuru']:checked").val());
 
                 _grid.dataSource.add({
-                    Id: 0, // Yeni kayıt
+                    Id: 0,
                     KullaniciId: parseInt(ddl.value()),
                     AdSoyad: ddl.text(),
                     RolAdi: dataItem.RolAdi || dataItem.rolAdi || "",
@@ -143,20 +141,20 @@ var ImzaRotaModule = (function () {
                 ddl.value("");
             });
 
-            // KAYDET / GÜNCELLE BUTONU
+           
             $("#btnKaydet").on('click', function () {
                 var rotaId = $("#RotaId").val();
                 var rotaAdi = $("#RotaAdi").val();
                 var gridItems = _grid.dataSource.data();
 
-                // Validasyon
+           
                 var errorMsg = _validatePayload(gridItems, rotaAdi);
                 if (errorMsg) {
                     showNotification(errorMsg, "error");
                     return;
                 }
 
-                // Payload Hazırlama (DTO yapısına uygun)
+              
                 var payload = {
                     Id: rotaId ? parseInt(rotaId) : 0,
                     RotaAdi: rotaAdi,
@@ -164,7 +162,7 @@ var ImzaRotaModule = (function () {
                         Id: item.Id || 0,
                         KullaniciId: item.KullaniciId,
                         ParafMiImzaMi: item.ImzaTuru,
-                        SiraNo: index + 1 // Sıralama griddeki güncel sıradır
+                        SiraNo: index + 1 
                     }))
                 };
 
@@ -188,7 +186,7 @@ var ImzaRotaModule = (function () {
     };
 })();
 
-// Sayfa yüklendiğinde modülü başlat
+
 $(document).ready(function () {
     ImzaRotaModule.init();
 });

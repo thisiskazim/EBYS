@@ -13,10 +13,10 @@ namespace EBYS.Application.DTOs.EvrakDTO
         public DateTime creat_time { get; set; }
         public string? Not { get; set; }
             
-        // Enum olarak orijinal değer
+    
         public Enums.AkisAdimDurumu AdimDurumu { get; set; }
 
-        // JS tarafında görünecek olan metinsel karşılık
+      
         public string AdimDurumuStr
         {
             get

@@ -9,7 +9,7 @@ namespace EBYS.Domain.Entities
 {
     public class Muhatap:BaseEntity
     {
-        public string Adi { get; set; } // Örn: Bilgi İşlem Dairesi Bşk.
+        public string Adi { get; set; } 
         public string Telefon { get; set; }
         public string? EPosta { get; set; }
         public string Adress { get; set; }
@@ -22,7 +22,7 @@ namespace EBYS.Domain.Entities
     {
         public string KepAdresi { get; set; }
         public string? TesisNo { get; set; }
-        public string DetsisNo { get; set; } // Devlet Teşkilat No
+        public string DetsisNo { get; set; } 
         public string KurumKodu { get; set; }
     }
     public class TuzelKisiMuhatap : Muhatap

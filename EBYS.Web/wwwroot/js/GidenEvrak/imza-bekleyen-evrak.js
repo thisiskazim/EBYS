@@ -22,20 +22,7 @@ var EvrakBekleyenListModule = (function () {
         });
     };
 
-    // -------------------------------------------------------
-    // Kendo Dialog'u başlat (sayfa yüklendiğinde bir kez)
-    // -------------------------------------------------------
-    //var _initDialog = function () {
-    //    _onizlemeDialog = $("#onizlemeDialog").kendoDialog({
-    //        width: "1300px",
-    //        height: "800px", // İçerideki 720px'lik d-flex'i rahat taşısın
-    //        title: "Evrak Detay Önizleme",
-    //        closable: true,
-    //        modal: true,
-    //        visible: false,
-    //        actions: [{ text: "Kapat" }]
-    //    }).data("kendoDialog");
-    //};
+   
 
     return {
         init: function () {
@@ -119,25 +106,25 @@ var EvrakBekleyenListModule = (function () {
                         }
                     },
                     {
-                        field: "olusturanKullanici", // JSON'daki gibi küçük harfle başlar
+                        field: "olusturanKullanici", 
                         title: "Oluşturan",
                         template: "<div class='d-flex align-items-center'>#: olusturanKullanici #</div>",
                         width: "120px"
                     },
                     {
-                        field: "konu", // 'Konu' yerine 'konu' yapıldı
+                        field: "konu", 
                         title: "Konu",
                         width: "200px",
-                        template: "<div>#: konu #</div>" // Hata almamak için template'i de küçük harfe çektik
+                        template: "<div>#: konu #</div>" 
                     },
                     {
-                        field: "fullKonuKodu", // JSON'daki gibi küçük harfle başlar
+                        field: "fullKonuKodu", 
                         title: "Konu Kodu",
                         width: "200px",
                         template: "<span class='badge bg-light text-dark border'>#: fullKonuKodu #</span>"
                     },
                     {
-                        field: "creat_time", // JSON'dan gelen gerçek isim 'creat_time' yapıldı
+                        field: "creat_time", 
                         title: "Oluşturma Zamanı",
                         width: "250px",
                         template: "#= creat_time ? kendo.toString(kendo.parseDate(creat_time), 'dd.MM.yyyy HH:mm') : '' #"
@@ -147,33 +134,20 @@ var EvrakBekleyenListModule = (function () {
             }).data("kendoGrid");
         },
 
-        //loadData: function () {
-        //    _ajaxCall('Akis/imza-bekleyen-listele', 'GET').done(function (res) {
-        //        var list = Array.isArray(res) ? res : (res.data || []);
-        //        var mappedList = list.map(x => ({
-        //            Id: x.id || x.Id,
-        //            OlusturanKullanici: x.olusturanKullanici,
-        //            Konu: x.konu,
-        //            FullKonuKodu: x.fullKonuKodu,
-        //            CreatTime: x.creat_time,
-        //            CanEdit: x.editYapabilirMi
-        //        }));
-        //        _grid.dataSource.data(mappedList);
-        //    });
-        //},
+     
 
         loadData: function () {
-            var $gridEl = $("#gridBekleyenler"); // Selector adını doğrula abi
-            kendo.ui.progress($gridEl, true); // Yükleniyor efektini aç
+            var $gridEl = $("#gridBekleyenler"); 
+            kendo.ui.progress($gridEl, true); 
 
-            // Kendi ortak fonksiyonunu tetikliyorsun, ne .map() ameleliği var ne tek tek elle yazma
+            
             _ajaxCall('Akis/imza-bekleyen-listele', 'GET')
                 .done(function (res) {
-                    // API doğrudan DTO listesi döndüğü için gelen veriyi direkt basıyoruz
+                   
                     _grid.dataSource.data(res);
                 })
                 .always(function () {
-                    kendo.ui.progress($gridEl, false); // İşlem bitince (başarılı veya başarısız) loading'i kapat
+                    kendo.ui.progress($gridEl, false); 
                 });
         },
 

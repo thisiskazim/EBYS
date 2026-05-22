@@ -45,41 +45,38 @@ namespace EBYS.Persistence
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                // 1. KONTROL: Entity, BaseEntity'den türemiş olmalı
-                // 2. KONTROL: Kalıtım varsa (Muhatap örneğindeki gibi), filtre sadece en üst (Root) sınıfa yazılır
+                
                 if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType)
                     && entityType.BaseType == null)
                 {
-                    // Lambda parametresi: (e => ...)
+            
                     var parameter = Expression.Parameter(entityType.ClrType, "e");
 
-                    // e.BaseKurumId mülküne erişim
+                  
                     var property = Expression.Property(parameter, "BaseKurumId");
 
-                    // --- DİNAMİK BAĞLANTI ---
-                    // DbContext içindeki private readonly int _currentKurumId alanına referans alıyoruz
+                  
                     var contextExpression = Expression.Constant(this);
                     var fieldInfo = typeof(EBYSContext).GetField("_currentKurumId",
                         System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
-                    if (fieldInfo == null) continue; // Alan bulunamazsa atla
+                    if (fieldInfo == null) continue; 
 
                     var currentKurumIdAccess = Expression.Field(contextExpression, fieldInfo);
 
-                    // e.BaseKurumId == this._currentKurumId karşılaştırması
-                    // property.Type kullanarak int veya int? uyumunu sağlar
+                  
                     var condition = Expression.Equal(property, Expression.Convert(currentKurumIdAccess, property.Type));
 
                     var lambda = Expression.Lambda(condition, parameter);
 
-                    // Filtreyi Model'e uygula
+                  
                     modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
                 }
             }
 
-            // 1. TPH Yapılandırması (Kalıtım Yönetimi)
+          
             modelBuilder.Entity<Muhatap>()
-                .HasDiscriminator<string>("MuhatapTipi") // Veritabanında gizli bir kolon açar
+                .HasDiscriminator<string>("MuhatapTipi") 
                 .HasValue<KurumMuhatap>("Kurum")
                 .HasValue<TuzelKisiMuhatap>("Tuzel")
                 .HasValue<BireyselMuhatap>("Birey");
@@ -99,28 +96,28 @@ namespace EBYS.Persistence
                 .HasOne(x => x.Evrak)
                 .WithMany(x => x.Muhataplar)
                 .HasForeignKey(x => x.EvrakId)
-                .OnDelete(DeleteBehavior.Cascade); // Evrak silinince Muhataplar silinir
+                .OnDelete(DeleteBehavior.Cascade);
 
             // 2. İlgiler İlişkisi
             modelBuilder.Entity<GidenEvrakIlgi>()
                 .HasOne(x => x.Evrak)
                 .WithMany(x => x.İlgiler)
                 .HasForeignKey(x => x.EvrakId)
-                .OnDelete(DeleteBehavior.Cascade); // Evrak silinince İlgiler silinir
+                .OnDelete(DeleteBehavior.Cascade); 
 
             modelBuilder.Entity<GidenEvrakEk>()
                  .HasOne(x => x.Evrak)
                  .WithMany(x => x.Ekler)
                  .HasForeignKey(x => x.EvrakId)
-                 .IsRequired() // 1. BU ÇOK ÖNEMLİ: EvrakId boş olamaz (Required)
-                 .OnDelete(DeleteBehavior.Cascade); // 2. Evrak silinirse her şeyi sil
+                 .IsRequired() 
+                 .OnDelete(DeleteBehavior.Cascade); 
 
           
             modelBuilder.Entity<GidenEvrakIlgi>()
                 .HasOne(x => x.Evrak)
                 .WithMany(x => x.İlgiler)
                 .HasForeignKey(x => x.EvrakId)
-                .IsRequired() // Null olamaz dedik
+                .IsRequired() 
                 .OnDelete(DeleteBehavior.Cascade);
 
         

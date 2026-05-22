@@ -145,7 +145,7 @@
 }
 
 
-// Write your JavaScript code.
+
 /* Grid hücrelerinin menüyü kesmesini engelle */
 .k-grid td {
     overflow: visible !important;

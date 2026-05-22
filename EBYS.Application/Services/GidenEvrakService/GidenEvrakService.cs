@@ -21,7 +21,6 @@ namespace EBYS.Application.Services.GidenEvrakService
             evrak.EvrakSayisi= 0;
             evrak.IsGelenEvrak = false;
 
-            // Oluşturan kullanıcıyı GidenEvrakAkis nesnesine set et
             evrak.AkisAdimlari.Add(new GidenEvrakAkis
             {
                 KullaniciId = evrakRepository.GetContextUserId(),
@@ -32,7 +31,7 @@ namespace EBYS.Application.Services.GidenEvrakService
 
             });
 
-            // Muhatapları ekle
+          
             if (createDto.Muhataplar?.Any() == true)
             {
                 evrak.Muhataplar = mapper.Map<List<GidenEvrakMuhatap>>(createDto.Muhataplar);
@@ -147,17 +146,14 @@ namespace EBYS.Application.Services.GidenEvrakService
 
         public async Task UpdateAsync(GidenEvrakUpdateDTO updateDto)
         {
-            // 1. Evrakı tüm detaylarıyla (Muhatap, Ek, Akış vb.) çekiyoruz
+            
             var mevcutEvrak = await evrakRepository.DetayliGetirAsync(updateDto.Id);
 
             if (mevcutEvrak == null)
                 throw new Exception("Güncellenecek evrak sistemde bulunamadı.");
 
-            // 2. Temel alanları DTO'dan Entity'ye aktar (Mapping)
             mapper.Map(updateDto, mevcutEvrak);
 
-
-           
             var muhatapListesi = updateDto.Muhataplar ?? new List<GidenEvrakMuhatapSecimDTO>();
             var dtoMuhatapIds = muhatapListesi.Where(x => x.MuhatapId > 0).Select(x => x.MuhatapId).ToList();
             var silinecekMuhataplar = mevcutEvrak.Muhataplar.Where(x => !dtoMuhatapIds.Contains(x.MuhatapId)).ToList();
@@ -238,16 +234,13 @@ namespace EBYS.Application.Services.GidenEvrakService
                 }
             }
 
-            // 2. DTO'dan gelen ekleri döngüye sokuyoruz (Create ile aynı mantık)
-            //ekler güncelleme aşaması
-
 
             // 6. Rota/Akış Değişikliği Kontrolü
             if (mevcutEvrak.ImzaRotaId != updateDto.ImzaRotaId)
             {
-                mevcutEvrak.AkisAdimlari.Clear(); // Rota değişirse akış sıfırlanır, bu doğru.
+                mevcutEvrak.AkisAdimlari.Clear(); 
 
-                // Kendisini 1. Adıma Ekle
+              
                 mevcutEvrak.AkisAdimlari.Add(new GidenEvrakAkis
                 {
                     KullaniciId = evrakRepository.GetContextUserId(),
@@ -274,7 +267,7 @@ namespace EBYS.Application.Services.GidenEvrakService
                 }
             }
 
-            // 7. Veritabanına Yansıt
+          
             evrakRepository.UpdateAsync(mevcutEvrak);
             await evrakRepository.SaveAsync();
         }

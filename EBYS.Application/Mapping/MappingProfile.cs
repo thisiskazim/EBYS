@@ -16,10 +16,7 @@ namespace EBYS.Application.Mapping
         {
           
 
-            // =============================================================================
-            // 1. OKUMA YÖNÜ (Entity -> DTO) - Veritabanından ekrana veri basarken
-            // =============================================================================
-
+            
             // --- ANA LİSTE EKRANI ---
             CreateMap<GidenEvrak, GidenEvrakAkisListeDTO>()
                 .ForMember(dest => dest.OlusturanKullaniciId, opt => opt.MapFrom(src => src.OlusturanId))
@@ -59,7 +56,7 @@ namespace EBYS.Application.Mapping
 
 
             // 2. YAZMA YÖNÜ (DTO -> Entity) - Ekrandan gelen veriyi DB'ye kaydederken
-            // =============================================================================
+           
 
             // --- YENİ KAYIT (Create) ---
 
@@ -96,9 +93,9 @@ namespace EBYS.Application.Mapping
 
 
 
-            // =============================================================================
+          
             // 1. OKUMA (Entity -> DTO)
-            // =============================================================================
+      
             CreateMap<GelenEvrak, GelenEvrakListDTO>()
                 .ForMember(dest => dest.GonderenMuhatapAdi, opt => opt.MapFrom(src => src.Muhatap.Adi))
                 .ForMember(dest => dest.Olusturan, opt => opt.MapFrom(src => src.Olusturan.AdSoyad))
@@ -130,35 +127,32 @@ namespace EBYS.Application.Mapping
                 .ForMember(dest => dest.Aciklama, opt => opt.MapFrom(src => src.Aciklama));
 
 
-            // =============================================================================
+         
             // 2. YAZMA (DTO -> Entity)
-            // =============================================================================
+          
 
             // --- ANA EVRAK KAYIT/GÜNCELLEME ---
-            // Burada listeleri IGNORE ediyoruz çünkü servis katmanında manuel (foreach ile) 
-            // senkronize edeceğiz. AutoMapper'ın bu listeleri otomatik ezmesini istemiyoruz.
+           
             CreateMap<GelenEvrakCreateDTO, GelenEvrak>()
                 .ForMember(dest => dest.Ekler, opt => opt.Ignore())
                 .ForMember(dest => dest.Ilgileri, opt => opt.Ignore())
                 .ForMember(dest => dest.Sevkler, opt => opt.Ignore());
 
             CreateMap<GelenEvrakUpdateDTO, GelenEvrak>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore()) // Primary Key değişmez
+                .ForMember(dest => dest.Id, opt => opt.Ignore()) 
                 .ForMember(dest => dest.Ekler, opt => opt.Ignore())
                 .ForMember(dest => dest.Ilgileri, opt => opt.Ignore())
                 .ForMember(dest => dest.Sevkler, opt => opt.Ignore());
 
             // --- ALT NESNE DÖNÜŞÜMLERİ ---
-            // Servis içinde _mapper.Map(dtoEk, entityEk) dediğinde bunlar çalışacak.
-
-            // EK (Dosya alanlarını servis içinde ProcessFileAsync ile doldurduğumuz için IGNORE)
+            
             CreateMap<GelenEvrakEkCreateDTO, GelenEvrakEk>()
                 .ForMember(dest => dest.DosyaVerisi, opt => opt.Ignore())
                 .ForMember(dest => dest.DosyaUzantisi, opt => opt.Ignore())
                 .ForMember(dest => dest.MimeType, opt => opt.Ignore());
 
             CreateMap<GelenEvrakEkUpdateDTO, GelenEvrakEk>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore()) // Liste içinde update yaparken ID sabit kalmalı
+                .ForMember(dest => dest.Id, opt => opt.Ignore()) 
                 .ForMember(dest => dest.DosyaVerisi, opt => opt.Ignore())
                 .ForMember(dest => dest.DosyaUzantisi, opt => opt.Ignore())
                 .ForMember(dest => dest.MimeType, opt => opt.Ignore());
@@ -231,7 +225,7 @@ namespace EBYS.Application.Mapping
                 .ForMember(dest => dest.AdSoyad, opt => opt.MapFrom(src => $"{src.Ad} {src.Soyad}"))
                 .ForMember(dest => dest.RolAdi, opt => opt.MapFrom(src => src.Rol.RolAdi));
 
-            // ImzaRotaAdimi'ndan DTO'ya dönüşürken kuralları tanımlıyoruz
+          
             CreateMap<ImzaRotaAdimi, ImzaRotaAdimlariUpdateDTO>()
                 .ForMember(dest => dest.AdSoyad, opt => opt.MapFrom(src => $"{src.Kullanici.Ad} {src.Kullanici.Soyad}"))
                 .ForMember(dest => dest.RolAdi, opt => opt.MapFrom(src => src.Kullanici.Rol.RolAdi))
@@ -246,79 +240,3 @@ namespace EBYS.Application.Mapping
 }
 
 
-
-
-
-////EVRAK MAPPİNG
-//// --- 1. LİSTELEME EKRANI (Entity -> DTO) ---
-//// Evraklar hareketleri
-//CreateMap<GidenEvrak, GidenEvrakAkisListeDTO>()
-//    .ForMember(dest => dest.OlusturanKullaniciId, opt => opt.MapFrom(src => src.OlusturanId))
-//    .ForMember(dest => dest.OlusturanKullanici, opt => opt.MapFrom(src => src.Olusturan.AdSoyad))
-//    .ForMember(dest => dest.SuAnKimde, opt => opt.MapFrom(src => src.AkisAdimlari.FirstOrDefault(a => a.SiradakiMi).Kullanici.AdSoyad ?? "Tamamlandı"))
-//    .ForMember(dest => dest.FullKonuKodu, opt => opt.MapFrom(src => $"{src.EvrakKonuKodu.KodNumber} - {src.EvrakKonuKodu.KodAdi}")
-//    );
-
-//CreateMap<GidenEvrakAkis, GidenEvrakAkisHareketleriDTO>().ForMember(dest => dest.KullaniciAdSoyad, opt => opt.MapFrom(src => src.Kullanici.AdSoyad));
-
-//// --- 2. DÜZENLEME EKRANI (Entity -> DTO) ---
-
-//// Alt listelerin (İlgiler, Muhataplar, Ekler) Entity'den DTO'ya dönüşebilmesi için bunlar ŞART:
-//CreateMap<GidenEvrakIlgi, GidenEvrakIlgiUpdateDTO>();
-
-//// Diğer Muhatap -> DTO eşleşmelerini sil, sadece bu kalsın:
-//CreateMap<GidenEvrakMuhatap, GidenEvrakMuhatapSecimDTO>()
-//    .ForMember(dest => dest.MuhatapId, opt => opt.MapFrom(src => src.MuhatapId))
-//    .ForMember(dest => dest.IsBilgi, opt => opt.MapFrom(src => src.IsBilgi))
-//    .ForMember(dest => dest.Adi, opt => opt.MapFrom(src => src.Muhatap.Adi));
-//CreateMap<GidenEvrakEk, GidenEvrakEkUpdateDTO>();
-
-
-
-
-
-//// --- 3. KAYDETME VE GÜNCELLEME (DTO -> Entity) ---
-//// Ekrandan gelen veriyi veritabanına yazarken kullanılır.
-
-//// Yeni Kayıt
-//CreateMap<GidenEvrakCreateDTO, GidenEvrak>()
-//    .ForMember(dest => dest.İlgiler, opt => opt.Ignore())
-//    .ForMember(dest => dest.Muhataplar, opt => opt.Ignore())
-//    .ForMember(dest => dest.Ekler, opt => opt.Ignore());
-
-//// Güncelleme
-//CreateMap<GidenEvrakUpdateDTO, GidenEvrak>()
-//    .ForMember(dest => dest.Id, opt => opt.Ignore())
-//    .ForMember(dest => dest.İlgiler, opt => opt.Ignore())
-//    .ForMember(dest => dest.Muhataplar, opt => opt.Ignore())
-//    .ForMember(dest => dest.Ekler, opt => opt.Ignore());
-
-
-//CreateMap<GidenEvrak, GidenEvrakUpdateDTO>()
-//  .ForMember(dest => dest.Ilgiler, opt => opt.MapFrom(src => src.İlgiler))
-//  .ForMember(dest => dest.Muhataplar, opt => opt.MapFrom(src => src.Muhataplar))
-//  .ForMember(dest => dest.Ekler, opt => opt.MapFrom(src => src.Ekler));
-
-
-//// Alt listelerin DTO'dan Entity'ye dönüşebilmesi için (Service içinde Map yaparken):
-//CreateMap<GidenEvrakIlgiCreateDTO, GidenEvrakIlgi>();
-//CreateMap<GidenEvrakIlgiUpdateDTO, GidenEvrakIlgi>();
-//CreateMap<GidenEvrakEkCreateDTO, GidenEvrakEk>();
-//CreateMap<GidenEvrakEkUpdateDTO, GidenEvrakEk>();
-//CreateMap<GidenEvrakMuhatapSecimDTO, GidenEvrakMuhatap>();
-
-//// Entity -> EvrakEkListDTO (Görüntüleme için)
-//CreateMap<GidenEvrakEk, GidenEvrakListDTO>();
-
-//// Entity -> EvrakEkBaseDTO (Gerekirse genel kullanım için)
-//CreateMap<GidenEvrakEk, GidenEvrakEkBaseDTO>();
-
-//// CreateDTO -> Entity (Kaydetme için)
-//CreateMap<GidenEvrakEkCreateDTO, GidenEvrakEk>()
-//    .ForMember(dest => dest.DosyaVerisi, opt => opt.Ignore()) // Dosyayı elle işleyeceğiz
-//    .ForMember(dest => dest.DosyaUzantisi, opt => opt.Ignore())
-//    .ForMember(dest => dest.MimeType, opt => opt.Ignore());
-
-//// UpdateDTO -> Entity (Güncelleme için)
-//CreateMap<GidenEvrakEkUpdateDTO, GidenEvrakEk>()
-//    .ForMember(dest => dest.DosyaVerisi, opt => opt.Ignore());
