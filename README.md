@@ -71,7 +71,7 @@ Projeyi yerel bilgisayarınızda çalıştırmak için aşağıdaki adımları t
 ## 🖼️ Görünümler
    1. **Giden Evrak İçin Bazı Görünümler:**
     ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/evrak-olustur.png)
-     ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/alıcı-ekle.png)
+    ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/alıcı-ekle.png)
     ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/evrak-gorunum.png)
     ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/imza-bekleyen.png)
     ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/evrak-akıs-gecmisi.png)
