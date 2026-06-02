@@ -68,7 +68,8 @@ Projeyi yerel bilgisayarınızda çalıştırmak için aşağıdaki adımları t
    dotnet ef database update
    ```
 
-   1. **Giden Evrak İçin Bazı Görüntüler:**
+## 🖼️ Görünümler
+   1. **Giden Evrak İçin Bazı Görünümler:**
     ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/evrak-olustur.png)
     ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/evrak-gorunum.png)
     ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/imza-bekleyen.png)
@@ -76,12 +77,12 @@ Projeyi yerel bilgisayarınızda çalıştırmak için aşağıdaki adımları t
     ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/imzaya-gonderdiklerim.png)
     ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/imza-rota.png)
  
-   2. **Gelen Evrak İçin Bazı Görüntüler:**
+   2. **Gelen Evrak İçin Bazı Görünümler:**
     ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/gelen-evrak-kayıt.png)
     ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/gelen-evrak-liste.png)
 
-   3. **Diğer Bazı Görüntüler:**
-    ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/kurum-ekleme.png)
+   3. **Diğer Bazı Görünümler:**
+    ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/evrak-onizleme.png)
     ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/api2.png)
 
 
