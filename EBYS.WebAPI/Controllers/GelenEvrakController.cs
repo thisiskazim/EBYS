@@ -59,6 +59,21 @@ namespace EBYS.WebAPI.Controllers
 
         }
 
+        [HttpDelete("EvrakSil/{id}")]
+        public async Task<IActionResult> EvrakSil(int id)
+        {
+            try
+            {
+                await evrakServive.DeleteAsync(id);
+                return Ok("Evrak silindi");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
         [HttpGet("EvrakGetir/{id}")]
         public async Task<IActionResult> EvrakGetirGetById(int id)
         {

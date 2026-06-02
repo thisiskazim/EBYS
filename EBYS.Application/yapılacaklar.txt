@@ -1,6 +1,0 @@
-﻿dotnet ef migrations add UpdateGelenEvrakSevk1 --project EBYS.Persistence --startup-project EBYS.WebAPI
-dotnet ef database update --project EBYS.Persistence --startup-project EBYS.WebAPI
-
-
-//
-giden evrak liste dto yu oluştur 

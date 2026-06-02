@@ -26,7 +26,7 @@ namespace EBYS.Persistence.Repository
 
         public async Task<int> KayitNumarasiOlustur(int yil)
         {
-            return await _context.GelenEvraklar.CountAsync(x => x.DefterTarihi.Year == yil);
+            return await _context.GelenEvraklar.CountAsync(x => x.EvrakTarihi.Year == yil);
         }
 
         public async Task<GelenEvrak> DetayliGetirByIdAsync(int id)

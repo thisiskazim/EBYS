@@ -83,7 +83,7 @@
             _ajaxCallFormData(action, formData).done(function (response) {
                 showNotification("Gelen evrak başarıyla kaydedildi.", "success");
                 setTimeout(function () {
-                    window.location.href = "/GelenEvrak/Liste";
+                    window.location.href = "/GelenEvrak/GelenEvrakListe";
                 }, 1000);
             });
         },

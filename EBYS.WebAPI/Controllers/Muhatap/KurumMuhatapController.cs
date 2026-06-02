@@ -5,7 +5,7 @@ using EBYS.Application.Services;
 using EBYS.Domain.Entities;
 using EBYS.Persistence;
 using Kendo.Mvc.Extensions;
-using Kendo.Mvc.UI; // Kendo paketini kurmuş olmalısın
+using Kendo.Mvc.UI; 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

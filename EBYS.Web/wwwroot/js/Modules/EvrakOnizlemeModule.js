@@ -23,15 +23,14 @@
             var self = this;
             var dialog = $("#onizlemeDialog").data("kendoDialog");
 
-            // 1. Önce Dialog'u açıyoruz
+         
             dialog.open();
             $("#onizleme-yukleniyor").show();
-            $("#pdf-frame-popup").attr("src", "about:blank"); // Sıfırla
+            $("#pdf-frame-popup").attr("src", "about:blank");
 
             var url = _apiBaseUrl+ "EvrakOnizleme/EkGoruntule/" + evrakTipi + "/" + ekId;
 
 
-            // 2. Veriyi çekiyoruz
             var xhr = new XMLHttpRequest();
             xhr.open("GET", url, true);
             xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem("token"));
@@ -42,10 +41,10 @@
                     var blob = new Blob([this.response], { type: 'application/pdf' });
                     var fileURL = URL.createObjectURL(blob);
 
-                    // Dialog zaten açık, ama render için milisaniyelik bir es veriyoruz
+                 
                     setTimeout(function () {
                         var $iframe = $("#pdf-frame-popup");
-                        // URL'nin sonuna fit ekleyerek tam sığmasını sağlayalım
+                 
                         $iframe.attr("src", fileURL + "#view=FitH");
                         $("#onizleme-yukleniyor").hide();
                     }, 100);

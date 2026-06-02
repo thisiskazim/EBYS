@@ -22,7 +22,7 @@ namespace EBYS.Persistence.Services
         }
         public string CreateToken(Kullanici kullanici)
         {
-            // appsettings.json içerisindeki JwtSettings bölümünü okuyoruz
+           
             var secretKey = _config["JwtSettings:Secret"];
             var issuer = _config["JwtSettings:Issuer"];
             var audience = _config["JwtSettings:Audience"];
@@ -30,8 +30,7 @@ namespace EBYS.Persistence.Services
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            // Token içerisine gömülecek bilgiler (Claims)
-            // KurumId burada mühürlendiği için CurrentUserService bunu okuyabilir.
+      
             var claims = new List<Claim>
             {
                 new Claim("UserId", kullanici.Id.ToString()),

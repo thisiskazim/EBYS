@@ -25,7 +25,7 @@ namespace EBYS.WebAPI.Controllers
         public IActionResult Login([FromBody] LoginDTO loginDto)
         {
 
-            // Kullanıcıyı veritabanından bul (Şimdilik düz şifre kontrolü)
+           
             var user = _context.Kullanicilar
                 .Include(x => x.Rol)
                 .IgnoreQueryFilters()
@@ -34,13 +34,12 @@ namespace EBYS.WebAPI.Controllers
             if (user == null)
                 return Unauthorized("Kimlik numarası veya şifre hatalı.");
 
-            // Token üret
             var token = _tokenService.CreateToken(user);
 
             return Ok(new { Token = token });
         }
 
-        [Authorize] // Sadece giriş yapmış kullanıcılar çıkış yapabilir
+        [Authorize] 
         [HttpPost("logout")]
         public IActionResult Logout()
         {

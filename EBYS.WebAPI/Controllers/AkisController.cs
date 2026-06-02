@@ -51,9 +51,9 @@ namespace EBYS.WebAPI.Controllers
             var sonuc = await akisService.OnaylaAsync(id);
 
             if (sonuc.BasariliMi)
-                return Ok(sonuc); // 200 döner
+                return Ok(sonuc); 
 
-            return BadRequest(sonuc); // 400 döner ve içindeki mesajı verir
+            return BadRequest(sonuc); 
         }
 
         [HttpGet("imzaya-gonderdiklerim")]

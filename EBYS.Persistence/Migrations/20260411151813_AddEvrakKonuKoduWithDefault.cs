@@ -9,14 +9,13 @@ namespace EBYS.Persistence.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            // 1. Önce mevcut kısıtlamaları (Foreign Key) kaldırıyoruz (Güncelleme için)
+        
             migrationBuilder.DropForeignKey(name: "FK_Evraklar_ImzaRotalar_ImzaRotaId", table: "Evraklar");
             migrationBuilder.DropForeignKey(name: "FK_Evraklar_Kullanicilar_OlusturanId", table: "Evraklar");
 
-            // 2. Gereksiz kolonu siliyoruz
             migrationBuilder.DropColumn(name: "DosyaYolu", table: "EvrakEkler");
 
-            // 3. Konu Kodları tablosunu oluşturuyoruz
+     
             migrationBuilder.CreateTable(
                 name: "EvrakKonuKodlari",
                 columns: table => new
@@ -31,10 +30,10 @@ namespace EBYS.Persistence.Migrations
                     table.PrimaryKey("PK_EvrakKonuKodlari", x => x.Id);
                 });
 
-            // 4. Varsayılan kayıt ekliyoruz (ID: 1)
+          
             migrationBuilder.Sql("INSERT INTO \"EvrakKonuKodlari\" (\"Id\", \"KodNumber\", \"KodAdi\") VALUES (1, '000.00', 'Tanımlanmamış / Eski Evrak')");
 
-            // 5. Evraklar tablosuna KonuKoduId kolonunu 1 varsayılan değeriyle ekliyoruz
+       
             migrationBuilder.AddColumn<int>(
                 name: "KonuKoduId",
                 table: "Evraklar",
@@ -42,13 +41,12 @@ namespace EBYS.Persistence.Migrations
                 nullable: false,
                 defaultValue: 1);
 
-            // 6. Index oluşturuyoruz
+        
             migrationBuilder.CreateIndex(
                 name: "IX_Evraklar_KonuKoduId",
                 table: "Evraklar",
                 column: "KonuKoduId");
 
-            // 7. Yeni Foreign Key'i (Konu Kodu) ekliyoruz
             migrationBuilder.AddForeignKey(
                 name: "FK_Evraklar_EvrakKonuKodlari_KonuKoduId",
                 table: "Evraklar",
@@ -57,7 +55,7 @@ namespace EBYS.Persistence.Migrations
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
 
-            // 8. Diğer Foreign Key'leri "Restrict" olacak şekilde geri bağlıyoruz
+       
             migrationBuilder.AddForeignKey(
                 name: "FK_Evraklar_ImzaRotalar_ImzaRotaId",
                 table: "Evraklar",

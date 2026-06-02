@@ -29,7 +29,7 @@
             }).data("kendoGrid");
         },
 
-        // ALT KISIM: Yan ekler için dosya seçildiğinde (Giden evrakla aynı)
+      
         ekDosyaSecildi: function (input) {
             if (input.files && input.files[0]) {
                 _tempFile = input.files[0];
@@ -38,7 +38,7 @@
             }
         },
 
-        // Grid'e ekleme (Giden evrakla aynı)
+    
         ekEkle: function () {
             var ad = $("#EkAdi").val();
             if (!ad && !_tempFile) return;
