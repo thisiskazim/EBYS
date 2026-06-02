@@ -3,6 +3,7 @@
 using EBYS.Application.DTOs;
 using EBYS.Application.DTOs.EvrakDTO;
 using EBYS.Application.DTOs.GelenEvrakDTO;
+using EBYS.Application.DTOs.ImzaRotaDTO;
 using EBYS.Application.DTOs.MuhatapDTO;
 using EBYS.Domain.Entities;
 using EBYS.Domain.Entities.GelenEvrak;
@@ -33,39 +34,37 @@ namespace EBYS.Application.Mapping
 
 
             // --- DÜZENLEME (Edit) FORMU DOLDURMA ---
-            // Kullanıcı "Düzenle" dediğinde DB'deki veriyi UpdateDTO'ya doldurur
+      
             CreateMap<GidenEvrak, GidenEvrakUpdateDTO>()
                 .ForMember(dest => dest.Ilgiler, opt => opt.MapFrom(src => src.İlgiler))
                 .ForMember(dest => dest.Muhataplar, opt => opt.MapFrom(src => src.Muhataplar))
                 .ForMember(dest => dest.Ekler, opt => opt.MapFrom(src => src.Ekler));
 
-            // Alt parçaların Entity'den DTO'ya dönüşebilmesi için (Okuma):
+           
             CreateMap<GidenEvrakIlgi, GidenEvrakIlgiUpdateDTO>();
             CreateMap<GidenEvrakEk, GidenEvrakEkUpdateDTO>();
             CreateMap<GidenEvrakMuhatap, GidenEvrakMuhatapSecimDTO>()
                 .ForMember(dest => dest.Adi, opt => opt.MapFrom(src => src.Muhatap.Adi));
 
-            // Ekstra: Sadece görüntüleme amaçlı Ek DTO'ları
+           
             CreateMap<GidenEvrakEk, GidenEvrakListDTO>();
             CreateMap<GidenEvrakEk, GidenEvrakEkBaseDTO>();
-
-
             CreateMap<GidenEvrakEk, EvrakOnizlemeBaseDTO>();
 
       
 
 
-            // 2. YAZMA YÖNÜ (DTO -> Entity) - Ekrandan gelen veriyi DB'ye kaydederken
+            // 2. YAZMA YÖNÜ (DTO -> Entity) 
            
 
-            // --- YENİ KAYIT (Create) ---
+            // --- YENİ KAYIT
 
             CreateMap<GidenEvrakCreateDTO, GidenEvrak>()
                 .ForMember(dest => dest.İlgiler, opt => opt.Ignore())
                 .ForMember(dest => dest.Muhataplar, opt => opt.Ignore())
                 .ForMember(dest => dest.Ekler, opt => opt.Ignore());
 
-            // --- GÜNCELLEME (Update) ---
+            // --- GÜNCELLEME 
            
             CreateMap<GidenEvrakUpdateDTO, GidenEvrak>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
@@ -73,7 +72,7 @@ namespace EBYS.Application.Mapping
                 .ForMember(dest => dest.Muhataplar, opt => opt.Ignore())
                 .ForMember(dest => dest.Ekler, opt => opt.Ignore());
 
-            // --- ALT LİSTELERİN KAYIT DÖNÜŞÜMLERİ ---
+            // --- ALT LİSTELERİN KAYIT DÖNÜŞÜMLERİ 
             CreateMap<GidenEvrakIlgiCreateDTO, GidenEvrakIlgi>();
             CreateMap<GidenEvrakIlgiUpdateDTO, GidenEvrakIlgi>();
             CreateMap<GidenEvrakMuhatapSecimDTO, GidenEvrakMuhatap>();
@@ -94,7 +93,7 @@ namespace EBYS.Application.Mapping
 
 
           
-            // 1. OKUMA (Entity -> DTO)
+            // 1. OKUMA 
       
             CreateMap<GelenEvrak, GelenEvrakListDTO>()
                 .ForMember(dest => dest.GonderenMuhatapAdi, opt => opt.MapFrom(src => src.Muhatap.Adi))
@@ -114,7 +113,7 @@ namespace EBYS.Application.Mapping
                 .ForMember(dest => dest.Ekler, opt => opt.MapFrom(src => src.Ekler))
                 .ForMember(dest => dest.Ilgiler, opt => opt.MapFrom(src => src.Ilgileri));
 
-            // Alt listelerin okunabilmesi için:
+            
             CreateMap<GelenEvrakEk, GelenEvrakEkUpdateDTO>();
             CreateMap<GelenEvrakIlgi, GelenEvrakIlgiUpdateDTO>();
             CreateMap<GelenEvrakEk, GelenEvrakEkBaseDTO>();
@@ -128,10 +127,10 @@ namespace EBYS.Application.Mapping
 
 
          
-            // 2. YAZMA (DTO -> Entity)
+            // 2. YAZMA 
           
 
-            // --- ANA EVRAK KAYIT/GÜNCELLEME ---
+            // --- ANA EVRAK KAYIT
            
             CreateMap<GelenEvrakCreateDTO, GelenEvrak>()
                 .ForMember(dest => dest.Ekler, opt => opt.Ignore())
@@ -199,7 +198,7 @@ namespace EBYS.Application.Mapping
             CreateMap<TuzelKisiMuhatapUpdateDTO, TuzelKisiMuhatap>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore()).ReverseMap();
 
-            //
+        
             
 
             //İMZA ROTA 

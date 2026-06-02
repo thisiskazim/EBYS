@@ -1,4 +1,4 @@
-﻿using EBYS.Application.DTOs;
+﻿using EBYS.Application.DTOs.ImzaRotaDTO;
 using EBYS.Application.Interfaces.IService;
 using Microsoft.AspNetCore.Mvc;
 

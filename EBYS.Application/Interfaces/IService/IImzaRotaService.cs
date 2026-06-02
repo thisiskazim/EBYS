@@ -1,4 +1,4 @@
-﻿using EBYS.Application.DTOs;
+﻿using EBYS.Application.DTOs.ImzaRotaDTO;
 using EBYS.Domain.Entities;
 using System;
 using System.Collections.Generic;

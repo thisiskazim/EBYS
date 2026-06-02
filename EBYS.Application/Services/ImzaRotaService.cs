@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using EBYS.Application.DTOs;
+using EBYS.Application.DTOs.ImzaRotaDTO;
 using EBYS.Application.Interfaces.IService;
 using EBYS.Application.Interfaces.Repository;
 using EBYS.Domain.Entities;

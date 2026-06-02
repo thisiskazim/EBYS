@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EBYS.Application.DTOs
+namespace EBYS.Application.DTOs.ImzaRotaDTO
 {
     public class ImzaRotaAdimlariBaseDTO
     {
