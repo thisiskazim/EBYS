@@ -6,6 +6,7 @@ using EBYS.Application.Interfaces.IService.IGelenEvrakService;
 using EBYS.Application.Interfaces.Repository;
 using EBYS.Domain.Entities.GelenEvrak;
 using EBYS.Domain.Enum;
+using EBYS.Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using System.Runtime.InteropServices;
 
@@ -160,7 +161,7 @@ namespace EBYS.Application.Services.GelenEvrakService
 
                 if (mevcutEvrak == null)
                 {
-                    throw new Exception("Güncellenecek evrak bulunamadı.");
+                    throw new EvrakHareketiBulunamadi();
                 }
 
                 mapper.Map(updateDto, mevcutEvrak);
@@ -281,12 +282,8 @@ namespace EBYS.Application.Services.GelenEvrakService
             }
             catch (Exception ex)
             {
-                var message = ex.InnerException?.Message ?? ex.Message;
-                throw new Exception("Veritabanı Hatası: " + message);
+                throw new Exception(ex.Message);
             }
-           
-
-
 
         }
 

@@ -1,7 +1,14 @@
-﻿var EvrakGonderdiklerimModule = (function () {
+﻿var GidenEvrakListModule = (function () {
     var _grid = null;
-    var _apiBaseUrl = "https://localhost:7060/api/Akis/";
+    var _onizlemeDialog = null;
+    var _apiBaseUrl = "https://localhost:7060/api/";
+    var _aktifOlanFiltre = null;
 
+    var _enumMap = {
+        'tamamlananlar': 2,
+        'iade': 3,   
+    
+    };
     var _ajaxCall = function (url, type, data) {
         return $.ajax({
             url: _apiBaseUrl + url,
@@ -12,6 +19,8 @@
                 var msg = "Sistem hatası oluştu.";
                 if (err.responseJSON && err.responseJSON.mesaj) {
                     msg = err.responseJSON.mesaj;
+                } else if (err.responseText) {
+                    msg = err.responseText;
                 }
                 showNotification(msg, "error");
             }
@@ -25,20 +34,20 @@
         },
 
         initGrid: function () {
-            // HTML'deki id ile aynı olmalı: gridGonderdiklerim
-            _grid = $("#gridGonderdiklerim").kendoGrid({
-                noRecords: { template: "<div class='p-5 text-center text-muted'>Gönderilmiş evrak bulunamadı.</div>" },
+            _grid = $("#gridGidenEvraklar").kendoGrid({
+                noRecords: { template: "<div class='p-5 text-center text-muted'>Kayıtlı gelen evrak bulunamadı.</div>" },
                 sortable: true,
-                pageable: { pageSize: 10, buttonCount: 5 },
-                columns: [
-                      {
+                resizable: true,
+                pageable: { pageSize: 15, refresh: true, buttonCount: 5 },
+                columns: [  
+                    {
                         title: "DOSYALAR",
                         width: "200px",
                         template: function (dataItem) {
                             var ekListesi = dataItem.ekler || [];
                             if (ekListesi.length === 0) return "<span class='text-muted small'>Dosya yok</span>";
 
-                            var html = `<div class='evrak-dosya-konteynir' onclick='EvrakOnizlemeModule.toggleEkler(this)'>
+                            var html = `<div class='evrak-dosya-konteynir' onclick='GelenEvrakListModule.toggleEkler(this)'>
                         <div class='small fw-bold text-info'>
                             <i class='fas fa-folder me-1'></i>${ekListesi.length} Adet Dosya
                             <i class='fas fa-chevron-down float-end mt-1 small'></i>
@@ -47,9 +56,9 @@
 
                             ekListesi.forEach(function (ek) {
                                 var uzanti = ek.dosyaUzantisi || "";
-                                var icon = EvrakOnizlemeModule.getIconByExtension(uzanti);
+                                var icon = GelenEvrakListModule.getIconByExtension(uzanti);
                                 var action = uzanti.toLowerCase().includes("pdf")
-                                    ? `EvrakOnizlemeModule.ac(${ek.id}, 'giden')`
+                                    ? `EvrakOnizlemeModule.ac(${ek.id}, 'gelen')`
                                     : `EvrakOnizlemeModule.dosyaIndir(${ek.id})`;
 
                                 html += `<div class='mb-1'>
@@ -62,77 +71,77 @@
                         }
                     },
                     {
-                        field: "konu",
-                        title: "Evrak Konusu",
-                        width: "250px",
-                        template: "<strong>#: konu #</strong>"
-                    },
-                    {
-                        field: "fullKonuKodu",
-                        title: "Konu Kodu",
-                        width: "150px",
-                        template: "<span class='badge bg-light text-dark border'>#: fullKonuKodu #</span>"
-                    },
-                    {
-                        field: "suAnKimde",
-                        title: "Durum / Şu An Kimde",
-                        width: "180px",
-                        template: "<i class='fas fa-user-clock text-primary me-2'></i>#: suAnKimde #"
-                    },
-                    {
-                        field: "creat_time",
-                        title: "Gönderim Tarihi",
-                        width: "150px",
-                        template: "#= kendo.toString(kendo.parseDate(creat_time), 'dd.MM.yyyy HH:mm') #"
-                    },
-                    {
                         title: "Hareketler",
                         width: "120px",
                         attributes: { style: "text-align: center" },
-                        template: `<button class='btn btn-outline-info btn-sm' onclick='EvrakGonderdiklerimModule.history("#: id #")'>
+                        template: `<button class='btn btn-outline-info btn-sm' onclick='GidenEvrakListModule.history("#: id #")'>
                                     <i class='fas fa-history'></i> Hareketler
                                    </button>`
                     },
                     {
-                        title: "İşlemler",
-                        width: "100px",
-                        attributes: { style: "text-align: center" },
-                        template: function (dataItem) {
-                            if (dataItem.geriCekilebilirMi) {
-                                // DİKKAT: dataItem.id değil, dataItem.Id (Büyük I)
-                                return `<button class='btn btn-warning btn-sm' onclick='EvrakGonderdiklerimModule.geriCek("${dataItem.id}")'>
-                                              <i class='fas fa-undo'></i> Geri Çek
-                                         </button>`;
-                            }
-                            return `<span class='badge bg-secondary opacity-75'>Geri Alınamaz</span>`;
-                        }
+                        field: "olusturanKullanici",
+                        title: "Oluşturan",
+                        template: "<div class='d-flex align-items-center'>#: olusturanKullanici #</div>",
+                        width: "120px"
+                    },
+                    {
+                        field: "konu",
+                        title: "Konu",
+                        width: "200px",
+                        template: "<div>#: konu #</div>"
+                    },
+                    {
+                        field: "fullKonuKodu",
+                        title: "Konu Kodu",
+                        width: "200px",
+                        template: "<span class='badge bg-light text-dark border'>#: fullKonuKodu #</span>"
+                    },
+                    {
+                        field: "creat_time",
+                        title: "Oluşturma Zamanı",
+                        width: "250px",
+                        template: "#= creat_time ? kendo.toString(kendo.parseDate(creat_time), 'dd.MM.yyyy HH:mm') : '' #"
                     }
-                ],
-                dataSource: { data: [] }
+                 
+                ]
             }).data("kendoGrid");
         },
 
-      
         loadData: function () {
-            var $gridEl = $("#gridGonderdiklerim");
-            kendo.ui.progress($gridEl, true); 
+            kendo.ui.progress($("#gridGidenEvraklar"), true);
+            var formData = new FormData();
 
-          
-            _ajaxCall('imzaya-gonderdiklerim', 'GET')
-                .done(function (res) {
-               
-                    _grid.dataSource.data(res);
-                })
-                .always(function () {
-                    kendo.ui.progress($gridEl, false); 
-                });
+            if (_aktifOlanFiltre !== null) {
+                formData.append("durum", _aktifOlanFiltre);
+            }
+
+            $.ajax({
+                url: _apiBaseUrl + "GidenEvrak/EvrakListele",
+                type: "POST",
+                data: formData, 
+                processData: false, 
+                contentType: false, 
+                success: function (response) {
+                    $("#gridGidenEvraklar").data("kendoGrid").dataSource.data(response);
+                },
+                error: function (xhr) {
+                    alert("Hata oluştu: " + xhr.responseText);
+                },
+                complete: function () {
+                    kendo.ui.progress($("#gridGidenEvraklar"), false);
+                }
+            });
+   
+        },
+        dosyaIndir: function (ekId) {
+            window.location.href = _apiBaseUrl + "GidenEvrak/DosyaIndir/" + ekId;
         },
 
-        history: function (id) {    
+        history: function (id) {
             var self = this;
-            _ajaxCall('evrak-hareketleri/' + id, 'GET').done(function (res) {
+            _ajaxCall('Akis/evrak-hareketleri/' + id, 'GET').done(function (res) {
 
-             
+
                 var winElement = $("#historyWindow");
                 var win = winElement.data("kendoWindow");
 
@@ -146,14 +155,14 @@
                     }).data("kendoWindow");
                 }
 
-             
+
                 var gridElement = $("#historyGrid");
                 if (gridElement.data("kendoGrid")) {
-                    gridElement.data("kendoGrid").destroy(); 
-                    gridElement.empty(); 
+                    gridElement.data("kendoGrid").destroy();
+                    gridElement.empty();
                 }
 
-               
+
                 gridElement.kendoGrid({
                     dataSource: {
                         data: res,
@@ -195,22 +204,29 @@
                 win.center().open();
             });
         },
+       
+        tabFiltrele: function (tabKey) {
+            _aktifOlanFiltre = _enumMap[tabKey];
+            GelenEvrakListModule.loadData();
+        },
 
-        geriCek: function (id) {
-            if (!confirm("Bu evrakı geri çekmek istediğinize emin misiniz?")) return;
+        getIconByExtension: function (ext) {
+            if (!ext) return "fas fa-file text-secondary";
+            ext = ext.toLowerCase();
+            if (ext.includes("pdf")) return "fas fa-file-pdf text-danger";
+            if (ext.includes("xls")) return "fas fa-file-excel text-success";
+            if (ext.includes("doc")) return "fas fa-file-word text-primary";
+            if (ext.includes("jpg") || ext.includes("png")) return "fas fa-file-image text-warning";
+            return "fas fa-file text-secondary";
+        },
+        toggleEkler: function (element) {
+            var list = $(element).find('.ek-listesi-gizli');
+            var icon = $(element).find('.fa-chevron-down, .fa-chevron-up');
 
-            _ajaxCall('GeriCek/' + id, 'POST').done(function (response) {
-                if (response.basariliMi) {
-                    showNotification(response.mesaj, "success");
-                    EvrakGonderdiklerimModule.loadData();
-                } else {
-                    showNotification(response.mesaj, "warning");
-                }
-            });
+            list.slideToggle('fast');
+            icon.toggleClass('fa-chevron-down fa-chevron-up');
         }
     };
 })();
 
-$(document).ready(function () {
-    EvrakGonderdiklerimModule.init();
-});
+$(document).ready(() => GidenEvrakListModule.init());

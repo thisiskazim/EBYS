@@ -26,3 +26,4 @@ namespace EBYS.Application.DTOs.EvrakDTO
         public string KullaniciAdSoyad { get; set; }
     }
 }
+

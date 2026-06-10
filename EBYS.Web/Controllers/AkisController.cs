@@ -16,5 +16,10 @@ namespace EBYS.Web.Controllers
         {
             return View();
         }
+
+        public IActionResult TumGidenEvraklarListele()
+        {
+            return View();
+        }
     }
 }

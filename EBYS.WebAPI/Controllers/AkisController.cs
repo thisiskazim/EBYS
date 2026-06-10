@@ -43,8 +43,6 @@ namespace EBYS.WebAPI.Controllers
 
         }
 
-
-
         [HttpPost("Onayla/{id}")]
         public async Task<IActionResult> EvrakOnayla(int id)
         {

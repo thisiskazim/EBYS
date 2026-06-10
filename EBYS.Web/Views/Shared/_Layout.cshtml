@@ -181,11 +181,49 @@
 
 
 
-    function showNotification(msg, type) {
-        var notification = $("#notification").data("kendoNotification");
-        notification.show({ message: msg }, type);
-    }
+    // function showNotification(msg, type) {
+    //     var notification = $("#notification").data("kendoNotification");
+    //     notification.show({ message: msg }, type);
+    // }
    
+    function showNotification(msg, type) {
+    var notification = $("#notification").data("kendoNotification");
+    if (!notification) return;
+
+    // Eğer gelen mesaj bir string ise ve içinde bizim API'nin JSON formatı varsa (örn: {"title": )
+    if (typeof msg === "string" && msg.trim().startsWith("{") && msg.includes("detail")) {
+        try {
+            // Ham metni (JSON string) Javascript nesnesine çeviriyoruz
+            var errorObj = JSON.parse(msg);
+
+            // 1. Durum: FluentValidation'dan gelen dizi (Array) halindeki hata listesi
+            if (errorObj && errorObj.detail && Array.isArray(errorObj.detail)) {
+                // Tüm hata mesajlarını bulup aralarına <br/> (satır başı) koyarak birleştiriyoruz
+                var combinedMessages = errorObj.detail.map(function (err) {
+                    return err.message; // Örn: "Konu alanı boş olamaz."
+                }).join("<br/>");
+
+                notification.show({ message: combinedMessages }, type);
+                return; // İşlem bitti, fonksiyondan çık
+            }
+            
+            // 2. Durum: Senin if (veri == null) throw new ... ile fırlattığın düz iş kuralı/404 hataları
+            if (errorObj && errorObj.detail && typeof errorObj.detail === "string") {
+                notification.show({ message: errorObj.detail }, type);
+                return; // İşlem bitti, fonksiyondan çık
+            }
+        } catch (e) {
+            // Eğer JSON parse ederken beklenmedik bir durum oluşursa kod patlamasın, düz metin gibi devam etsin
+        }
+    }
+
+    // Eğer gelen veri normal bir yazı ise (örn: "Lütfen önce kurum seçiniz!" veya response.mesaj)
+    // Sistem eski usul tıkır tıkır çalışmaya devam eder, hiçbir eski sayfan bozulmaz:
+    notification.show({ message: msg }, type);
+}
+
+
+
    var AuthModule = (function () {
     return {
         // 1. Token içindeki bilgileri (Payload) çözen fonksiyon
