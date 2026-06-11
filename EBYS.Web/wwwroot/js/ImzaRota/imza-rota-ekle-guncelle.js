@@ -2,22 +2,6 @@
 var ImzaRotaModule = (function () {
 
     var _grid = null;
-    var _apiBaseUrl = "https://localhost:7060/api/ImzaRota/";
-
-
-
-    var _ajaxCall = function (url, type, data) {
-        return $.ajax({
-            url: _apiBaseUrl + url,
-            type: type,
-            contentType: "application/json",
-            data: data ? JSON.stringify(data) : null,
-            error: function (err) {
-                var msg = err && err.responseText ? err.responseText : "Bir hata oluştu.";
-                showNotification(msg, "error");
-            }
-        });
-    };
 
 
     var _fillForm = function (data) {
@@ -166,9 +150,9 @@ var ImzaRotaModule = (function () {
                     }))
                 };
 
-                var action = payload.Id > 0 ? "ImzaRotaGuncelle" : "ImzaRotaEkle";
+                var action = payload.Id > 0 ? "ImzaRota/ImzaRotaGuncelle" : "ImzaRota/ImzaRotaEkle";
 
-                _ajaxCall(action, "POST", payload).done(function () {
+                ApiService.postJson(action, payload).done(function () {
                     showNotification('İmza rotası başarıyla kaydedildi.', 'success');
                     setTimeout(function () { window.location.href = "/ImzaRota/ImzaRotaListe"; }, 1000);
                 });
@@ -178,7 +162,7 @@ var ImzaRotaModule = (function () {
         loadInitialData: function () {
             var id = $("#RotaId").val();
             if (id && id !== "0" && id !== "") {
-                _ajaxCall("ImzaRotaGetir/" + id, "GET").done(function (response) {
+                ApiService.getJson("ImzaRota/ImzaRotaGetir/" + id).done(function (response) {
                     _fillForm(response);
                 });
             }

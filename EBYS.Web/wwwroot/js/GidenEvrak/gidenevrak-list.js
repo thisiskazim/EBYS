@@ -1,31 +1,12 @@
 ﻿var GidenEvrakListModule = (function () {
-    var _grid = null;
-    var _onizlemeDialog = null;
     var _apiBaseUrl = "https://localhost:7060/api/";
     var _aktifOlanFiltre = null;
 
     var _enumMap = {
         'tamamlananlar': 2,
         'iade': 3,   
-    
     };
-    var _ajaxCall = function (url, type, data) {
-        return $.ajax({
-            url: _apiBaseUrl + url,
-            type: type,
-            contentType: "application/json",
-            data: data ? JSON.stringify(data) : null,
-            error: function (err) {
-                var msg = "Sistem hatası oluştu.";
-                if (err.responseJSON && err.responseJSON.mesaj) {
-                    msg = err.responseJSON.mesaj;
-                } else if (err.responseText) {
-                    msg = err.responseText;
-                }
-                showNotification(msg, "error");
-            }
-        });
-    };
+   
 
     return {
         init: function () {
@@ -115,31 +96,19 @@
                 formData.append("durum", _aktifOlanFiltre);
             }
 
-            $.ajax({
-                url: _apiBaseUrl + "GidenEvrak/EvrakListele",
-                type: "POST",
-                data: formData, 
-                processData: false, 
-                contentType: false, 
-                success: function (response) {
-                    $("#gridGidenEvraklar").data("kendoGrid").dataSource.data(response);
-                },
-                error: function (xhr) {
-                    alert("Hata oluştu: " + xhr.responseText);
-                },
-                complete: function () {
-                    kendo.ui.progress($("#gridGidenEvraklar"), false);
-                }
-            });
-   
+            ApiService.postFormData("GidenEvrak/GidenEvrakListesi", formData).done(function (res) {
+                $("#gridGidenEvraklar").data("kendoGrid").dataSource.data(res);
+            }).always(function () {
+                kendo.ui.progress($("#gridGidenEvraklar"), false);
+            }); 
         },
         dosyaIndir: function (ekId) {
             window.location.href = _apiBaseUrl + "GidenEvrak/DosyaIndir/" + ekId;
         },
 
         history: function (id) {
-            var self = this;
-            _ajaxCall('Akis/evrak-hareketleri/' + id, 'GET').done(function (res) {
+         
+            ApiService.getJson("GidenEvrak/EvrakHareketleri/" + id).done(function (res) {
 
 
                 var winElement = $("#historyWindow");
@@ -209,7 +178,6 @@
             _aktifOlanFiltre = _enumMap[tabKey];
             GelenEvrakListModule.loadData();
         },
-
         getIconByExtension: function (ext) {
             if (!ext) return "fas fa-file text-secondary";
             ext = ext.toLowerCase();

@@ -1,55 +1,35 @@
 ﻿var module = (function () {
-    var _apiBaseUrl = "https://localhost:7060/api/KurumMuhatap/";
-
-    var _ajaxCall = function (url, type, data) {
-        return $.ajax({
-            url: _apiBaseUrl + url,
-            type: type,
-            contentType: "application/json",
-            data: data ? JSON.stringify(data) : null,
-            error: function (err) {
-                var msg = err && err.responseText ? err.responseText : "Hata oluştu.";
-                showNotification(msg, "error");
-            }
-        });
-    };
-
 
     var _fillForm = function (data) {
         if (!data) return;
-
-       
 
         $("#Adi").data("kendoTextBox").value(data.adi);
         $("#Telefon").data("kendoTextBox").value(data.telefon);
         $("#DetsisNo").data("kendoTextBox").value(data.detsisNo);
         $("#KurumKodu").data("kendoTextBox").value(data.kurumKodu);
         $("#KepAdresi").data("kendoTextBox").value(data.kepAdresi);
-        $("#Adress").data("kendoTextBox").value(data.adress);
+        $("#Adress").data("kendoTextAreas").value(data.adress);
         $("#EPosta").data("kendoTextBox").value(data.ePosta);
     };
 
     return {
         init: function () {
             this.loadInitialData();
-            this.kaydet();
+            
         },
 
         loadInitialData: function () {
-            var id = $("#Id").val();
-            if (id && id !== "0") {
-                $("#btnKaydet").text("Güncelle");
-                _ajaxCall("Getir/" + id, "GET").done(function (response) {
+            var id = parseInt($("#Id").val(), 10) || 0;
+            if (id > 0) {
+                ApiService.getJson("KurumMuhatap/Getir/" + id).done(function (response) {
                     _fillForm(response);
                 });
-            } else {
-                $("#btnKaydet").text("Kaydet");
             }
         },
 
         kaydet: function () {
             var id = $("#Id").val();
-            var formData = {
+            var data = {
                 Id: id === "" ? 0 : parseInt(id),
                 Adi: $("#Adi").val(),
                 DetsisNo: $("#DetsisNo").val(),
@@ -61,14 +41,9 @@
 
             };
 
-            if (!formData.Adi) {
-                showNotification("Kurum adı zorunludur!", "warning");
-                return;
-            }
+            var url = data.Id > 0 ? "KurumMuhatap/Guncelle" : "KurumMuhatap/Ekle";
 
-            var url = formData.Id > 0 ? "Guncelle" : "Ekle";
-
-            _ajaxCall(url, "POST", formData).done(function (res) {
+            ApiService.postJson(url,data).done(function (res) {
                 showNotification("Başarıyla kaydedildi.", "success");
                 setTimeout(function () { window.location.href = "/KurumMuhatap/Listele"; }, 1000);
             });

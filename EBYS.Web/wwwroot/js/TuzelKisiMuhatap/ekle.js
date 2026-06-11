@@ -39,7 +39,7 @@
             var id = $("#Id").val();
             if (id && id !== "0") {
                 $("#btnKaydet").text("Güncelle");
-                _ajaxCall("Getir/" + id, "GET").done(function (response) {
+                ApiService.getJson("TuzelKisiMuhatap/Getir/" + id).done(function (response) {
                     _fillForm(response);
                 });
             } else {
@@ -49,7 +49,7 @@
 
         kaydet: function () {
             var id = $("#Id").val();
-            var formData = {
+            var data = {
                 Id: id === "" ? 0 : parseInt(id),
                 Adi: $("#Adi").val(),
                 VergiNo: $("#VergiNo").val(),
@@ -61,14 +61,9 @@
 
             };
 
-            if (!formData.Adi) {
-                showNotification("Tuzel adı zorunludur!", "warning");
-                return;
-            }
+            var url = data.Id > 0 ? "TuzelKisiMuhatap/Guncelle" : "TuzelKisiMuhatap/Ekle";
 
-            var url = formData.Id > 0 ? "Guncelle" : "Ekle";
-
-            _ajaxCall(url, "POST", formData).done(function (res) {
+            ApiService.postJson(url, data).done(function (res) {
                 showNotification("Başarıyla kaydedildi.", "success");
                 setTimeout(function () { window.location.href = "/TuzelKisiMuhatap/Listele"; }, 1500);
             });

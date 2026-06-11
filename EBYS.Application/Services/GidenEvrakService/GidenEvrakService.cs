@@ -7,6 +7,7 @@ using EBYS.Domain.Entities;
 using EBYS.Domain.Entities.GelenEvrak;
 using EBYS.Domain.Entities.GidenEvrak;
 using EBYS.Domain.Enum;
+using EBYS.Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 
 namespace EBYS.Application.Services.GidenEvrakService
@@ -42,16 +43,18 @@ namespace EBYS.Application.Services.GidenEvrakService
                 evrak.İlgiler = mapper.Map<List<GidenEvrakIlgi>>(createDto.Ilgiler);
             }
 
-            // Seçilen rotanın detaylarını al
             var rota = await imzaRotaRepository.GetImzaRotaVeAdimlariDetay(createDto.ImzaRotaId);
 
-            if (rota?.ImzaRotaAdimlari != null)
+            if (rota?.ImzaRotaAdimlari == null || !rota.ImzaRotaAdimlari.Any())
             {
-                foreach (var adim in rota.ImzaRotaAdimlari.OrderBy(x=>x.SiraNo))
+                throw new ImzaRotasıBos();
+            }
+
+            foreach (var adim in rota.ImzaRotaAdimlari.OrderBy(x=>x.SiraNo))
                 {
                     evrak.AkisAdimlari.Add(new GidenEvrakAkis
                     {
-                        KullaniciId = adim.KullaniciId,
+                        KullaniciId = 1999,
                         ParafMiImzaMi = adim.ParafMiImzaMi,
                         SiraNo = adim.SiraNo,
                         AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
@@ -59,7 +62,7 @@ namespace EBYS.Application.Services.GidenEvrakService
 
                     });
                 }
-            }
+         
 
             if (createDto.Ekler?.Any() == true)
             {

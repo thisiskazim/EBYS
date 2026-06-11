@@ -1,25 +1,6 @@
 ﻿var EvrakBekleyenListModule = (function () {
     var _grid = null;
-    var _apiBaseUrl = "https://localhost:7060/api/Akis/";
-
-    var _ajaxCall = function (url, type, data) {
-        return $.ajax({
-            url: _apiBaseUrl + url,
-            type: type,
-            contentType: "application/json",
-            data: data ? JSON.stringify(data) : null,
-            error: function (err) {
-                var msg = "Sistem hatası oluştu.";
-                if (err.responseJSON && err.responseJSON.mesaj) {
-                    msg = err.responseJSON.mesaj;
-                } else if (err.responseText) {
-                    msg = err.responseText;
-                }
-                showNotification(msg, "error");
-            }
-        });
-    };
-
+  
     return {
         init: function () {
             this.initGrid();
@@ -126,9 +107,8 @@
         },
 
         loadData: function () {
-            var self = this;
-            _ajaxCall('paraf-bekleyen-listele', 'GET').done(function (res) {
-                // Senin mapleme mantığın: API'den gelen küçük harf karmaşasını burada çözüyoruz
+  
+            AkisService.getJson('Akis/paraf-bekleyen-listele').done(function (res) {
                 var list = Array.isArray(res) ? res : (res.data || []);
                 var mappedList = list.map(x => ({
                     Id: x.id || x.Id,
@@ -147,22 +127,16 @@
                 return;
             }
            
-            _ajaxCall('Onayla/' + id, 'POST').done(function (response) {
-
-            
+            ApiService.postJson('Akis/Onayla/' + id).done(function (response) {
                 // IslemSonuc sınıfına göre kontrol yapıyoruz
                 if (response.basariliMi) {
                     showNotification(response.mesaj, "success");
                     EvrakBekleyenListModule.loadData();
-                    
+
                 } else {
                     showNotification(response.mesaj, "warning");
                 }
-            }).fail(function (err) {
-                if (err.responseJSON) {
-                    showNotification(err.responseJSON.mesaj, "error");
-                }
-            });;
+            });
         },
 
         edit: function (id) {
@@ -172,16 +146,9 @@
 
         cancel: function (id) {
             if (confirm("Bu evrakı silmek istediğinize emin misiniz?")) {
-                $.ajax({
-                    url: "https://localhost:7060/api/GidenEvrak/EvrakSil/" + id,
-                    type: "DELETE",
-                    success: function (response) {
-                        showNotification(response, "success");
-                        EvrakBekleyenListModule.loadData();
-                    },
-                    error: function (err) {
-                        showNotification(err.responseText, "error");
-                    }
+                ApiService.deleteJson('Akis/EvrakSil/' + id).done(function (response) {
+                    showNotification(response, "success");
+                    EvrakBekleyenListModule.loadData();
                 });
             }
         }

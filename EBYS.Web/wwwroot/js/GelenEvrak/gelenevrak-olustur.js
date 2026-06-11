@@ -1,26 +1,9 @@
 ﻿var EvrakOlustur = (function () {
-    var _apiBaseUrl = "https://localhost:7060/api/GelenEvrak/";
-
-  
-    var _ajaxCallFormData = function (url, formData) {
-        return $.ajax({
-            url: _apiBaseUrl + url,
-            type: "POST",
-            data: formData,
-            processData: false, 
-            contentType: false,
-            error: function (err) {
-                var msg = err && err.responseText ? err.responseText : "Hata oluştu.";
-                showNotification(msg, "error");
-            }
-        });
-    };
 
     return {
         init: function () {
             this.loadInitialData();
         },
-
 
         kaydet: function () {
             var bilgiler = GelenEvrakBilgiModule.getData(); 
@@ -43,7 +26,6 @@
                  
                     formData.append(`Ilgiler[${index}].IlgiMetni`, ilgi.IlgiMetni);
 
-                
                     if (ilgi.Id > 0) {
                         formData.append(`Ilgiler[${index}].Id`, ilgi.Id);
                     }
@@ -78,9 +60,9 @@
             }
 
          
-            var action = bilgiler.Id > 0 ? "EvrakGuncelle" : "EvrakOlustur";
+            var action = bilgiler.Id > 0 ? "GelenEvrak/EvrakGuncelle" : "GelenEvrak/EvrakOlustur";
 
-            _ajaxCallFormData(action, formData).done(function (response) {
+            ApiService.postFormData(action, formData).done(function (response) {
                 showNotification("Gelen evrak başarıyla kaydedildi.", "success");
                 setTimeout(function () {
                     window.location.href = "/GelenEvrak/GelenEvrakListe";
@@ -94,15 +76,18 @@
 
             if (id && id !== "0" && id !== "") {
      
-                $.get(_apiBaseUrl + "EvrakGetir/" + id, function (response) {
-                    GelenEvrakBilgiModule.setData(response);
-                    GelenIlgilerModule.setData(response.ilgiler);
-                    GelenEklerModule.setData(response.ekler);
-                });
+                ApiService.getJson("GelenEvrak/EvrakGetir/" + id)
+                    .done(function (response) {
+                        // Veri başarılı geldiyse ilgili modülleri mermi gibi besle
+                        GelenEvrakBilgiModule.setData(response);
+                        GelenIlgilerModule.setData(response.ilgiler);
+                        GelenEklerModule.setData(response.ekler);
+                    });
             }
         }
     };
 })();
+
 
 
 $(document).ready(function () {

@@ -19,9 +19,6 @@ namespace EBYS.Application.Services.GelenEvrakService
 
         public async Task AddAsync(GelenEvrakCreateDTO createDto)
         {
-
-            try
-            {
                 var evrak = mapper.Map<GelenEvrak>(createDto);
                 evrak.KayitNo = await KayitNumarasiOlustur();
 
@@ -78,11 +75,7 @@ namespace EBYS.Application.Services.GelenEvrakService
                 await evrakRepository.AddAsync(evrak);
                 await evrakRepository.SaveAsync();
             }
-            catch (Exception ex)
-            {
-                var message = ex.InnerException?.Message ?? ex.Message;
-                throw new Exception("Veritabanı Hatası: " + message);
-            }
+           
         }
 
         public async Task DeleteAsync(int id)

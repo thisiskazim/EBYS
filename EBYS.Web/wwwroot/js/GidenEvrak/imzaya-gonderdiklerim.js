@@ -1,22 +1,8 @@
 ﻿var EvrakGonderdiklerimModule = (function () {
     var _grid = null;
-    var _apiBaseUrl = "https://localhost:7060/api/Akis/";
 
-    var _ajaxCall = function (url, type, data) {
-        return $.ajax({
-            url: _apiBaseUrl + url,
-            type: type,
-            contentType: "application/json",
-            data: data ? JSON.stringify(data) : null,
-            error: function (err) {
-                var msg = "Sistem hatası oluştu.";
-                if (err.responseJSON && err.responseJSON.mesaj) {
-                    msg = err.responseJSON.mesaj;
-                }
-                showNotification(msg, "error");
-            }
-        });
-    };
+
+    
 
     return {
         init: function () {
@@ -25,7 +11,6 @@
         },
 
         initGrid: function () {
-            // HTML'deki id ile aynı olmalı: gridGonderdiklerim
             _grid = $("#gridGonderdiklerim").kendoGrid({
                 noRecords: { template: "<div class='p-5 text-center text-muted'>Gönderilmiş evrak bulunamadı.</div>" },
                 sortable: true,
@@ -118,9 +103,7 @@
             kendo.ui.progress($gridEl, true); 
 
           
-            _ajaxCall('imzaya-gonderdiklerim', 'GET')
-                .done(function (res) {
-               
+            ApiService.getJson("Akis/imzaya-gonderdiklerim").done(function (res) {
                     _grid.dataSource.data(res);
                 })
                 .always(function () {
@@ -130,9 +113,7 @@
 
         history: function (id) {    
             var self = this;
-            _ajaxCall('evrak-hareketleri/' + id, 'GET').done(function (res) {
-
-             
+            ApiService.getJson("Akis/evrak-hareketleri/" + id).done(function (res) {
                 var winElement = $("#historyWindow");
                 var win = winElement.data("kendoWindow");
 
@@ -199,7 +180,7 @@
         geriCek: function (id) {
             if (!confirm("Bu evrakı geri çekmek istediğinize emin misiniz?")) return;
 
-            _ajaxCall('GeriCek/' + id, 'POST').done(function (response) {
+            ApiService.postJson('Akis/GeriCek/' + id).done(function (response) {
                 if (response.basariliMi) {
                     showNotification(response.mesaj, "success");
                     EvrakGonderdiklerimModule.loadData();

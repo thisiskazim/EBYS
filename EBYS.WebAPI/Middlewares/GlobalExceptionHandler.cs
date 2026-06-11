@@ -30,7 +30,6 @@ namespace EBYS.WebAPI.Middlewares
                 case FluentValidation.ValidationException valEx:
                     statusCode = 400;
                     title = "Validasyon Hatası";
-                    // Tam senin istediğin "field" ve "message" formatına eşliyoruz
                     detail = valEx.Errors.Select(e => new {
                         field = e.PropertyName,
                         message = e.ErrorMessage

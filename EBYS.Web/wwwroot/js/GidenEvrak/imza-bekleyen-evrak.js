@@ -1,32 +1,9 @@
 ﻿
 var EvrakBekleyenListModule = (function () {
     var _grid = null;
-    var _onizlemeDialog = null;
-    var _apiBaseUrl = "https://localhost:7060/api/";
-
-    var _ajaxCall = function (url, type, data) {
-        return $.ajax({
-            url: _apiBaseUrl + url,
-            type: type,
-            contentType: "application/json",
-            data: data ? JSON.stringify(data) : null,
-            error: function (err) {
-                var msg = "Sistem hatası oluştu.";
-                if (err.responseJSON && err.responseJSON.mesaj) {
-                    msg = err.responseJSON.mesaj;
-                } else if (err.responseText) {
-                    msg = err.responseText;
-                }
-                showNotification(msg, "error");
-            }
-        });
-    };
-
-   
 
     return {
         init: function () {
-          /*  _initDialog();*/
             this.initGrid();
             this.loadData();
         },
@@ -141,9 +118,7 @@ var EvrakBekleyenListModule = (function () {
             kendo.ui.progress($gridEl, true); 
 
             
-            _ajaxCall('Akis/imza-bekleyen-listele', 'GET')
-                .done(function (res) {
-                   
+            ApiService.getJson("Akis/imza-bekleyen-listele").done(function (res) {
                     _grid.dataSource.data(res);
                 })
                 .always(function () {
@@ -151,21 +126,13 @@ var EvrakBekleyenListModule = (function () {
                 });
         },
 
-
-
-
         onay: function (id) {
             if (!confirm("Seçili evrakı onaylamak istediğinize emin misiniz?")) return;
-            _ajaxCall('Akis/Onayla/' + id, 'POST').done(function (response) {
-                if (response.basariliMi) {
-                    showNotification(response.mesaj, "success");
+            ApiService.postJson("Akis/Onayla/" + id)
+                .done(function (response) {
+                    showNotification(response.mesaj || "Evrak başarıyla onaylandı.", "success");
                     EvrakBekleyenListModule.loadData();
-                } else {
-                    showNotification(response.mesaj, "warning");
-                }
-            }).fail(function (err) {
-                if (err.responseJSON) showNotification(err.responseJSON.mesaj, "error");
-            });
+                });
         },
 
         edit: function (id) {
@@ -174,16 +141,9 @@ var EvrakBekleyenListModule = (function () {
 
         cancel: function (id) {
             if (confirm("Bu evrakı silmek istediğinize emin misiniz?")) {
-                $.ajax({
-                    url: "https://localhost:7060/api/GidenEvrak/EvrakSil/" + id,
-                    type: "DELETE",
-                    success: function (response) {
-                        showNotification(response, "success");
-                        EvrakBekleyenListModule.loadData();
-                    },
-                    error: function (err) {
-                        showNotification(err.responseText, "error");
-                    }
+                ApiService.delete("GidenEvrak/EvrakSil/" + id).done(function (response) {
+                    showNotification(response.mesaj || "Evrak başarıyla silindi.", "success");
+                    EvrakBekleyenListModule.loadData();
                 });
             }
         }
