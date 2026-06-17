@@ -22,8 +22,7 @@ namespace EBYS.Application.Services.GidenEvrakService
         }
         public async Task<IslemSonuc> OnaylaAsync(int evrakId)
         {
-            try
-            {
+     
                 var entities = await evrakRepository.AkisAdimlariSorguAsync(evrakId);
 
                 if (entities == null) throw new Exception("Evrak bulunamadı.");
@@ -66,12 +65,9 @@ namespace EBYS.Application.Services.GidenEvrakService
                     return new IslemSonuc(true, "Onay işlemi başarıyla tamamlandı.");
 
                 return new IslemSonuc(false, "Veritabanı güncelleme sırasında bir hata oluştu.");
-            }
-            catch (Exception ex)
-            {
-                return new IslemSonuc(false, $"Beklenmedik bir hata: {ex.Message}");
-            }
         }
+       
+        
         public Task<bool> IadeEtAsync(int evrakId, string neden)
         {
             throw new NotImplementedException();
@@ -109,8 +105,7 @@ namespace EBYS.Application.Services.GidenEvrakService
 
         public async Task<IslemSonuc> GeriCekAsync(int evrakId)
         {
-            try
-            {
+      
                 var userId = evrakRepository.GetContextUserId();
                 var entities = evrakRepository.AkisAdimlariSorguAsync(evrakId).Result;
 
@@ -150,11 +145,7 @@ namespace EBYS.Application.Services.GidenEvrakService
                     return IslemSonuc.İslemBasarili("Evrak başarıyla geri çekildi. 'Bekleyenler' listenize aktarıldı.");
 
                 return IslemSonuc.Hata("İşlem sırasında bir hata oluştu.");
-            }
-            catch (Exception ex)
-            {
-                return IslemSonuc.İslemBasarili($"Beklenmedik hata: {ex.Message}");
-            }
+       
         }
 
         public async Task<List<GidenEvrakAkisHareketleriDTO>> EvrakHareketleriGetirAsync(int evrakId)
