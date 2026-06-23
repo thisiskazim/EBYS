@@ -20,7 +20,7 @@ var EvrakBekleyenListModule = (function () {
                         headerAttributes: { style: "text-align: center" },
                         attributes: { style: "text-align: center" },
                         template: function (dataItem) {
-                          
+
                             var editHtml = dataItem.editYapabilirMi
                                 ? `<li><a class='dropdown-item py-2' href='#' onclick='EvrakBekleyenListModule.edit("${dataItem.id}")'><i class='fas fa-edit text-primary me-2'></i>Düzenle</a></li>`
                                 : `<li><a class='dropdown-item disabled text-muted py-2' href='#'><i class='fas fa-lock me-2'></i>Düzenle <small>(Yetki Yok)</small></a></li>`;
@@ -45,6 +45,20 @@ var EvrakBekleyenListModule = (function () {
                                         <i class='fas fa-file-signature text-success me-2'></i>İmzala
                                     </a>
                                 </li>
+
+                                <li>
+                                    <a class='dropdown-item py-2 text-warning' href='#' onclick='EvrakBekleyenListModule.iadePopupAc("${dataItem.id}")'>
+                                        <i class='fas fa-reply me-2'></i>İade Et
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class='dropdown-item py-2 text-danger' href='#' onclick='EvrakBekleyenListModule.redPopupAc("${dataItem.id}")'>
+                                        <i class='fas fa-times-circle me-2'></i>Reddet
+                                    </a>
+                                </li>
+
+
                                 ${editHtml}
                                 <li><hr class='dropdown-divider opacity-50'></li>
                                 ${deleteHtml}
@@ -83,25 +97,25 @@ var EvrakBekleyenListModule = (function () {
                         }
                     },
                     {
-                        field: "olusturanKullanici", 
+                        field: "olusturanKullanici",
                         title: "Oluşturan",
                         template: "<div class='d-flex align-items-center'>#: olusturanKullanici #</div>",
                         width: "120px"
                     },
                     {
-                        field: "konu", 
+                        field: "konu",
                         title: "Konu",
                         width: "200px",
-                        template: "<div>#: konu #</div>" 
+                        template: "<div>#: konu #</div>"
                     },
                     {
-                        field: "fullKonuKodu", 
+                        field: "fullKonuKodu",
                         title: "Konu Kodu",
                         width: "200px",
                         template: "<span class='badge bg-light text-dark border'>#: fullKonuKodu #</span>"
                     },
                     {
-                        field: "creat_time", 
+                        field: "creat_time",
                         title: "Oluşturma Zamanı",
                         width: "250px",
                         template: "#= creat_time ? kendo.toString(kendo.parseDate(creat_time), 'dd.MM.yyyy HH:mm') : '' #"
@@ -111,22 +125,25 @@ var EvrakBekleyenListModule = (function () {
             }).data("kendoGrid");
         },
 
-     
+
 
         loadData: function () {
-            var $gridEl = $("#gridBekleyenler"); 
-            kendo.ui.progress($gridEl, true); 
+            var $gridEl = $("#gridBekleyenler");
+            kendo.ui.progress($gridEl, true);
 
-            
+
             ApiService.getJson("Akis/imza-bekleyen-listele").done(function (res) {
-                    _grid.dataSource.data(res);
-                })
+                _grid.dataSource.data(res);
+            })
                 .always(function () {
-                    kendo.ui.progress($gridEl, false); 
+                    kendo.ui.progress($gridEl, false);
                 });
         },
 
         onay: function (id) {
+            var $gridEl = $("#gridBekleyenler");
+            kendo.ui.progress($gridEl, true);
+
             if (!confirm("Seçili evrakı onaylamak istediğinize emin misiniz?")) return;
             ApiService.postJson("Akis/Onayla/" + id)
                 .done(function (response) {
@@ -135,16 +152,56 @@ var EvrakBekleyenListModule = (function () {
                 });
         },
 
+        reddet: function (id, not) {
+            var $gridEl = $("#gridBekleyenler");
+            kendo.ui.progress($gridEl, true);
+
+            if (!confirm("Seçili evrakı reddetmek istediğinize emin misiniz?")) return;
+            ApiService.postJson("Akis/Reddet?id=" + id + "&neden=" + encodeURIComponent(not))
+                .done(function (response) {
+                    showNotification(response.mesaj || "Evrak başarıyla reddedildi.", "success");
+                    EvrakBekleyenListModule.loadData();
+                });
+        },
+
+        redPopupAc: function (id) {
+
+            Swal.fire({
+                title: 'Evrakı Reddet',
+                input: 'textarea',
+                inputLabel: 'Lütfen bir reddetme gerekçesi giriniz:',
+                inputPlaceholder: 'Gerekçenizi buraya yazın...',
+                inputAttributes: { 'aria-label': 'Gerekçenizi buraya yazın' },
+                showCancelButton: true,
+                confirmButtonText: 'Evrakı Reddet',
+                cancelButtonText: 'Vazgeç',
+                confirmButtonColor: '#d33',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Reddetme gerekçesi girmek zorunludur!'
+                    }
+                }
+            }).then((result) => {
+                // Eğer kullanıcı vazgeçmediyse ve notu girdiyse asıl API isteğini tetikliyoruz:
+                if (result.isConfirmed && result.value) {
+                    EvrakBekleyenListModule.reddet(id, result.value);
+                }
+            });
+        },
+
         edit: function (id) {
+
             window.location.href = '/Home/Index?id=' + id;
         },
 
         cancel: function (id) {
+
             if (confirm("Bu evrakı silmek istediğinize emin misiniz?")) {
-                ApiService.delete("GidenEvrak/EvrakSil/" + id).done(function (response) {
-                    showNotification(response.mesaj || "Evrak başarıyla silindi.", "success");
-                    EvrakBekleyenListModule.loadData();
-                });
+                ApiService.delete("GidenEvrak/EvrakSil/" + id)
+                    .done(function (response) {
+                        showNotification(response.mesaj || "Evrak başarıyla silindi.", "success");
+                        EvrakBekleyenListModule.loadData();
+                    });
             }
         }
     };
