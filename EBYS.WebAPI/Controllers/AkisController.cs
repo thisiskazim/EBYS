@@ -84,7 +84,7 @@ namespace EBYS.WebAPI.Controllers
         }
 
         [HttpPost("Reddet/{id}")]
-        public async Task<IActionResult> Reddet(int id, [FromBody] string not)
+        public async Task<IActionResult> Reddet(int id, [FromQuery] string not)
         {
             var sonuc = await akisService.ReddetAsync(id, not);
 
@@ -94,8 +94,8 @@ namespace EBYS.WebAPI.Controllers
             return BadRequest(sonuc);
         }
 
-        [HttpPost("İadeEt/{id}")]
-        public async Task<IActionResult> IadeEt(int id, [FromBody] string not)
+        [HttpPost("IadeEt/{id}")]
+        public async Task<IActionResult> IadeEt(int id, [FromQuery] string not)
         {
             var sonuc = await akisService.IadeEtAsync(id, not);
 

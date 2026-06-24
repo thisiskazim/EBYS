@@ -54,7 +54,7 @@ namespace EBYS.Application.Services.GidenEvrakService
                 {
                     evrak.AkisAdimlari.Add(new GidenEvrakAkis
                     {
-                        KullaniciId = 1999,
+                        KullaniciId = adim.KullaniciId,
                         ParafMiImzaMi = adim.ParafMiImzaMi,
                         SiraNo = adim.SiraNo,
                         AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,

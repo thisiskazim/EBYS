@@ -45,6 +45,21 @@
                                                 <i class='fas fa-file-signature text-success me-2'></i>Parafla
                                             </a>
                                         </li>
+
+                                          <li>
+                                    <a class='dropdown-item py-2 text-warning' href='#' onclick='EvrakBekleyenListModule.iadePopupAc("${dataItem.id}")'>
+                                        <i class='fas fa-reply me-2'></i>İade Et
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class='dropdown-item py-2 text-danger' href='#' onclick='EvrakBekleyenListModule.redPopupAc("${dataItem.id}")'>
+                                        <i class='fas fa-times-circle me-2'></i>Reddet
+                                    </a>
+                                </li>
+
+
+
                                         ${editHtml} 
                                         <li><hr class='dropdown-divider opacity-50'></li>
                                         ${deleteHtml} 
@@ -83,23 +98,23 @@
                         }
                     },
                     {
-                        field: "OlusturanKullanici",
+                        field: "olusturanKullanici",
                         title: "Oluşturan",
-                        template: "<div class='d-flex align-items-center'></i>#: OlusturanKullanici #</div>",
+                        template: "<div class='d-flex align-items-center'></i>#: olusturanKullanici #</div>",
                         width: "120px"
                     },
-                    { field: "Konu", title: "Konu", width: "200px" },
+                    { field: "konu", title: "Konu", width: "200px" },
                     {
-                        field: "FullKonuKodu",
+                        field: "fullKonuKodu",
                         title: "Konu Kodu",
                         width: "200px",
-                        template: "<span class='badge bg-light text-dark border'>#: FullKonuKodu #</span>"
+                        template: "<span class='badge bg-light text-dark border'>#: fullKonuKodu #</span>"
                     },
                     {
-                        field: "CreatTime",
+                        field: "creat_time",
                         title: "Oluşturma Zamanı",
                         width: "250px",
-                        template: "#= kendo.toString(kendo.parseDate(CreatTime), 'dd.MM.yyyy HH:mm') #"
+                        template: "#= kendo.toString(kendo.parseDate(creat_time), 'dd.MM.yyyy HH:mm') #"
                     }
                 ],
                 dataSource: { data: [] }
@@ -107,19 +122,25 @@
         },
 
         loadData: function () {
-  
-            AkisService.getJson('Akis/paraf-bekleyen-listele').done(function (res) {
-                var list = Array.isArray(res) ? res : (res.data || []);
-                var mappedList = list.map(x => ({
-                    Id: x.id || x.Id,
-                    OlusturanKullanici: x.olusturanKullanici ,
-                    Konu: x.konu ,
-                    FullKonuKodu: x.fullKonuKodu ,
-                    CreatTime: x.creat_time,
-                    CanEdit: x.editYapabilirMi
-                }));
-                _grid.dataSource.data(mappedList);
-            });
+            var $gridEl = $("#gridBekleyenler");
+            kendo.ui.progress($gridEl, true);
+
+            ApiService.getJson('Akis/paraf-bekleyen-listele').done(function (res) {
+                //var list = Array.isArray(res) ? res : (res.data || []);
+                //var mappedList = list.map(x => ({
+                //    Id: x.id || x.Id,
+                //    OlusturanKullanici: x.olusturanKullanici ,
+                //    Konu: x.konu ,
+                //    FullKonuKodu: x.fullKonuKodu ,
+                //    CreatTime: x.creat_time,
+                //    CanEdit: x.editYapabilirMi
+                _grid.dataSource.data(res);
+            })
+                .always(function () {
+                    kendo.ui.progress($gridEl, false);
+                });
+           /*     _grid.dataSource.data(mappedList);*/
+           
         },
 
         onay: function (id) {
@@ -138,6 +159,74 @@
                 }
             });
         },
+
+        redPopupAc: function (id) {
+            kendo.prompt("Lütfen bir reddetme gerekçesi giriniz:", "")
+                .done(function (not) {
+                    // Kullanıcı text alanını doldurup "OK" (Tamam) butonuna bastıysa:
+                    if (not && not.trim() !== "") {
+                        // Bizim o jilet gibi yazdığın güvenli reddet metodunu çağırıyoruz knk
+                        EvrakBekleyenListModule.reddet(id, not);
+                    } else if (not === "") {
+                        // Kullanıcı hiçbir şey yazmadan OK'e bastıysa kibarca uyarıyoruz
+                        alert("Reddetme gerekçesi girmek zorunludur!");
+                    }
+                })
+                .fail(function () {
+                    // Kullanıcı "Cancel" (İptal) butonuna bastıysa hiçbir şey yapma, efendice kapansın
+                    console.log("Reddetme işleminden vazgeçildi.");
+                });
+        },
+
+
+
+        reddet: function (id, not) {
+            var $gridEl = $("#gridBekleyenler");
+            kendo.ui.progress($gridEl, true);
+
+            if (!confirm("Seçili evrakı reddetmek istediğinize emin misiniz?")) return;
+            ApiService.postJson("Akis/Reddet/" + id + "?not=" + encodeURIComponent(not), {})
+                .done(function (response) {
+                    showNotification(response.mesaj || "Evrak başarıyla reddedildi.", "success");
+                    EvrakBekleyenListModule.loadData();
+                }).always(function () {
+                    kendo.ui.progress($gridEl, false);
+                });
+
+        },
+
+        iadePopupAc: function (id) {
+            kendo.prompt("Lütfen bir iade gerekçesi giriniz:", "")
+                .done(function (not) {
+
+                    if (not && not.trim() !== "") {
+                        EvrakBekleyenListModule.iadeEt(id, not);
+                    } else if (not === "") {
+                        alert("İade gerekçesi girmek zorunludur!");
+                    }
+                })
+                .fail(function () {
+                    console.log("Reddetme işleminden vazgeçildi.");
+                });
+        },
+
+        iadeEt: function (id, not) {
+            var $gridEl = $("#gridBekleyenler");
+            kendo.ui.progress($gridEl, true);
+
+            if (!confirm("Seçili evrakı iade etmek istediğinize emin misiniz?")) return;
+            ApiService.postJson("Akis/IadeEt/" + id + "?not=" + encodeURIComponent(not), {})
+                .done(function (response) {
+                    showNotification(response.mesaj || "Evrak başarıyla iade edildi.", "success");
+                    EvrakBekleyenListModule.loadData();
+                }).always(function () {
+                    kendo.ui.progress($gridEl, false);
+                });
+
+        },
+
+
+
 
         edit: function (id) {
 

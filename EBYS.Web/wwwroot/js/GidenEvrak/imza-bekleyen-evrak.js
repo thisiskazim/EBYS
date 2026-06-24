@@ -152,41 +152,69 @@ var EvrakBekleyenListModule = (function () {
                 });
         },
 
+        redPopupAc: function (id) {
+            kendo.prompt("Lütfen bir reddetme gerekçesi giriniz:", "")
+                .done(function (not) {
+                    // Kullanıcı text alanını doldurup "OK" (Tamam) butonuna bastıysa:
+                    if (not && not.trim() !== "") {
+                        // Bizim o jilet gibi yazdığın güvenli reddet metodunu çağırıyoruz knk
+                        EvrakBekleyenListModule.reddet(id, not);
+                    } else if (not === "") {
+                        // Kullanıcı hiçbir şey yazmadan OK'e bastıysa kibarca uyarıyoruz
+                        alert("Reddetme gerekçesi girmek zorunludur!");
+                    }
+                })
+                .fail(function () {
+                    // Kullanıcı "Cancel" (İptal) butonuna bastıysa hiçbir şey yapma, efendice kapansın
+                    console.log("Reddetme işleminden vazgeçildi.");
+                });
+        },
+
+
+
         reddet: function (id, not) {
             var $gridEl = $("#gridBekleyenler");
             kendo.ui.progress($gridEl, true);
 
             if (!confirm("Seçili evrakı reddetmek istediğinize emin misiniz?")) return;
-            ApiService.postJson("Akis/Reddet?id=" + id + "&neden=" + encodeURIComponent(not))
+            ApiService.postJson("Akis/Reddet/" + id + "?not=" + encodeURIComponent(not), {})
                 .done(function (response) {
                     showNotification(response.mesaj || "Evrak başarıyla reddedildi.", "success");
                     EvrakBekleyenListModule.loadData();
+                }).always(function () {
+                    kendo.ui.progress($gridEl, false);
+                });
+        
+        },
+
+        iadePopupAc: function (id) {
+            kendo.prompt("Lütfen bir iade gerekçesi giriniz:", "")
+                .done(function (not) {
+                 
+                    if (not && not.trim() !== "") {
+                        EvrakBekleyenListModule.iadeEt(id, not);
+                    } else if (not === "") {
+                        alert("İade gerekçesi girmek zorunludur!");
+                    }
+                })
+                .fail(function () {
+                    console.log("Reddetme işleminden vazgeçildi.");
                 });
         },
 
-        redPopupAc: function (id) {
+        iadeEt: function (id, not) {
+            var $gridEl = $("#gridBekleyenler");
+            kendo.ui.progress($gridEl, true);
 
-            Swal.fire({
-                title: 'Evrakı Reddet',
-                input: 'textarea',
-                inputLabel: 'Lütfen bir reddetme gerekçesi giriniz:',
-                inputPlaceholder: 'Gerekçenizi buraya yazın...',
-                inputAttributes: { 'aria-label': 'Gerekçenizi buraya yazın' },
-                showCancelButton: true,
-                confirmButtonText: 'Evrakı Reddet',
-                cancelButtonText: 'Vazgeç',
-                confirmButtonColor: '#d33',
-                inputValidator: (value) => {
-                    if (!value) {
-                        return 'Reddetme gerekçesi girmek zorunludur!'
-                    }
-                }
-            }).then((result) => {
-                // Eğer kullanıcı vazgeçmediyse ve notu girdiyse asıl API isteğini tetikliyoruz:
-                if (result.isConfirmed && result.value) {
-                    EvrakBekleyenListModule.reddet(id, result.value);
-                }
-            });
+            if (!confirm("Seçili evrakı iade etmek istediğinize emin misiniz?")) return;
+            ApiService.postJson("Akis/IadeEt/" + id + "?not=" + encodeURIComponent(not), {})
+                .done(function (response) {
+                    showNotification(response.mesaj || "Evrak başarıyla iade edildi.", "success");
+                    EvrakBekleyenListModule.loadData();
+                }).always(function () {
+                    kendo.ui.progress($gridEl, false);
+                });
+
         },
 
         edit: function (id) {
