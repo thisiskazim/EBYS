@@ -3,8 +3,11 @@
     var _aktifOlanFiltre = null;
 
     var _enumMap = {
-        'tamamlananlar': 2,
-        'iade': 3,   
+        'tumGidenEvraklar': 1,
+        'iadeEttiklerim': 2,
+        'sahsimaIadeEdilenler': 3,
+        'reddettiklerim': 4,
+        'banareddönen': 5
     };
    
 
@@ -16,7 +19,7 @@
 
         initGrid: function () {
             _grid = $("#gridGidenEvraklar").kendoGrid({
-                noRecords: { template: "<div class='p-5 text-center text-muted'>Kayıtlı gelen evrak bulunamadı.</div>" },
+                noRecords: { template: "<div class='p-5 text-center text-muted'>Kayıtlı giden evrak bulunamadı.</div>" },
                 sortable: true,
                 resizable: true,
                 pageable: { pageSize: 15, refresh: true, buttonCount: 5 },
@@ -28,7 +31,7 @@
                             var ekListesi = dataItem.ekler || [];
                             if (ekListesi.length === 0) return "<span class='text-muted small'>Dosya yok</span>";
 
-                            var html = `<div class='evrak-dosya-konteynir' onclick='GelenEvrakListModule.toggleEkler(this)'>
+                            var html = `<div class='evrak-dosya-konteynir' onclick='GidenEvrakListModule.toggleEkler(this)'>
                         <div class='small fw-bold text-info'>
                             <i class='fas fa-folder me-1'></i>${ekListesi.length} Adet Dosya
                             <i class='fas fa-chevron-down float-end mt-1 small'></i>
@@ -37,9 +40,9 @@
 
                             ekListesi.forEach(function (ek) {
                                 var uzanti = ek.dosyaUzantisi || "";
-                                var icon = GelenEvrakListModule.getIconByExtension(uzanti);
+                                var icon = GidenEvrakListModule.getIconByExtension(uzanti);
                                 var action = uzanti.toLowerCase().includes("pdf")
-                                    ? `EvrakOnizlemeModule.ac(${ek.id}, 'gelen')`
+                                    ? `EvrakOnizlemeModule.ac(${ek.id}, 'giden')`
                                     : `EvrakOnizlemeModule.dosyaIndir(${ek.id})`;
 
                                 html += `<div class='mb-1'>
@@ -156,8 +159,7 @@
                             title: "İşlem",
                             width: "120px",
                             template: function (dataItem) {
-                                var color = dataItem.adimDurumuStr.includes("İade") ? "danger" : "info";
-                                return `<span class='badge bg-${color}'>${dataItem.adimDurumuStr}</span>`;
+                                return `<span class='badge bg-info'>${dataItem.adimDurumuStr}</span>`;
                             }
                         },
                         {
@@ -176,7 +178,7 @@
        
         tabFiltrele: function (tabKey) {
             _aktifOlanFiltre = _enumMap[tabKey];
-            GelenEvrakListModule.loadData();
+            GidenEvrakListModule.loadData();
         },
         getIconByExtension: function (ext) {
             if (!ext) return "fas fa-file text-secondary";

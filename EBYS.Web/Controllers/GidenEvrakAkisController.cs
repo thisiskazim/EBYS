@@ -2,7 +2,7 @@
 
 namespace EBYS.Web.Controllers
 {
-    public class AkisController : Controller
+    public class GidenEvrakAkisController : Controller
     {
         public IActionResult ImzaBekleyenListele()
         {

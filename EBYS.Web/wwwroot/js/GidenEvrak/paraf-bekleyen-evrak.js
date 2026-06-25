@@ -20,12 +20,12 @@
                         attributes: { style: "text-align: center" },
                         template: function (dataItem) {
                             // Düzenle butonu yetki kontrolü
-                            var editHtml = dataItem.CanEdit
+                            var editHtml = dataItem.editYapabilirMi
                                 ? `<li><a class='dropdown-item py-2' href='#' onclick='EvrakBekleyenListModule.edit("${dataItem.Id}")'><i class='fas fa-edit text-primary me-2'></i>Düzenle</a></li>`
                                 : `<li><a class='dropdown-item disabled text-muted py-2' href='#'><i class='fas fa-lock me-2'></i>Düzenle <small>(Yetki Yok)</small></a></li>`;
 
                             // Sil butonu yetki kontrolü
-                            var deleteHtml = dataItem.CanEdit
+                            var deleteHtml = dataItem.editYapabilirMi
                                 ? `<li><a class='dropdown-item py-2 text-danger' href='#' onclick='EvrakBekleyenListModule.cancel("${dataItem.Id}")'><i class='fas fa-trash-alt me-2'></i>Sil</a></li>`
                                 : `<li><a class='dropdown-item disabled text-muted py-2' href='#'><i class='fas fa-lock me-2'></i>Sil <small>(Yetki Yok)</small></a></li>`;
 
@@ -230,7 +230,7 @@
 
         edit: function (id) {
 
-            window.location.href = '/Home/Index?id=' + id;
+            window.location.href = '/GidenEvrak/GidenEvrakOlustur?id=' + id;
         },
 
         cancel: function (id) {

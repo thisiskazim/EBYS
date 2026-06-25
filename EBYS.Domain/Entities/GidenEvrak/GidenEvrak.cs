@@ -18,7 +18,7 @@ namespace EBYS.Domain.Entities.GidenEvrak
         public string? ImzaAltindaOlanIcerik { get; set; }
         public int? EvrakSayisi { get; set; }
         public bool IsGelenEvrak { get; set; } 
-        public Enums.BelgeDurum BelgeDurum { get; set;} 
+        public Enums.GidenEvrakDurum BelgeDurum { get; set;} 
 
         public Enums.GizlilikDerecesi GizlilikDerecesi { get; set;}
         public Enums.IvedilikDerecesi IvedilikDerecesi { get; set;}

@@ -66,7 +66,7 @@
 
             ApiService.postFormData(action, formData).done(function () {
                 showNotification("Evrak başarıyla kaydedildi.", "success");
-                setTimeout(function () { window.location.href = "/Akis/ImzaBekleyenListele"; }, 1000);
+                setTimeout(function () { window.location.href = "/GidenEvrakAkis/ImzaBekleyenListele"; }, 1000);
             });
         },
 

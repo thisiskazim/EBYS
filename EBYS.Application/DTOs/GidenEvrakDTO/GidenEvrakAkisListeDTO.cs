@@ -2,7 +2,7 @@
 
 namespace EBYS.Application.DTOs.EvrakDTO
 {
-    public class GidenEvrakAkisListeDTO
+    public class GidenEvrakAkisListeDTO  //GİDEN EVRAK LİSTE AYNI ZAMANDA
     {
         public int Id { get; set; }
         public string OlusturanKullanici { get; set; }

@@ -18,7 +18,7 @@ namespace EBYS.Application.Services.GidenEvrakService
         public async Task AddAsync(GidenEvrakCreateDTO createDto)
         {
             var evrak = mapper.Map<GidenEvrak>(createDto);
-            evrak.BelgeDurum = Enums.BelgeDurum.Taslak;
+            evrak.BelgeDurum = Enums.GidenEvrakDurum.Taslak;
             evrak.EvrakSayisi= 0;
             evrak.IsGelenEvrak = false;
 

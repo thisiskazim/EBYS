@@ -219,7 +219,7 @@ var EvrakBekleyenListModule = (function () {
 
         edit: function (id) {
 
-            window.location.href = '/Home/Index?id=' + id;
+            window.location.href = '/GidenEvrak/GidenEvrakOlustur?id=' + id;
         },
 
         cancel: function (id) {

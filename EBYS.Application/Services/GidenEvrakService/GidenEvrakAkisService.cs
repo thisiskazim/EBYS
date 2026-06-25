@@ -47,15 +47,15 @@ namespace EBYS.Application.Services.GidenEvrakService
                 if (sonrakiAdim != null)
                 {
                     sonrakiAdim.SiradakiMi = true;
-                    if (entities.BelgeDurum == Enums.BelgeDurum.Taslak)
+                    if (entities.BelgeDurum == Enums.GidenEvrakDurum.Taslak)
                     {
-                        entities.BelgeDurum = Enums.BelgeDurum.Imzada;
+                        entities.BelgeDurum = Enums.GidenEvrakDurum.Imzada;
                     }
 
                 }
                 else
                 {
-                    entities.BelgeDurum = Enums.BelgeDurum.Tamamlandi;
+                    entities.BelgeDurum = Enums.GidenEvrakDurum.Tamamlandi;
 
                     entities.EvrakSayisi++;
                     //onaylanma tarihini eklenecek
@@ -81,16 +81,16 @@ namespace EBYS.Application.Services.GidenEvrakService
             if (suankiAdim == null)
                 throw new Exception("İade edilebilecek aktif bir akış adımı bulunamadı.");
 
-            entities.BelgeDurum = Enums.BelgeDurum.GeriIadeEdildi;
+            entities.BelgeDurum = Enums.GidenEvrakDurum.GeriIadeEdildi;
             suankiAdim.Not = $"İade Edildi. Gerekçe: {not}";
 
             foreach (var adim in entities.AkisAdimlari)
             {
-                adim.AdimDurumu = Enums.AkisAdimDurumu.IadeEdildi;
+                adim.AdimDurumu = Enums.AkisAdimDurumu.IadeEdildi;// düzenle
                 adim.SiradakiMi = false;
             }
 
-            var ilkAdim = entities.AkisAdimlari.FirstOrDefault(a => a.SiraNo == 1);
+            var ilkAdim = entities.AkisAdimlari.FirstOrDefault(a => a.SiraNo == 0);
             if (ilkAdim != null)
             {
                 ilkAdim.SiradakiMi = true;
@@ -115,7 +115,7 @@ namespace EBYS.Application.Services.GidenEvrakService
             if (suankiAdim == null)
                 throw new Exception("Reddedilebilecek aktif bir akış adımı bulunamadı.");
 
-            entities.BelgeDurum = Enums.BelgeDurum.Reddedildi;
+            entities.BelgeDurum = Enums.GidenEvrakDurum.Reddedildi;
             suankiAdim.AdimDurumu = Enums.AkisAdimDurumu.Reddedildi;
             suankiAdim.Not = $"Evrak Reddedildi. Gerekçe: {not}";
             suankiAdim.SiradakiMi = false;
@@ -192,7 +192,7 @@ namespace EBYS.Application.Services.GidenEvrakService
 
                 if (benimAdimim.SiraNo == 1)
                 {
-                    entities.BelgeDurum = Enums.BelgeDurum.Taslak;
+                    entities.BelgeDurum = Enums.GidenEvrakDurum.Taslak;
                 }
 
                 var result = await evrakRepository.SaveAsync();

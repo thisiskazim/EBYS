@@ -1,14 +1,16 @@
 ﻿
+
+
 <div class="container-fluid py-3" style="background-color: #f8fafc; min-height: 90vh;">
 
     @await Component.InvokeAsync("PageHeader", new PageHeaderModel
     {
-        Title = "Gelen Evrak Listesi",
+        Title = "Giden Evrak Listesi",
         BreadcrumbParent = "Evrak İşlemleri",
-        BreadcrumbCurrent = "Gelen Evrak Listesi",
-        FilterJsFunction = "GelenEvrakListModule.openFilterWindow()",
-        NewActionUrl = "/GelenEvrak/EvrakOlustur",
-        NewActionText = "Yeni Gelen Evrak"
+        BreadcrumbCurrent = "Giden Evrak Listesi",
+        FilterJsFunction = "GidenEvrakListModule.openFilterWindow()",
+        NewActionUrl = "/GidenEvrak/EvrakOlustur",
+        NewActionText = "Yeni Giden Evrak"
         })
 
     <div class="card shadow-sm border-0" style="border-radius: 16px; overflow: hidden;">
@@ -16,30 +18,37 @@
             <ul class="nav nav-tabs border-bottom-0" id="evrakTabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active fw-bold px-4 pb-3 position-relative text-secondary"
-                            id="tumEvraklar-tab" data-bs-toggle="tab" data-bs-target="#tumEvraklar" type="button"
-                            onclick="GelenEvrakListModule.tabFiltrele('tum')">
-                        <i class="fas fa-list-ul me-2"></i>Tüm Gelen Evraklar
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link fw-bold px-4 pb-3 position-relative text-secondary"
-                            id="adimaGelenler-tab" data-bs-toggle="tab" data-bs-target="#adimaGelenler" type="button"
-                            onclick="GelenEvrakListModule.tabFiltrele('adima')">
-                        <i class="fas fa-user-check me-2"></i>Şahsıma Sevk Edilenler
+                            id="tumGidenEvraklar-tab" data-bs-toggle="tab" data-bs-target="#tumGidenEvraklar" type="button"
+                            onclick="GidenEvrakListModule.tabFiltrele('tumGidenEvraklar')">
+                        <i class="fas fa-list-ul me-2"></i>Tüm Giden Evraklar
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link fw-bold px-4 pb-3 position-relative text-secondary"
                             id="iadeEttiklerim-tab" data-bs-toggle="tab" data-bs-target="#iadeEttiklerim" type="button"
-                            onclick="GelenEvrakListModule.tabFiltrele('iade')">
+                            onclick="GidenEvrakListModule.tabFiltrele('iadeEttiklerim')">
                         <i class="fas fa-undo-alt me-2"></i>İade Ettiklerim
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link fw-bold px-4 pb-3 position-relative text-secondary"
-                            id="cevapladiklarim-tab" data-bs-toggle="tab" data-bs-target="#cevapladiklarim" type="button"
-                            onclick="GelenEvrakListModule.tabFiltrele('cevap')">
-                        <i class="fas fa-reply me-2"></i>Cevapladıklarım
+                            id="sahsimaIadeEdilenler-tab" data-bs-toggle="tab" data-bs-target="#sahsimaIadeEdilenler" type="button"
+                            onclick="GidenEvrakListModule.tabFiltrele('sahsimaIadeEdilenler')">
+                        <i class="fas fa-user-check me-2"></i>Şahsıma İade Edilenler
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold px-4 pb-3 position-relative text-secondary"
+                            id="reddettiklerim-tab" data-bs-toggle="tab" data-bs-target="#reddettiklerim" type="button"
+                            onclick="GidenEvrakListModule.tabFiltrele('reddettiklerim')">
+                        <i class="fas fa-undo-alt me-2"></i>Reddettiklerim
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold px-4 pb-3 position-relative text-secondary"
+                            id="banareddönen-tab" data-bs-toggle="tab" data-bs-target="#banareddönen" type="button"
+                            onclick="GidenEvrakListModule.tabFiltrele('banareddönen')">
+                        <i class="fas fa-reply me-2"></i>Bana Red Dönen
                     </button>
                 </li>
             </ul>
@@ -48,7 +57,7 @@
         <div class="card-body p-0 bg-white">
             <div class="tab-content">
                 <div class="tab-pane fade show active" id="centralTabContent" role="tabpanel">
-                    <div id="gridGelenEvraklar" class="border-0"></div>
+                    <div id="gridGidenEvraklar" class="border-0"></div>
                 </div>
             </div>
         </div>
@@ -84,8 +93,8 @@
         <hr class="my-4 opacity-50">
 
         <div class="d-flex justify-content-end gap-2">
-            <button class="btn btn-light fw-bold px-4" onclick="GelenEvrakListModule.clearFilters()">Temizle</button>
-            <button class="btn btn-primary fw-bold px-4 shadow-sm" onclick="GelenEvrakListModule.filterGrid()">
+            <button class="btn btn-light fw-bold px-4" onclick="GidenEvrakListModule.clearFilters()">Temizle</button>
+            <button class="btn btn-primary fw-bold px-4 shadow-sm" onclick="GidenEvrakListModule.filterGrid()">
                 <i class="fas fa-search me-1"></i> Sorgula
             </button>
         </div>
@@ -102,4 +111,4 @@
 
 
 
-<script src="~/js/GelenEvrak/gelenevrak-list.js"></script>
+<script src="~/js/GidenEvrak/gidenevrak-list.js"></script>

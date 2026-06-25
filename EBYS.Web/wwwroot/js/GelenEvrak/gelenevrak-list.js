@@ -10,23 +10,7 @@
         'iade': 4,    
         'cevap': 5   
     };
-    //var _ajaxCall = function (url, type, data) {
-    //    return $.ajax({
-    //        url: _apiBaseUrl + url,
-    //        type: type,
-    //        contentType: "application/json",
-    //        data: data ? JSON.stringify(data) : null,
-    //        error: function (err) {
-    //            var msg = "Sistem hatası oluştu.";
-    //            if (err.responseJSON && err.responseJSON.mesaj) {
-    //                msg = err.responseJSON.mesaj;
-    //            } else if (err.responseText) {
-    //                msg = err.responseText;
-    //            }
-    //            showNotification(msg, "error");
-    //        }
-    //    });
-    //};
+
 
 
 
@@ -292,12 +276,14 @@
         
         },
 
+
+
+
+
         tabFiltrele: function (tabKey) {
             _aktifOlanFiltre = _enumMap[tabKey];
             GelenEvrakListModule.loadData();
         },
-
-
         getIconByExtension: function (ext) {
             if (!ext) return "fas fa-file text-secondary";
             ext = ext.toLowerCase();

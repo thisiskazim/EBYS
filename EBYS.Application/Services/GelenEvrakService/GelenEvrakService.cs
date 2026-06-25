@@ -104,8 +104,6 @@ namespace EBYS.Application.Services.GelenEvrakService
                 {
                     veri.EditYapabilirMi = veri.OlusturanId == olusturanId;
                     veri.IslemSirasiBendeMi = veri.AlanKullaniciId == olusturanId;
-
-
                 }
                return getVeri;
 
