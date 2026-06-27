@@ -3,6 +3,8 @@ using EBYS.Application.DTOs.EvrakDTO;
 using EBYS.Application.Interfaces.IService;
 using EBYS.Application.Interfaces.IService.IGidenEvrakService;
 using EBYS.Application.Services;
+using EBYS.Domain.Exceptions;
+using EBYS.Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EBYS.WebAPI.Controllers
@@ -15,94 +17,43 @@ namespace EBYS.WebAPI.Controllers
         [HttpPost("EvrakOlustur")]
         public async Task<IActionResult> EvrakOlustur([FromForm] GidenEvrakCreateDTO evrakCreateDTO)
         {
-
-            try
-            {
-                await evrakServive.AddAsync(evrakCreateDTO);
-                return Ok("Evrak başarıyla kaydedildi");
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-
-
+            await evrakServive.AddAsync(evrakCreateDTO);
+            return Ok("Evrak başarıyla kaydedildi");
         }
 
 
         [HttpPost("EvrakGuncelle")]
         public async Task<IActionResult> EvrakGuncelle([FromForm] GidenEvrakUpdateDTO evrakCreateDTO)
         {
-
-            try
-            {
-                await evrakServive.UpdateAsync(evrakCreateDTO);
-                return Ok("Evrak başarıyla güncellendi");
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-
-
+            await evrakServive.UpdateAsync(evrakCreateDTO);
+            return Ok("Evrak başarıyla güncellendi");
         }
 
         [HttpDelete("EvrakSil/{id}")]
         public async Task<IActionResult> EvrakSil(int id)
         {
-            try
-            {
-                await evrakServive.DeleteAsync(id);
-                return Ok("Evrak silindi");
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+
+            await evrakServive.DeleteAsync(id);
+            return Ok("Evrak silindi");
         }
-
-       
-
 
         [HttpGet("KonuKoduGet")]
         public async Task<IActionResult> KonuKoduGet()
         {
-            try
-            {
-                var konuKodlari = await konuKoduService.KonuKoduList();
-                return Ok(konuKodlari);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-
+            var konuKodlari = await konuKoduService.KonuKoduList();
+            return Ok(konuKodlari);
         }
-
-
 
         [HttpGet("EvrakGetir/{id}")]
         public async Task<IActionResult> EvrakGetirGetById(int id)
         {
+            var gelenVeri = await evrakServive.GetByIdAsync(id);
 
-            try
+            if (gelenVeri == null)
             {
-                var gelenVeri = await evrakServive.GetByIdAsync(id);
-
-                if (gelenVeri == null)
-                {
-                    return NotFound("Böyle bir evrak bulunamadı.");
-                }
-
-                return Ok(gelenVeri);
+                 throw new BadRequestException("Böyle bir evrak bulunamadı.");
             }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-
+            return Ok(gelenVeri);
         }
-
-
     }
 }

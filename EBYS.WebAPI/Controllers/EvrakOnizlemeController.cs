@@ -1,5 +1,6 @@
 ﻿using EBYS.Application.Interfaces.IService.IGelenEvrakService;
 using EBYS.Application.Interfaces.IService.IGidenEvrakService;
+using EBYS.Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,7 +28,8 @@ namespace EBYS.WebAPI.Controllers
                 dosyaVerisi = ek?.DosyaVerisi;
             }
 
-            if (dosyaVerisi == null) return NotFound("Dosya bulunamadı.");
+            if (dosyaVerisi == null) 
+                throw new NotFoundException("Dosya bulunamadı.");
 
             return File(dosyaVerisi, "application/pdf");
         }

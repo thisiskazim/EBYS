@@ -42,7 +42,7 @@ namespace EBYS.Application.Services.GidenEvrakService
                 evrak.İlgiler = mapper.Map<List<GidenEvrakIlgi>>(createDto.Ilgiler);
             }
 
-            // Seçilen rotanın detaylarını al
+        
             var rota = await imzaRotaRepository.GetImzaRotaVeAdimlariDetay(createDto.ImzaRotaId);
 
             if (rota?.ImzaRotaAdimlari != null)
