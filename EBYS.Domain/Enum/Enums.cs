@@ -14,14 +14,15 @@ namespace EBYS.Domain.Enum
             TuzelKisi = 2,
             Bireysel = 3
         }
-       public enum BelgeDurum
+       public enum GidenEvrakDurum
         {
             Taslak = 0,
             Imzada = 1,
             Tamamlandi = 2,
             GeriIadeEdildi =3,
-            HazirSablonOlarakKaydet = 4
-            
+            HazirSablonOlarakKaydet = 4,
+            Reddedildi = 5
+
         }
         public enum GizlilikDerecesi
         {
@@ -56,7 +57,15 @@ namespace EBYS.Domain.Enum
             SevkEdildi = 2,      
             TeslimAlindi = 3,    
             IadeEdildi = 4,     
-            Cevaplandi = 5      
+            Cevaplandi = 5   
+        }
+        public enum GidenEvrakFiltreTipi
+        {
+            TumGidenEvraklar = 1,
+            IadeEttiklerim = 2,
+            SahsimaIadeEdilenler = 3,
+            Reddettiklerim = 4,
+            BanaRedDonen = 5
         }
 
     }

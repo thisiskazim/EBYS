@@ -11,18 +11,37 @@ namespace EBYS.WebAPI.Controllers
         [HttpGet("imza-bekleyen-listele")]
         public async Task<IActionResult> ImzaBekleyenEvrakListele()
         {
-             var data = await akisService.ImzaBekleyenleriGetirAsync();
-             return Ok(data);
+            try
+            {
+                var data = await akisService.ImzaBekleyenleriGetirAsync();
+
+                return Ok(data);
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(e.Message);
+            }
+            
         }
 
 
         [HttpGet("paraf-bekleyen-listele")]
         public async Task<IActionResult> ParafBekleyenEvrakListele()
         {
-             var data = await akisService.ParafBekleyenleriGetirAsync();
-             return Ok(data);
-        }
+            try
+            {
+                var data = await akisService.ParafBekleyenleriGetirAsync();
 
+                return Ok(data);
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(e.Message);
+            }
+
+        }
 
         [HttpPost("Onayla/{id}")]
         public async Task<IActionResult> EvrakOnayla(int id)
@@ -38,8 +57,18 @@ namespace EBYS.WebAPI.Controllers
         [HttpGet("imzaya-gonderdiklerim")]
         public async Task<IActionResult> ImzayaGonderdiklerim()
         {
-            var data = await akisService.ImzayaGonderdigimAsync();
-            return Ok(data);
+            try
+            {
+                var data = await akisService.ImzayaGonderdigimAsync();
+
+                return Ok(data);
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(e.Message);
+            }
+
         }
 
 
@@ -54,11 +83,47 @@ namespace EBYS.WebAPI.Controllers
             return BadRequest(sonuc);
         }
 
+        [HttpPost("Reddet/{id}")]
+        public async Task<IActionResult> Reddet(int id, [FromQuery] string not)
+        {
+            var sonuc = await akisService.ReddetAsync(id, not);
+
+            if (sonuc.BasariliMi)
+                return Ok(sonuc);
+
+            return BadRequest(sonuc);
+        }
+
+        [HttpPost("IadeEt/{id}")]
+        public async Task<IActionResult> IadeEt(int id, [FromQuery] string not)
+        {
+            var sonuc = await akisService.IadeEtAsync(id, not);
+
+            if (sonuc.BasariliMi)
+                return Ok(sonuc);
+
+            return BadRequest(sonuc);
+        }
+
+
         [HttpGet("evrak-hareketleri/{id}")]
         public async Task<IActionResult> EvrakHareketleri(int id)
         {
-             var data = await akisService.EvrakHareketleriGetirAsync(id);
-             return Ok(data);
+            try
+            {
+                var data = await akisService.EvrakHareketleriGetirAsync(id);
+
+                return Ok(data);
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(e.Message);
+            }
+
         }
+
+
+
     }
 }

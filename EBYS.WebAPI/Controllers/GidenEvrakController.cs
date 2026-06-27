@@ -3,8 +3,6 @@ using EBYS.Application.DTOs.EvrakDTO;
 using EBYS.Application.Interfaces.IService;
 using EBYS.Application.Interfaces.IService.IGidenEvrakService;
 using EBYS.Application.Services;
-using EBYS.Domain.Exceptions;
-using EBYS.Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EBYS.WebAPI.Controllers
@@ -17,43 +15,98 @@ namespace EBYS.WebAPI.Controllers
         [HttpPost("EvrakOlustur")]
         public async Task<IActionResult> EvrakOlustur([FromForm] GidenEvrakCreateDTO evrakCreateDTO)
         {
-            await evrakServive.AddAsync(evrakCreateDTO);
-            return Ok("Evrak başarıyla kaydedildi");
+                await evrakServive.AddAsync(evrakCreateDTO);
+                return Ok("Evrak başarıyla kaydedildi");
         }
 
 
         [HttpPost("EvrakGuncelle")]
         public async Task<IActionResult> EvrakGuncelle([FromForm] GidenEvrakUpdateDTO evrakCreateDTO)
         {
-            await evrakServive.UpdateAsync(evrakCreateDTO);
-            return Ok("Evrak başarıyla güncellendi");
+
+            try
+            {
+                await evrakServive.UpdateAsync(evrakCreateDTO);
+                return Ok("Evrak başarıyla güncellendi");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+
         }
 
         [HttpDelete("EvrakSil/{id}")]
         public async Task<IActionResult> EvrakSil(int id)
         {
+            try
+            {
+                await evrakServive.DeleteAsync(id);
+                return Ok("Evrak silindi");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
-            await evrakServive.DeleteAsync(id);
-            return Ok("Evrak silindi");
+        [HttpGet("GelenEvraklarGetAll")]
+        public async Task<IActionResult> GelenEvraklarGetAll()
+        {
+            try
+            {
+                var gelenVeri = await evrakServive.GetAllAsync();
+                if (gelenVeri == null)
+                {
+                    return NotFound("Evrak bulunamadı.");
+                }
+
+                return Ok(gelenVeri);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet("KonuKoduGet")]
         public async Task<IActionResult> KonuKoduGet()
         {
-            var konuKodlari = await konuKoduService.KonuKoduList();
-            return Ok(konuKodlari);
+            try
+            {
+                var konuKodlari = await konuKoduService.KonuKoduList();
+                return Ok(konuKodlari);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
         }
 
         [HttpGet("EvrakGetir/{id}")]
         public async Task<IActionResult> EvrakGetirGetById(int id)
         {
-            var gelenVeri = await evrakServive.GetByIdAsync(id);
 
-            if (gelenVeri == null)
+            try
             {
-                 throw new BadRequestException("Böyle bir evrak bulunamadı.");
+                var gelenVeri = await evrakServive.GetByIdAsync(id);
+
+                if (gelenVeri == null)
+                {
+                    return NotFound("Böyle bir evrak bulunamadı.");
+                }
+
+                return Ok(gelenVeri);
             }
-            return Ok(gelenVeri);
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
         }
+
+       
     }
 }

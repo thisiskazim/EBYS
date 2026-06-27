@@ -1,20 +1,6 @@
 ﻿var ImzaRotaListModule = (function () {
     var _grid = null;
-    var _apiBaseUrl = "https://localhost:7060/api/ImzaRota/";
-
-    var _ajaxCall = function (url, type, data) {
-        return $.ajax({
-            url: _apiBaseUrl + url,
-            type: type,
-            contentType: "application/json",
-            data: data ? JSON.stringify(data) : null,
-            error: function (err) {
-                var msg = err && err.responseText ? err.responseText : "Hata oluştu.";
-                showNotification(msg, "error");
-            }
-        });
-    };
-
+  
     return {
         init: function () {
             this.initGrid();
@@ -62,7 +48,7 @@
                                     e.preventDefault();
                                     var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
                                     if (confirm(dataItem.RotaAdi + " silinecek. Emin misiniz?")) {
-                                        _ajaxCall("ImzaRotaSil/" + dataItem.Id, "DELETE").done(function () {
+                                        ApiService.delete("ImzaRota/ImzaRotaSil/" + dataItem.Id).done(function () {
                                             _grid.dataSource.remove(dataItem);
                                             showNotification("Başarıyla silindi.", "success");
                                         });
@@ -78,7 +64,7 @@
         },
 
         loadData: function () {
-            _ajaxCall('ImzaRotaListesi', 'GET').done(function (res) {
+            ApiService.getJson('ImzaRota/ImzaRotaListesi').done(function (res) {
                 var list = Array.isArray(res) ? res : (res.data || res.rota || []);
                 _grid.dataSource.data(list.map(x => ({ Id: x.id || x.Id, RotaAdi: x.rotaAdi || x.RotaAdi })));
             });

@@ -76,7 +76,7 @@
                     document.cookie = "AuthToken=" + response.token + "; path=/; SameSite=Strict";
                     localStorage.setItem("token", response.token);
 
-                    window.location.href = "/Home/Index";
+                    window.location.href = "/GidenEvrak/GidenEvrakOlustur";
                 },
                 error: function (error) {
                     var msg = error && error.responseText ? error.responseText : 'Giriş hatası';

@@ -1,19 +1,5 @@
 ﻿var ImzaRotaListModule = (function () {
     var _grid = null;
-    var _apiBaseUrl = "https://localhost:7060/api/KurumMuhatap/";
-
-    var _ajaxCall = function (url, type, data) {
-        return $.ajax({
-            url: _apiBaseUrl + url,
-            type: type,
-            contentType: "application/json",
-            data: data ? JSON.stringify(data) : null,
-            error: function (err) {
-                var msg = err && err.responseText ? err.responseText : "Hata oluştu.";
-                showNotification(msg, "error");
-            }
-        });
-    };
 
     return {
         init: function () {
@@ -68,7 +54,7 @@
                                     e.preventDefault();
                                     var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
                                     if (confirm(dataItem.Adi + " silinecek. Emin misiniz?")) {
-                                        _ajaxCall("Sil/" + dataItem.Id, "DELETE").done(function () {
+                                        ApiService.delete("KurumMuhatap/Sil/" + dataItem.Id).done(function () {
                                             _grid.dataSource.remove(dataItem);
                                             showNotification("Başarıyla silindi.", "success");
                                         });
@@ -84,7 +70,7 @@
         },
 
         loadData: function () {
-            _ajaxCall('Listele', 'GET').done(function (res) {
+            ApiService.getJson('KurumMuhatap/Listele').done(function (res) {
                 var list = Array.isArray(res) ? res : (res.data || res.muhatap || []);
                 _grid.dataSource.data(list.map(x => ({ Id: x.id || x.Id, Adi: x.Adi || x.adi, Adress: x.adress })));
             });

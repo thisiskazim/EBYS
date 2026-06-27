@@ -1,29 +1,12 @@
 ﻿var EvrakOlustur = (function () {
-    var _apiBaseUrl = "https://localhost:7060/api/GidenEvrak/";
-
-    var _ajaxCallFormData = function (url, formData) {
-        return $.ajax({
-            url: _apiBaseUrl + url,
-            type: "POST",
-            data: formData,
-            processData: false, 
-            contentType: false, 
-            error: function (err) {
-                var msg = err && err.responseText ? err.responseText : "Hata oluştu.";
-                showNotification(msg, "error");
-            }
-        });
-    };
-
     return {
         init: function () {
             this.loadInitialData();
-        },
+        },  
 
         updateImzaciFromRota: function (rotaId) {
             if (!rotaId || rotaId === "0") return;
-
-            $.get("https://localhost:7060/api/ImzaRota/ImzaRotaGetir/" + rotaId, function (response) {
+            ApiService.getJson("ImzaRota/ImzaRotaGetir/" + rotaId).done(function (response) {
        
                 var adimlar = response.rotaAdimlari || [];
 
@@ -34,8 +17,6 @@
             
                     var ad = sonAdim.adSoyad;
                     var unvan = sonAdim.rolAdi;
-
-         
 
                     if (typeof OnizlemeModule !== "undefined") {
                         OnizlemeModule.setImzaci(ad, unvan);
@@ -81,11 +62,11 @@
             });
 
        
-            var action = bilgiler.Id > 0 ? "EvrakGuncelle" : "EvrakOlustur";
+            var action = bilgiler.Id > 0 ? "GidenEvrak/EvrakGuncelle" : "GidenEvrak/EvrakOlustur";
 
-            _ajaxCallFormData(action, formData).done(function (response) {
+            ApiService.postFormData(action, formData).done(function () {
                 showNotification("Evrak başarıyla kaydedildi.", "success");
-                setTimeout(function () { window.location.href = "/Akis/ImzaBekleyenListele"; }, 1000);
+                setTimeout(function () { window.location.href = "/GidenEvrakAkis/ImzaBekleyenListele"; }, 1000);
             });
         },
 
@@ -95,7 +76,7 @@
 
             if (id && id !== "0" && id !== "") {
      
-                $.get(_apiBaseUrl + "EvrakGetir/" + id, function (response) {
+                ApiService.getJson("GidenEvrak/EvrakGetir/" + id).done(function (response) {
                     EvrakBilgiModule.setData(response);
                     AliciModule.setData(response.muhataplar);
                     IlgilerModule.setData(response.ilgiler);
