@@ -6,7 +6,6 @@ using EBYS.Application.Interfaces.IService.IGelenEvrakService;
 using EBYS.Application.Interfaces.Repository;
 using EBYS.Domain.Entities.GelenEvrak;
 using EBYS.Domain.Enum;
-using EBYS.Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using System.Runtime.InteropServices;
 
@@ -20,6 +19,8 @@ namespace EBYS.Application.Services.GelenEvrakService
         public async Task AddAsync(GelenEvrakCreateDTO createDto)
         {
 
+            try
+            {
                 var evrak = mapper.Map<GelenEvrak>(createDto);
                 evrak.KayitNo = await KayitNumarasiOlustur();
 
@@ -65,7 +66,7 @@ namespace EBYS.Application.Services.GelenEvrakService
                     evrak.Sevkler = new List<GelenEvrakSevk>();
                 }
 
-                var ilkSevk = new GelenEvrakSevk    
+                var ilkSevk = new GelenEvrakSevk
                 {
                     SevkEdenKullaniciId = evrakRepository.GetContextUserId(),
                     SevkTarihi = DateTime.Now,
@@ -75,7 +76,12 @@ namespace EBYS.Application.Services.GelenEvrakService
 
                 await evrakRepository.AddAsync(evrak);
                 await evrakRepository.SaveAsync();
-            
+            }
+            catch (Exception ex)
+            {
+                var message = ex.InnerException?.Message ?? ex.Message;
+                throw new Exception("Veritabanı Hatası: " + message);
+            }
         }
 
         public async Task DeleteAsync(int id)
@@ -83,7 +89,8 @@ namespace EBYS.Application.Services.GelenEvrakService
             var getVeri = await evrakRepository.GetByIdAsync(id);
             if (getVeri == null)
             {
-                throw new BadRequestException("Evrak bulunamadı");
+                throw new Exception("Evrak bulunamadı");
+
             }
             evrakRepository.DeleteAsync(getVeri);
             await evrakRepository.SaveAsync();
@@ -91,56 +98,78 @@ namespace EBYS.Application.Services.GelenEvrakService
 
         public async Task<List<GelenEvrakListDTO>> GelenEvraklariFiltreliListeleAsync(Enums.GelenEvrakDurumu? durum)
         {
-           
+            try
+            {
                 var olusturanId = evrakRepository.GetContextUserId();
 
                 var getVeri = await evrakRepository.FiltreliEvrakGetirAsync(olusturanId,durum);
 
                 if (getVeri is null)
                 {
-                    throw new BadRequestException("Gelen Evrak bulunamadı");
+                    throw new Exception("Gelen Evrak bulunamadı");
                 }
 
                 foreach (var veri in getVeri)
                 {
                     veri.EditYapabilirMi = veri.OlusturanId == olusturanId;
                     veri.IslemSirasiBendeMi = veri.AlanKullaniciId == olusturanId;
+
+
                 }
 
+
                return getVeri;
+
+
+            }
+            catch (Exception ex)
+            {
+                var message = ex.InnerException?.Message ?? ex.Message;
+                throw new Exception("Veritabanı Hatası: " + message);
+            }
+
         }
 
         public async Task<GelenEvrakUpdateDTO> GetByIdAsync(int id)
         {
-
+            try
+            {
                 var getVeri = await evrakRepository.DetayliGetirByIdAsync(id);
 
                 if (getVeri is null)
                 {
-                    throw new BadRequestException("Rota Bulunamadı");
+                    throw new Exception("Rota Bulunamadı");
                 }
                 var dto = mapper.Map<GelenEvrakUpdateDTO>(getVeri);
 
                 return dto;
+            }
+            catch (Exception ex)
+            {
+                var message = ex.InnerException?.Message ?? ex.Message;
+                throw new Exception("Veritabanı Hatası: " + message);
+            }
+
         }
 
         public async Task UpdateAsync(GelenEvrakUpdateDTO updateDto)
         {
-           
+            try
+            {
                 var mevcutEvrak = await evrakRepository.DetayliGetirByIdAsync(updateDto.Id);
 
                 if (mevcutEvrak == null)
                 {
-                    throw new BadRequestException("Güncellenecek evrak bulunamadı.");
+                    throw new Exception("Güncellenecek evrak bulunamadı.");
                 }
 
                 mapper.Map(updateDto, mevcutEvrak);
+
 
                 var ilgiListesi = updateDto.Ilgiler ?? new List<GelenEvrakIlgiUpdateDTO>();
                 var dtoIlgiIds = ilgiListesi.Where(x => x.Id > 0).Select(x => x.Id).ToList();
 
                 var silinecekIlgiler = mevcutEvrak.Ilgileri.Where(x => !dtoIlgiIds.Contains(x.Id)).ToList();
-
                 foreach (var sil in silinecekIlgiler)
                 {
                     mevcutEvrak.Ilgileri.Remove(sil);
@@ -162,6 +191,7 @@ namespace EBYS.Application.Services.GelenEvrakService
                     }
                 }
 
+
                 var ekListesi = updateDto.Ekler ?? new List<GelenEvrakEkUpdateDTO>();
                 var dtoEkIds = ekListesi.Where(x => x.Id > 0).Select(x => x.Id).ToList();
 
@@ -175,12 +205,7 @@ namespace EBYS.Application.Services.GelenEvrakService
                 {
                     if (ekDto.Id == 0 && ekDto.Dosya != null)
                     {
-                        if (ekDto.Dosya.Length > 10 * 1024 * 1024) 
-                        {
-                            throw new BadRequestException("Yüklenecek ek dosya boyutu 10 MB'ı geçemez.");
-                        }
-
-                    var fileResult = await ProcessFileAsync(ekDto.Dosya);
+                        var fileResult = await ProcessFileAsync(ekDto.Dosya);
                         var yeniEk = mapper.Map<GelenEvrakEk>(ekDto);
                         yeniEk.DosyaVerisi = fileResult.Data;
                         yeniEk.DosyaUzantisi = fileResult.Extension;
@@ -200,11 +225,7 @@ namespace EBYS.Application.Services.GelenEvrakService
 
                             if (ekDto.Dosya != null)
                             {
-                                if (ekDto.Dosya.Length > 10 * 1024 * 1024) 
-                                {
-                                    throw new BadRequestException("Yüklenecek ek dosya boyutu 10 MB'ı geçemez.");
-                                }
-                            var fileResult = await ProcessFileAsync(ekDto.Dosya);
+                                var fileResult = await ProcessFileAsync(ekDto.Dosya);
                                 mevcutEk.DosyaVerisi = fileResult.Data;
                                 mevcutEk.DosyaUzantisi = fileResult.Extension;
                                 mevcutEk.MimeType = fileResult.MimeType;
@@ -215,11 +236,19 @@ namespace EBYS.Application.Services.GelenEvrakService
 
                 evrakRepository.UpdateAsync(mevcutEvrak);
                 await evrakRepository.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                var message = ex.InnerException?.Message ?? ex.Message;
+                throw new Exception("Veritabanı Hatası: " + message);
+            }
+
         }
-       
+
         public async Task<EvrakOnizlemeBaseDTO> GelenEvrakEkOnizlemeAsync(int ekId)
         {
-
+            try
+            {
                 var getVeri = await evrakRepository.GelenEvrakEkDosyaByIdAsync(ekId);
 
                 if (getVeri == null)
@@ -228,19 +257,36 @@ namespace EBYS.Application.Services.GelenEvrakService
                 }
                 var dto = mapper.Map<EvrakOnizlemeBaseDTO>(getVeri);
                 return dto;
-
+            }
+            catch (Exception ex)
+            {
+                var message = ex.InnerException?.Message ?? ex.Message;
+                throw new Exception("Veritabanı Hatası: " + message);
+            }
+       
         }
 
         public async Task<List<GelenEvrakSevkListDTO>> GelenEvrakHareketleri(int evrakId)
         {
-           
+            try
+            {
                 var getVeri = await evrakRepository.GelenEvrakSevkHareketleriAsync(evrakId);
 
                 if (getVeri is null)
                 {
-                    throw new BadRequestException("Evrak Hareketi Bulunamadı");
+                    throw new Exception("Evrak Hareketi Bulunamadı");
                 }
+
                 return getVeri;
+            }
+            catch (Exception ex)
+            {
+                var message = ex.InnerException?.Message ?? ex.Message;
+                throw new Exception("Veritabanı Hatası: " + message);
+            }
+           
+
+
 
         }
 
@@ -251,7 +297,7 @@ namespace EBYS.Application.Services.GelenEvrakService
 
             if(sevkEntity is null)
             {
-                throw new BadRequestException("Bu evrak daha önce başka bir kullanıcı tarafından teslim alınmış.");
+                throw new Exception("Bu evrak daha önce başka bir kullanıcı tarafından teslim alınmış.");
             }
 
             sevkEntity.AlanKullaniciId = currentUserId;
@@ -277,6 +323,7 @@ namespace EBYS.Application.Services.GelenEvrakService
         private async Task<string> KayitNumarasiOlustur()
         {
             int yil = DateTime.Now.Year;
+
             int count = await evrakRepository.KayitNumarasiOlustur(yil);
 
             return $"{yil}/{count + 1}";

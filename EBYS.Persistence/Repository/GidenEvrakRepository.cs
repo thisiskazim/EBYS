@@ -59,13 +59,13 @@ namespace EBYS.Persistence.Repository
                     return await _context.Evraklar
                 .Where(e => e.BelgeDurum == Enums.BelgeDurum.Imzada &&
                             e.AkisAdimlari.Any(a => a.KullaniciId == userId && a.AdimDurumu == Enums.AkisAdimDurumu.Onaylandi))
-                .OrderByDescending(e => e.creat_time) 
+                .OrderByDescending(e => e.creat_time) // En yeni evraklar üstte gelsin
                 .AsNoTracking()
                 .ProjectTo<GidenEvrakAkisListeDTO>(_mapper.ConfigurationProvider) 
                 .ToListAsync();
         }
 
-        public async Task<List<GidenEvrak>> IslemBekleyenlenKullaniciSorguAsync(int userId, Enums.ImzaTipi imzaTipi)
+        public async Task<List<GidenEvrak>> IslemBekleyenlenKullaniciSorguAsync(int userId, Enums.ImzaTipi imzaTipi)//evrak mı parafmı berkleyenlerde kullanıcıya göre sorgu
         {
 
             return await _context.Evraklar

@@ -11,17 +11,38 @@ namespace EBYS.WebAPI.Controllers
         [HttpGet("imza-bekleyen-listele")]
         public async Task<IActionResult> ImzaBekleyenEvrakListele()
         {
-             var data = await akisService.ImzaBekleyenleriGetirAsync();
-             return Ok(data);
+            try
+            {
+                var data = await akisService.ImzaBekleyenleriGetirAsync();
+
+                return Ok(data);
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(e.Message);
+            }
+            
         }
 
 
         [HttpGet("paraf-bekleyen-listele")]
         public async Task<IActionResult> ParafBekleyenEvrakListele()
         {
-             var data = await akisService.ParafBekleyenleriGetirAsync();
-             return Ok(data);
+            try
+            {
+                var data = await akisService.ParafBekleyenleriGetirAsync();
+
+                return Ok(data);
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(e.Message);
+            }
+
         }
+
 
 
         [HttpPost("Onayla/{id}")]
@@ -38,8 +59,18 @@ namespace EBYS.WebAPI.Controllers
         [HttpGet("imzaya-gonderdiklerim")]
         public async Task<IActionResult> ImzayaGonderdiklerim()
         {
-            var data = await akisService.ImzayaGonderdigimAsync();
-            return Ok(data);
+            try
+            {
+                var data = await akisService.ImzayaGonderdigimAsync();
+
+                return Ok(data);
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(e.Message);
+            }
+
         }
 
 
@@ -57,8 +88,21 @@ namespace EBYS.WebAPI.Controllers
         [HttpGet("evrak-hareketleri/{id}")]
         public async Task<IActionResult> EvrakHareketleri(int id)
         {
-             var data = await akisService.EvrakHareketleriGetirAsync(id);
-             return Ok(data);
+            try
+            {
+                var data = await akisService.EvrakHareketleriGetirAsync(id);
+
+                return Ok(data);
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(e.Message);
+            }
+
         }
+
+
+
     }
 }

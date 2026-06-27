@@ -12,7 +12,6 @@ using EBYS.Application.Services.MuhatapService;
 using EBYS.Persistence;
 using EBYS.Persistence.Repository;
 using EBYS.Persistence.Services;
-using EBYS.WebAPI.Handler;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -60,11 +59,16 @@ builder.Services.AddScoped<IGelenEvrakService, GelenEvrakService>();
 builder.Services.AddScoped<IGelenEvrakRepository, GelenEvrakRepository>();
 
 
+
+
+
+
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddKendo();
 
 builder.Services.AddSwaggerGen(c =>
 {
+
     c.CustomSchemaIds(type => type.FullName);
 });
 
@@ -104,8 +108,6 @@ builder.Services.AddControllers(options =>
 builder.Services.AddControllers()
     .AddNewtonsoftJson();
 
-builder.Services.AddProblemDetails();
-builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowAll", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
@@ -113,16 +115,16 @@ builder.Services.AddCors(options => {
 
 
 var app = builder.Build();
-app.UseExceptionHandler();
+
 
 if (app.Environment.IsDevelopment())
 {
+
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
 app.UseCors("AllowAll");
-
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
