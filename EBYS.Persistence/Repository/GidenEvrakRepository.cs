@@ -85,7 +85,9 @@ namespace EBYS.Persistence.Repository
                             .ToListAsync();
         }
 
-        public async Task<List<GidenEvrakAkisListeDTO>> FiltreliEvrakGetirAsync(int currentUserId, Enums.GidenEvrakFiltreTipi? filtreTipi)
+
+
+        public async Task<List<GidenEvrakAkisListeDTO>> FiltreliEvrakGetirAsync(int? currentUserId, GidenEvrakFiltreTipi? filtreTipi)
         {
             var query = _context.Evraklar.AsNoTracking().Where(x => !x.isDelete && x.IsGelenEvrak == false);
 
@@ -95,7 +97,7 @@ namespace EBYS.Persistence.Repository
                 {
 
                     case GidenEvrakFiltreTipi.TumGidenEvraklar:
-                        query = query.Where(x => x.EvrakSayisi > 0 && x.BelgeDurum == Enums.GidenEvrakDurum.Tamamlandi );
+                        query = query.Where(x => x.EvrakSayisi > 0 && x.BelgeDurum == Enums.GidenEvrakDurum.Tamamlandi);
                         break;
 
                     case GidenEvrakFiltreTipi.IadeEttiklerim:
@@ -116,10 +118,10 @@ namespace EBYS.Persistence.Repository
 
                 }
             }
-                    return await query
-                    .OrderByDescending(x => x.creat_time)
-                    .ProjectTo<GidenEvrakAkisListeDTO>(_mapper.ConfigurationProvider)
-                    .ToListAsync();
+            return await query
+            .OrderByDescending(x => x.creat_time)
+            .ProjectTo<GidenEvrakAkisListeDTO>(_mapper.ConfigurationProvider)
+            .ToListAsync();
         }
     }
 }
