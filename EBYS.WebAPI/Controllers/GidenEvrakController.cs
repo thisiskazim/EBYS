@@ -15,18 +15,8 @@ namespace EBYS.WebAPI.Controllers
         [HttpPost("EvrakOlustur")]
         public async Task<IActionResult> EvrakOlustur([FromForm] GidenEvrakCreateDTO evrakCreateDTO)
         {
-
-            try
-            {
                 await evrakServive.AddAsync(evrakCreateDTO);
                 return Ok("Evrak başarıyla kaydedildi");
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-
-
         }
 
 
@@ -61,8 +51,24 @@ namespace EBYS.WebAPI.Controllers
             }
         }
 
-       
+        [HttpGet("GelenEvraklarGetAll")]
+        public async Task<IActionResult> GelenEvraklarGetAll()
+        {
+            try
+            {
+                var gelenVeri = await evrakServive.GetAllAsync();
+                if (gelenVeri == null)
+                {
+                    return NotFound("Evrak bulunamadı.");
+                }
 
+                return Ok(gelenVeri);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
         [HttpGet("KonuKoduGet")]
         public async Task<IActionResult> KonuKoduGet()
@@ -78,8 +84,6 @@ namespace EBYS.WebAPI.Controllers
             }
 
         }
-
-
 
         [HttpGet("EvrakGetir/{id}")]
         public async Task<IActionResult> EvrakGetirGetById(int id)
@@ -103,6 +107,6 @@ namespace EBYS.WebAPI.Controllers
 
         }
 
-
+       
     }
 }

@@ -22,9 +22,7 @@
                 var fileURL = URL.createObjectURL(_asilEvrakFile);
                 $("#pdf-preview-frame").attr("src", fileURL);
 
-                if (typeof showNotification !== "undefined") {
-                    showNotification("Üst yazı önizlemeye yüklendi.", "info");
-                }
+               
             }
         },
 

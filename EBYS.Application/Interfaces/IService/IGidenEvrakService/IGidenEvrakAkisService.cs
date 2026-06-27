@@ -19,9 +19,9 @@ namespace EBYS.Application.Interfaces.IService.IGidenEvrakService
 
         Task<IslemSonuc> GeriCekAsync(int evrakId);
 
-        Task<bool> ReddetAsync(int evrakId, string neden);
+        Task<IslemSonuc> ReddetAsync(int evrakId, string not);
 
         
-        Task<bool> IadeEtAsync(int evrakId, string neden);
+        Task<IslemSonuc> IadeEtAsync(int evrakId, string not);
     }
 }

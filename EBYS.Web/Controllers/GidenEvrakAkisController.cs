@@ -2,7 +2,7 @@
 
 namespace EBYS.Web.Controllers
 {
-    public class AkisController : Controller
+    public class GidenEvrakAkisController : Controller
     {
         public IActionResult ImzaBekleyenListele()
         {
@@ -13,6 +13,11 @@ namespace EBYS.Web.Controllers
             return View();
         }
         public IActionResult ImzayaGonderdiklerimListe()
+        {
+            return View();
+        }
+
+        public IActionResult TumGidenEvraklarListele()
         {
             return View();
         }

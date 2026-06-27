@@ -43,8 +43,6 @@ namespace EBYS.WebAPI.Controllers
 
         }
 
-
-
         [HttpPost("Onayla/{id}")]
         public async Task<IActionResult> EvrakOnayla(int id)
         {
@@ -84,6 +82,29 @@ namespace EBYS.WebAPI.Controllers
 
             return BadRequest(sonuc);
         }
+
+        [HttpPost("Reddet/{id}")]
+        public async Task<IActionResult> Reddet(int id, [FromQuery] string not)
+        {
+            var sonuc = await akisService.ReddetAsync(id, not);
+
+            if (sonuc.BasariliMi)
+                return Ok(sonuc);
+
+            return BadRequest(sonuc);
+        }
+
+        [HttpPost("IadeEt/{id}")]
+        public async Task<IActionResult> IadeEt(int id, [FromQuery] string not)
+        {
+            var sonuc = await akisService.IadeEtAsync(id, not);
+
+            if (sonuc.BasariliMi)
+                return Ok(sonuc);
+
+            return BadRequest(sonuc);
+        }
+
 
         [HttpGet("evrak-hareketleri/{id}")]
         public async Task<IActionResult> EvrakHareketleri(int id)

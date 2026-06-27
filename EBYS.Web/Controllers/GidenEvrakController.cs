@@ -4,10 +4,10 @@ using System.Diagnostics;
 
 namespace EBYS.Web.Controllers
 {
-    public class HomeController : Controller
+    public class GidenEvrakController : Controller
     {
 
-        public IActionResult Index(int? EvrakId)
+        public IActionResult GidenEvrakOlustur(int? EvrakId)
         {
             if (EvrakId.HasValue)
             {

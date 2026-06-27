@@ -4,6 +4,7 @@ using EBYS.Application.DTOs.EvrakDTO;
 using EBYS.Application.Interfaces.IService.IGidenEvrakService;
 using EBYS.Application.Interfaces.Repository;
 using EBYS.Domain.Enum;
+using EBYS.Domain.Exceptions;
 using EBYS.Domain.Utilities;
 
 namespace EBYS.Application.Services.GidenEvrakService
@@ -22,8 +23,7 @@ namespace EBYS.Application.Services.GidenEvrakService
         }
         public async Task<IslemSonuc> OnaylaAsync(int evrakId)
         {
-            try
-            {
+     
                 var entities = await evrakRepository.AkisAdimlariSorguAsync(evrakId);
 
                 if (entities == null) throw new Exception("Evrak bulunamadı.");
@@ -47,15 +47,15 @@ namespace EBYS.Application.Services.GidenEvrakService
                 if (sonrakiAdim != null)
                 {
                     sonrakiAdim.SiradakiMi = true;
-                    if (entities.BelgeDurum == Enums.BelgeDurum.Taslak)
+                    if (entities.BelgeDurum == Enums.GidenEvrakDurum.Taslak)
                     {
-                        entities.BelgeDurum = Enums.BelgeDurum.Imzada;
+                        entities.BelgeDurum = Enums.GidenEvrakDurum.Imzada;
                     }
 
                 }
                 else
                 {
-                    entities.BelgeDurum = Enums.BelgeDurum.Tamamlandi;
+                    entities.BelgeDurum = Enums.GidenEvrakDurum.Tamamlandi;
 
                     entities.EvrakSayisi++;
                     //onaylanma tarihini eklenecek
@@ -66,20 +66,72 @@ namespace EBYS.Application.Services.GidenEvrakService
                     return new IslemSonuc(true, "Onay işlemi başarıyla tamamlandı.");
 
                 return new IslemSonuc(false, "Veritabanı güncelleme sırasında bir hata oluştu.");
-            }
-            catch (Exception ex)
-            {
-                return new IslemSonuc(false, $"Beklenmedik bir hata: {ex.Message}");
-            }
         }
-        public Task<bool> IadeEtAsync(int evrakId, string neden)
+       
+        
+        public async Task<IslemSonuc> IadeEtAsync(int evrakId, string not)
         {
-            throw new NotImplementedException();
+            var entities = await evrakRepository.AkisAdimlariSorguAsync(evrakId);
+
+            if (entities == null)
+                throw new EvrakHareketiBulunamadi();
+
+            var suankiAdim = entities.AkisAdimlari.FirstOrDefault(a => a.SiradakiMi && a.AdimDurumu == Enums.AkisAdimDurumu.Bekliyor);
+
+            if (suankiAdim == null)
+                throw new Exception("İade edilebilecek aktif bir akış adımı bulunamadı.");
+
+            entities.BelgeDurum = Enums.GidenEvrakDurum.GeriIadeEdildi;
+            suankiAdim.Not = $"İade Edildi. Gerekçe: {not}";
+
+            foreach (var adim in entities.AkisAdimlari)
+            {
+                adim.AdimDurumu = Enums.AkisAdimDurumu.IadeEdildi;// düzenle
+                adim.SiradakiMi = false;
+            }
+
+            var ilkAdim = entities.AkisAdimlari.FirstOrDefault(a => a.SiraNo == 0);
+            if (ilkAdim != null)
+            {
+                ilkAdim.SiradakiMi = true;
+            }
+
+            var saveResult = await evrakRepository.SaveAsync();
+
+            if (saveResult > 0)
+                return new IslemSonuc(true,"Evrak başarıyla iade edildi ve hazırlayan memura geri gönderildi.");
+
+            return new IslemSonuc(false, "İade işlemi sırasında veritabanı güncellenemedi.");
         }
 
-        public Task<bool> ReddetAsync(int evrakId, string neden)
+        public async Task<IslemSonuc> ReddetAsync(int evrakId, string not)
         {
-            throw new NotImplementedException();
+            var entities = await evrakRepository.AkisAdimlariSorguAsync(evrakId);
+            if (entities == null)
+                throw new EvrakHareketiBulunamadi();
+
+            var suankiAdim = entities.AkisAdimlari.FirstOrDefault(a => a.SiradakiMi && a.AdimDurumu == Enums.AkisAdimDurumu.Bekliyor);
+
+            if (suankiAdim == null)
+                throw new Exception("Reddedilebilecek aktif bir akış adımı bulunamadı.");
+
+            entities.BelgeDurum = Enums.GidenEvrakDurum.Reddedildi;
+            suankiAdim.AdimDurumu = Enums.AkisAdimDurumu.Reddedildi;
+            suankiAdim.Not = $"Evrak Reddedildi. Gerekçe: {not}";
+            suankiAdim.SiradakiMi = false;
+
+            foreach (var adim in entities.AkisAdimlari.Where(a => a.SiraNo != suankiAdim.SiraNo))
+            {
+                adim.SiradakiMi = false;
+            }
+
+            var saveResult = await evrakRepository.SaveAsync();
+
+            if (saveResult > 0)
+                return new IslemSonuc(true, "Evrak başarıyla reddedildi.");
+
+            return new IslemSonuc(false, "Reddetme işlemi sırasında veritabanı güncellenemedi.");
+
         }
 
 
@@ -109,8 +161,7 @@ namespace EBYS.Application.Services.GidenEvrakService
 
         public async Task<IslemSonuc> GeriCekAsync(int evrakId)
         {
-            try
-            {
+      
                 var userId = evrakRepository.GetContextUserId();
                 var entities = evrakRepository.AkisAdimlariSorguAsync(evrakId).Result;
 
@@ -141,7 +192,7 @@ namespace EBYS.Application.Services.GidenEvrakService
 
                 if (benimAdimim.SiraNo == 1)
                 {
-                    entities.BelgeDurum = Enums.BelgeDurum.Taslak;
+                    entities.BelgeDurum = Enums.GidenEvrakDurum.Taslak;
                 }
 
                 var result = await evrakRepository.SaveAsync();
@@ -150,11 +201,7 @@ namespace EBYS.Application.Services.GidenEvrakService
                     return IslemSonuc.İslemBasarili("Evrak başarıyla geri çekildi. 'Bekleyenler' listenize aktarıldı.");
 
                 return IslemSonuc.Hata("İşlem sırasında bir hata oluştu.");
-            }
-            catch (Exception ex)
-            {
-                return IslemSonuc.İslemBasarili($"Beklenmedik hata: {ex.Message}");
-            }
+       
         }
 
         public async Task<List<GidenEvrakAkisHareketleriDTO>> EvrakHareketleriGetirAsync(int evrakId)

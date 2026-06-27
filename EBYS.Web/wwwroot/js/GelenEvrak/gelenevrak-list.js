@@ -10,23 +10,10 @@
         'iade': 4,    
         'cevap': 5   
     };
-    var _ajaxCall = function (url, type, data) {
-        return $.ajax({
-            url: _apiBaseUrl + url,
-            type: type,
-            contentType: "application/json",
-            data: data ? JSON.stringify(data) : null,
-            error: function (err) {
-                var msg = "Sistem hatası oluştu.";
-                if (err.responseJSON && err.responseJSON.mesaj) {
-                    msg = err.responseJSON.mesaj;
-                } else if (err.responseText) {
-                    msg = err.responseText;
-                }
-                showNotification(msg, "error");
-            }
-        });
-    };
+
+
+
+
 
     return {
         init: function () {
@@ -154,30 +141,19 @@
                 formData.append("durum", _aktifOlanFiltre);
             }
 
-            $.ajax({
-                url: _apiBaseUrl + "EvrakListele",
-                type: "POST",
-                data: formData, 
-                processData: false, 
-                contentType: false, 
-                success: function (response) {
+            ApiService.postFormData("GelenEvrak/EvrakListele", formData)
+                .done(function (response) {
                     $("#gridGelenEvraklar").data("kendoGrid").dataSource.data(response);
-                },
-                error: function (xhr) {
-                    alert("Hata oluştu: " + xhr.responseText);
-                },
-                complete: function () {
+                })
+                .always(function () {
                     kendo.ui.progress($("#gridGelenEvraklar"), false);
-                }
-            });
-   
+                });
         },
         dosyaIndir: function (ekId) {
             window.location.href = _apiBaseUrl + "DosyaIndir/" + ekId;
         },
 
         evrakAdimlari: function (id) {
-            var self = this;
 
           
             var winElement = $("#historyWindow");
@@ -199,17 +175,15 @@
          
             kendo.ui.progress($("#gridGelenEvraklar"), true);
 
-      
-            _ajaxCall('evrak-sevk-hareketleri/' + id, 'GET')
-                .done(function (res) {
 
+            ApiService.getJson('GelenEvrak/evrak-sevk-hareketleri/' + id)
+                .done(function (res) {
          
                     if (gridElement.data("kendoGrid")) {
                         gridElement.data("kendoGrid").destroy();
                         gridElement.empty();
                     }
-
-                  
+     
                     gridElement.kendoGrid({
                         dataSource: {
                             data: res,
@@ -275,14 +249,11 @@
 
         delete: function (id) {
             if (confirm("Bu evrakı silmek istediğinize emin misiniz?")) {
-                $.ajax({
-                    url: _apiBaseUrl + "EvrakSil/" + id,
-                    type: "DELETE",
-                    success: function (res) {
+                ApiService.delete("GelenEvrak/EvrakSil/" + id)
+                    .done(function (res) {
                         showNotification("Evrak başarıyla silindi.", "success");
                         GelenEvrakListModule.loadData();
-                    }
-                });
+                    });
             }
         },
 
@@ -290,7 +261,7 @@
            
             kendo.ui.progress($("#gridGelenEvraklar"), true);
 
-            _ajaxCall("SahsimaTeslimAl/" + id, "POST")
+            ApiService.postJson("GelenEvrak/SahsimaTeslimAl/" + id)
                 .done(function (res) {
                     showNotification("Evrak üzerinize başarıyla alındı.", "success");
                     GelenEvrakListModule.loadData();
@@ -305,12 +276,14 @@
         
         },
 
+
+
+
+
         tabFiltrele: function (tabKey) {
             _aktifOlanFiltre = _enumMap[tabKey];
             GelenEvrakListModule.loadData();
         },
-
-
         getIconByExtension: function (ext) {
             if (!ext) return "fas fa-file text-secondary";
             ext = ext.toLowerCase();
