@@ -108,9 +108,19 @@ namespace EBYS.Application.Services.GidenEvrakService
             await evrakRepository.SaveAsync();
         }
 
-        public Task<List<GidenEvrakListDTO>> GetAllAsync()
+        
+        public async Task<List<GidenEvrakAkisListeDTO>> GidenEvraklariFiltreliListeleAsync(Enums.GidenEvrakFiltreTipi? filtreTipi)
         {
-            throw new NotImplementedException();
+            var olusturanId = evrakRepository.GetContextUserId();
+
+            var getVeri = await evrakRepository.FiltreliEvrakGetirAsync(olusturanId, filtreTipi);
+
+            if (getVeri is null)
+            {
+                throw new EvrakBulunamadi();
+            }
+
+            return getVeri;
         }
 
         public async Task<GidenEvrakUpdateDTO> GetByIdAsync(int id)
@@ -146,6 +156,8 @@ namespace EBYS.Application.Services.GidenEvrakService
             }
 
         }
+
+      
 
         public async Task UpdateAsync(GidenEvrakUpdateDTO updateDto)
         {
@@ -285,5 +297,12 @@ namespace EBYS.Application.Services.GidenEvrakService
                 MimeType: file.ContentType
             );
         }
+
+        public Task<List<GidenEvrakListDTO>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+    
     }
 }

@@ -26,7 +26,7 @@ namespace EBYS.Application.Services.GidenEvrakService
      
                 var entities = await evrakRepository.AkisAdimlariSorguAsync(evrakId);
 
-                if (entities == null) throw new Exception("Evrak bulunamadı.");
+                if (entities == null) throw new EvrakBulunamadi();
 
                 var suankiAdim = entities.AkisAdimlari.FirstOrDefault(a => a.SiradakiMi && a.AdimDurumu == Enums.AkisAdimDurumu.Bekliyor);
 
@@ -35,6 +35,7 @@ namespace EBYS.Application.Services.GidenEvrakService
                     suankiAdim.AdimDurumu = Enums.AkisAdimDurumu.Onaylandi;
                     suankiAdim.SiradakiMi = false;
                     suankiAdim.creat_time = DateTime.Now;
+                    suankiAdim.Not = null;
                 }
                 else
                     throw new Exception("Herhangi bir adım bulunamadı.");
@@ -47,16 +48,16 @@ namespace EBYS.Application.Services.GidenEvrakService
                 if (sonrakiAdim != null)
                 {
                     sonrakiAdim.SiradakiMi = true;
-                    if (entities.BelgeDurum == Enums.GidenEvrakDurum.Taslak)
+                    sonrakiAdim.AdimDurumu = Enums.AkisAdimDurumu.Bekliyor;
+
+                    if (entities.BelgeDurum == Enums.GidenEvrakDurum.Taslak || entities.BelgeDurum == Enums.GidenEvrakDurum.GeriIadeEdildi)
                     {
                         entities.BelgeDurum = Enums.GidenEvrakDurum.Imzada;
                     }
-
                 }
                 else
                 {
                     entities.BelgeDurum = Enums.GidenEvrakDurum.Tamamlandi;
-
                     entities.EvrakSayisi++;
                     //onaylanma tarihini eklenecek
                 }
@@ -83,17 +84,21 @@ namespace EBYS.Application.Services.GidenEvrakService
 
             entities.BelgeDurum = Enums.GidenEvrakDurum.GeriIadeEdildi;
             suankiAdim.Not = $"İade Edildi. Gerekçe: {not}";
+            
 
             foreach (var adim in entities.AkisAdimlari)
             {
-                adim.AdimDurumu = Enums.AkisAdimDurumu.IadeEdildi;// düzenle
+                adim.AdimDurumu = Enums.AkisAdimDurumu.Bekliyor;
                 adim.SiradakiMi = false;
             }
+            suankiAdim.AdimDurumu = Enums.AkisAdimDurumu.IadeEdildi;
 
             var ilkAdim = entities.AkisAdimlari.FirstOrDefault(a => a.SiraNo == 0);
+
             if (ilkAdim != null)
             {
                 ilkAdim.SiradakiMi = true;
+                ilkAdim.AdimDurumu = Enums.AkisAdimDurumu.Bekliyor;
             }
 
             var saveResult = await evrakRepository.SaveAsync();

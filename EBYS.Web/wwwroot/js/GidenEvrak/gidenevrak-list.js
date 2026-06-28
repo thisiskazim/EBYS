@@ -1,13 +1,14 @@
 ﻿var GidenEvrakListModule = (function () {
     var _apiBaseUrl = "https://localhost:7060/api/";
-    var _aktifOlanFiltre = null;
+    var _aktifOlanFiltre = 1;
+
 
     var _enumMap = {
-        'tumGidenEvraklar': 1,
-        'iadeEttiklerim': 2,
-        'sahsimaIadeEdilenler': 3,
-        'reddettiklerim': 4,
-        'banareddönen': 5
+        'tumGidenEvraklar': 1,//belge durumu tamamlanmış olan evraklar listesi olacak ve işlemler kısmı boş olacak
+        'iadeEttiklerim': 2,// iade ettiklerim olack işlemler kısmı boş olcak 
+        'sahsimaIadeEdilenler': 3,// burda işlemler kısmı olacak onay düzenle redder gibi durumlar olacak 
+        'reddettiklerim': 4,//işlemler kısmı boş olacak 
+        'banareddönen': 5 // işlemler kısmı boş olacak 
     };
    
 
@@ -23,7 +24,65 @@
                 sortable: true,
                 resizable: true,
                 pageable: { pageSize: 15, refresh: true, buttonCount: 5 },
-                columns: [  
+                columns: [ 
+                    
+                    {
+                    title: "İşlemler",
+                    width: "120px",
+                    headerAttributes: { style: "text-align: center" },
+                    attributes: { style: "text-align: center" },
+                        template: function (dataItem) {
+                            if (_aktifOlanFiltre !== _enumMap.sahsimaIadeEdilenler) {
+                                return "<span class='text-muted small'>-</span>";
+                            }   
+
+                            var canEdit = dataItem.editYapabilirMi;
+
+                            var editHtml = canEdit
+                                ? `<li><a class='dropdown-item py-2' href='#' onclick='AkisOnayRedEditModule.edit("${dataItem.id}")'><i class='fas fa-edit text-primary me-2'></i>Düzenle</a></li>`
+                                : `<li><a class='dropdown-item disabled text-muted py-2' href='#'><i class='fas fa-lock me-2'></i>Düzenle <small>(Yetki Yok)</small></a></li>`;
+
+                            var deleteHtml = canEdit
+                                ? `<li><a class='dropdown-item py-2 text-danger' href='#' onclick='AkisOnayRedEditModule.cancel("${dataItem.id}", "#gridGidenEvraklar", () => GidenEvrakListModule.loadData())'><i class='fas fa-trash-alt me-2'></i>Sil</a></li>`
+                                : `<li><a class='dropdown-item disabled text-muted py-2' href='#'><i class='fas fa-lock me-2'></i>Sil <small>(Yetki Yok)</small></a></li>`;
+
+                        return `
+                        <div class='dropdown'>
+                            <button class='btn btn-link btn-sm p-0 border-0'
+                                    type='button'
+                                    data-bs-toggle='dropdown'
+                                    data-bs-popper-config='{"strategy":"fixed"}'
+                                    aria-expanded='false'
+                                    style='text-decoration: none;'>
+                                <i class='fas fa-ellipsis-v text-info' style='font-size: 18px;'></i>
+                            </button>
+                            <ul class='dropdown-menu dropdown-menu-end shadow-lg border-0' style='border-radius: 12px; min-width: 160px;'>
+                                   <li><a class='dropdown-item py-2' href='#' onclick='GidenEvrakListModule.history("${dataItem.id}")'><i class='fas fa-shoe-prints text-info me-2'></i>Evrak Hareketleri</a></li>
+
+                                  <li>
+                                        <a class='dropdown-item py-2' href='#' onclick='AkisOnayRedEditModule.onayla("${dataItem.id}", "#gridGidenEvraklar", () => GidenEvrakListModule.loadData())'>
+                                            <i class='fas fa-file-signature text-success me-2'></i>İmzala
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a class='dropdown-item py-2 text-warning' href='#' onclick='AkisOnayRedEditModule.iadePopupAc("${dataItem.id}", "#gridGidenEvraklar", () => GidenEvrakListModule.loadData())'>
+                                            <i class='fas fa-reply me-2'></i>İade Et
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a class='dropdown-item py-2 text-danger' href='#' onclick='AkisOnayRedEditModule.reddetPopupAc("${dataItem.id}", "#gridGidenEvraklar", () => GidenEvrakListModule.loadData())'>
+                                            <i class='fas fa-times-circle me-2'></i>Reddet
+                                        </a>
+                                    </li>
+                                ${editHtml}
+                                <li><hr class='dropdown-divider opacity-50'></li>
+                                ${deleteHtml}
+                            </ul>
+                        </div>`;
+                    }
+                },
                     {
                         title: "DOSYALAR",
                         width: "200px",
@@ -90,16 +149,31 @@
                 ]
             }).data("kendoGrid");
         },
+        //loadData: function () {
+        //    var $gridEl = $("#gridGidenEvraklar");
+        //    kendo.ui.progress($gridEl, true);
 
+        //    // 🎯 FormData karmaşasını kaldırdık, projenin yeni parametrik standardına geçtik:
+        //    var url = "GidenEvrak/GidenEvrakListesi?filtreTipi=" + _aktifOlanFiltre;
+
+        //    ApiService.postJson(url, {})
+        //        .done(function (res) {
+        //            // Grid veri kaynağını yeniliyoruz
+        //            _grid.dataSource.data(res);
+        //            // 🎯 Veri yenilendiğinde kolonların kendilerini ve içindeki template mantığını yeniden tetiklemesini sağlıyoruz:
+        //            _grid.refresh();
+        //        })
+        //        .always(function () {
+        //            kendo.ui.progress($gridEl, false);
+        //        });
+        //},
         loadData: function () {
             kendo.ui.progress($("#gridGidenEvraklar"), true);
             var formData = new FormData();
+            formData.append("filtreTipi", _aktifOlanFiltre);
+            
 
-            if (_aktifOlanFiltre !== null) {
-                formData.append("durum", _aktifOlanFiltre);
-            }
-
-            ApiService.postFormData("GidenEvrak/GidenEvrakListesi", formData).done(function (res) {
+            ApiService.postFormData("GidenEvrak/EvrakListele", formData).done(function (res) {
                 $("#gridGidenEvraklar").data("kendoGrid").dataSource.data(res);
             }).always(function () {
                 kendo.ui.progress($("#gridGidenEvraklar"), false);
@@ -111,10 +185,10 @@
 
         history: function (id) {
          
-            ApiService.getJson("GidenEvrak/EvrakHareketleri/" + id).done(function (res) {
+            ApiService.getJson("GidenEvrak/evrak-hareketleri/" + id).done(function (res) {
 
 
-                var winElement = $("#historyWindow");
+                var winElement = $("#historyWindow");       
                 var win = winElement.data("kendoWindow");
 
                 if (!win) {

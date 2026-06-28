@@ -15,6 +15,12 @@ namespace EBYS.Web.Controllers
             }
             return View();
         }
+        public IActionResult GidenEvrakListe()
+        {
+         
+            return View();
+        }
 
-      }
+
+    }
 }

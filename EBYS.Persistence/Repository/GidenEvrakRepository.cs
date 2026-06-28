@@ -31,7 +31,7 @@ namespace EBYS.Persistence.Repository
 
             return await _context.Evraklar
                       .Include(x => x.AkisAdimlari)
-                      .ThenInclude(a => a.Kullanici) // Burası kritik!
+                      .ThenInclude(a => a.Kullanici)
                       .FirstOrDefaultAsync(e => e.Id == evrakId); ;
         }
 
@@ -78,7 +78,7 @@ namespace EBYS.Persistence.Repository
 
         public async Task<List<GidenEvrakAkisListeDTO>> IslemBekleyenler(int userId, Enums.ImzaTipi imzaTipi)
         {
-            return await _context.Evraklar.AsNoTracking().Where(e => (e.BelgeDurum == Enums.GidenEvrakDurum.Taslak || e.BelgeDurum == Enums.GidenEvrakDurum.Imzada) && !e.isDelete &&
+            return await _context.Evraklar.AsNoTracking().Where(e => (e.BelgeDurum == Enums.GidenEvrakDurum.Taslak || e.BelgeDurum == Enums.GidenEvrakDurum.Imzada || e.BelgeDurum== Enums.GidenEvrakDurum.GeriIadeEdildi) && !e.isDelete &&
                            (e.AkisAdimlari.Any(a => a.KullaniciId == userId && a.SiradakiMi && a.ParafMiImzaMi == imzaTipi)))
                             .AsNoTracking()
                             .ProjectTo<GidenEvrakAkisListeDTO>(_mapper.ConfigurationProvider)
@@ -123,5 +123,7 @@ namespace EBYS.Persistence.Repository
             .ProjectTo<GidenEvrakAkisListeDTO>(_mapper.ConfigurationProvider)
             .ToListAsync();
         }
+
+       
     }
 }

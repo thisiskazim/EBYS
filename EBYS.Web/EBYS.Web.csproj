@@ -7,8 +7,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.12" />
-    <PackageReference Include="Telerik.Core.Export" Version="2026.1.211" />
-    <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2026.1.212" />
+    <PackageReference Include="Telerik.Core.Export" Version="2026.2.520" />
+    <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2026.2.520" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EBYS.Application\EBYS.Application.csproj" />

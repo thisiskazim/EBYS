@@ -3,13 +3,14 @@ using EBYS.Application.DTOs.EvrakDTO;
 using EBYS.Application.Interfaces.IService;
 using EBYS.Application.Interfaces.IService.IGidenEvrakService;
 using EBYS.Application.Services;
+using EBYS.Domain.Enum;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EBYS.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GidenEvrakController(IGidenEvrakService evrakServive, IKonuKoduService konuKoduService) : ControllerBase
+    public class GidenEvrakController(IGidenEvrakService evrakServive, IGidenEvrakAkisService akisService,IKonuKoduService konuKoduService) : ControllerBase
     {
 
         [HttpPost("EvrakOlustur")]
@@ -51,24 +52,20 @@ namespace EBYS.WebAPI.Controllers
             }
         }
 
-        [HttpGet("GelenEvraklarGetAll")]
-        public async Task<IActionResult> GelenEvraklarGetAll()
+        [HttpPost("EvrakListele")]
+        public async Task<IActionResult> EvrakListele([FromForm] Enums.GidenEvrakFiltreTipi? filtreTipi)
         {
             try
             {
-                var gelenVeri = await evrakServive.GetAllAsync();
-                if (gelenVeri == null)
-                {
-                    return NotFound("Evrak bulunamadı.");
-                }
-
-                return Ok(gelenVeri);
+                var evraklar = await evrakServive.GidenEvraklariFiltreliListeleAsync(filtreTipi);
+                return Ok(evraklar);
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
         }
+
 
         [HttpGet("KonuKoduGet")]
         public async Task<IActionResult> KonuKoduGet()
@@ -77,6 +74,28 @@ namespace EBYS.WebAPI.Controllers
             {
                 var konuKodlari = await konuKoduService.KonuKoduList();
                 return Ok(konuKodlari);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+        }
+
+        [HttpGet("evrak-hareketleri/{id}")]
+        public async Task<IActionResult> EvrakHareketleri(int id)
+        {
+
+            try
+            {
+                var gelenVeri = await akisService.EvrakHareketleriGetirAsync(id);
+
+                if (gelenVeri == null)
+                {
+                    return NotFound("Evrak Hareketleri Bulunamadı");
+                }
+
+                return Ok(gelenVeri);
             }
             catch (Exception e)
             {

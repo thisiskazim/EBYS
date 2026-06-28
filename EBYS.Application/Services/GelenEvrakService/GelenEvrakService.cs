@@ -230,7 +230,7 @@ namespace EBYS.Application.Services.GelenEvrakService
                 if (getVeri is null)
                 {
                     throw new EvrakBulunamadi();
-            }
+                }
 
                 return getVeri;
         }

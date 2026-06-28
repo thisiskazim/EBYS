@@ -43,7 +43,7 @@ namespace EBYS.WebAPI.Controllers
 
         }
 
-        [HttpPost("Onayla/{id}")]
+        [HttpPost("Onayla/{id}")]   
         public async Task<IActionResult> EvrakOnayla(int id)
         {
             var sonuc = await akisService.OnaylaAsync(id);

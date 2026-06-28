@@ -41,7 +41,7 @@
                                     </button>
                                     <ul class='dropdown-menu dropdown-menu-end shadow-lg border-0' style='border-radius: 12px; min-width: 160px;'>
                                         <li>
-                                            <a class='dropdown-item py-2' href='#' onclick='EvrakBekleyenListModule.onay("${dataItem.Id}")'>
+                                            <a class='dropdown-item py-2' href='#' onclick='EvrakBekleyenListModule.onay("${dataItem.id}")'>
                                                 <i class='fas fa-file-signature text-success me-2'></i>Parafla
                                             </a>
                                         </li>

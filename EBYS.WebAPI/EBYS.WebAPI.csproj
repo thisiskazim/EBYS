@@ -20,7 +20,7 @@
     <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
     <PackageReference Include="Serilog.Sinks.PostgreSQL" Version="2.3.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.4" />
-    <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2026.1.212" />
+    <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2026.2.520" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EBYS.Application\EBYS.Application.csproj" />
