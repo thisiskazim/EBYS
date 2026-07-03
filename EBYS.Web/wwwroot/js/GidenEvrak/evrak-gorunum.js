@@ -2,6 +2,7 @@
 var OnizlemeModule = (function () {
     var _imzaciAd = "";
     var _imzaciUnvan = "";
+    var _generatedPdfBlob = null;
 
     kendo.pdf.defineFont({
         "DejaVu Sans": "https://kendo.cdn.telerik.com/2023.1.117/styles/fonts/DejaVu/DejaVuSans.ttf",
@@ -9,7 +10,17 @@ var OnizlemeModule = (function () {
         "Times New Roman": "https://kendo.cdn.telerik.com/2023.1.117/styles/fonts/DejaVu/DejaVuSans.ttf",
         "serif": "https://kendo.cdn.telerik.com/2023.1.117/styles/fonts/DejaVu/DejaVuSans.ttf"
     });
-
+    // Base64 DataURI'yi .NET'in anlayacağı bir Dosya (Blob/File) nesnesine çeviren sihirli fonksiyon:
+    var _dataURItoBlob = function (dataURI) {
+        var byteString = atob(dataURI.split(',')[1]);
+        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+        var ab = new ArrayBuffer(byteString.length);
+        var ia = new Uint8Array(ab);
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([ab], { type: mimeString });
+    };
 
     var _renderKendoPdf = function () {
         var loaderContainer = $(".pdf-viewer-wrapper");
@@ -31,6 +42,7 @@ var OnizlemeModule = (function () {
             .then(function (dataURI) {
               
                 $("#pdf-frame").attr("src", dataURI);
+                _generatedPdfBlob = _dataURItoBlob(dataURI); //bunu yeni ekledik
                 kendo.ui.progress(loaderContainer, false);
             })
             .fail(function (err) {
@@ -177,6 +189,12 @@ var OnizlemeModule = (function () {
                     });
                 });
         },
+
+        getGeneratedPdfFile: function () {
+            if (!_generatedPdfBlob) return null;
+            // .NET Controller'ın [FromForm] IFormFile olarak yakalayabilmesi için File nesnesine dönüştürüyoruz:
+            return new File([_generatedPdfBlob], "Ust_Yazi.pdf", { type: "application/pdf" });
+        } //bu yeni
 
 
 

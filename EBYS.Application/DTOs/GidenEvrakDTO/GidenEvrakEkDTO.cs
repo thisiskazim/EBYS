@@ -19,12 +19,16 @@ namespace EBYS.Application.DTOs.EvrakDTO
     public class GidenEvrakEkCreateDTO
     {
         public string? Ad { get; set; }
+        public bool IsAsilEvrak { get; set; }
+
         public IFormFile? Dosya { get; set; }
     }
 
     public class GidenEvrakEkUpdateDTO : GidenEvrakEkBaseDTO
     {
         public IFormFile? Dosya { get; set; }
+        public bool IsAsilEvrak { get; set; }
+
     }
 
 }

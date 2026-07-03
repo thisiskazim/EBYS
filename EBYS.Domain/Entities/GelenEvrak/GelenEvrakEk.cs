@@ -10,7 +10,8 @@ namespace EBYS.Domain.Entities.GelenEvrak
     {
         public int? GelenEvrakId { get; set; } 
         public virtual GelenEvrak? GelenEvrak { get; set; }
-
+       
+            
         public string? Ad { get; set; }
         public byte[]? DosyaVerisi { get; set; } 
         public string? DosyaUzantisi { get; set; }

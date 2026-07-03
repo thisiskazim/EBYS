@@ -10,6 +10,7 @@ namespace EBYS.Domain.Entities.GidenEvrak
     {
         public int? EvrakId { get; set; }
         public virtual GidenEvrak? Evrak { get; set; }
+        public bool IsAsilEvrak { get; set; }
         public string? Ad { get; set; }
         public byte[]? DosyaVerisi { get; set; }
         public string? DosyaUzantisi { get; set; }

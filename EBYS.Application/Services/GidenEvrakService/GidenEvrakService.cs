@@ -22,74 +22,16 @@ namespace EBYS.Application.Services.GidenEvrakService
             evrak.EvrakSayisi= 0;
             evrak.IsGelenEvrak = false;
 
-            evrak.AkisAdimlari.Add(new GidenEvrakAkis
-            {
-                KullaniciId = evrakRepository.GetContextUserId(),
-                ParafMiImzaMi = Enums.ImzaTipi.Imza,
-                SiraNo = 0,
-                AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
-                SiradakiMi = true
+            // 1. Akış adımlarını (İlk adımı ve rotayı) yükle
+            await OlusturAkisAdimlariAsync(evrak, createDto.ImzaRotaId);
 
-            });
+            // 2. Muhataplar ve İlgiler listesini harita metotlarına pasla
+            OlusturMuhataplarVeIlgiler(evrak, createDto);
 
-          
-            if (createDto.Muhataplar?.Any() == true)
-            {
-                evrak.Muhataplar = mapper.Map<List<GidenEvrakMuhatap>>(createDto.Muhataplar);
-            }
+            // 3. Ekler havuzunu (Yan ekler ve Asıl Üst Yazı) tertemiz inşa et
+            await OlusturEklerAsync(evrak, createDto.Ekler);    
 
-            if (createDto.Ilgiler?.Any() == true)
-            {
-                evrak.İlgiler = mapper.Map<List<GidenEvrakIlgi>>(createDto.Ilgiler);
-            }
 
-            var rota = await imzaRotaRepository.GetImzaRotaVeAdimlariDetay(createDto.ImzaRotaId);
-
-            if (rota?.ImzaRotaAdimlari == null || !rota.ImzaRotaAdimlari.Any())
-            {
-                throw new ImzaRotasıBos();
-            }
-
-            foreach (var adim in rota.ImzaRotaAdimlari.OrderBy(x=>x.SiraNo))
-                {
-                    evrak.AkisAdimlari.Add(new GidenEvrakAkis
-                    {
-                        KullaniciId = adim.KullaniciId,
-                        ParafMiImzaMi = adim.ParafMiImzaMi,
-                        SiraNo = adim.SiraNo,
-                        AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
-                        SiradakiMi = false
-
-                    });
-                }
-         
-
-            if (createDto.Ekler?.Any() == true)
-            {
-
-                if (evrak.Ekler == null)
-                {
-                    evrak.Ekler = new List<GidenEvrakEk>();
-                }
-                foreach (var ekDto in createDto.Ekler)
-                {
-                    if (ekDto.Dosya == null && string.IsNullOrEmpty(ekDto.Ad)) continue;
-
-                    var yeniEk = mapper.Map<GidenEvrakEk>(ekDto);
-
-                    if (ekDto.Dosya != null)
-                    {
-                        var fileResult = await ProcessFileAsync(ekDto.Dosya);
-                        yeniEk.DosyaVerisi = fileResult.Data;
-                        yeniEk.DosyaUzantisi = fileResult.Extension;
-                        yeniEk.MimeType = fileResult.MimeType;
-
-                        if (string.IsNullOrEmpty(yeniEk.Ad))
-                            yeniEk.Ad = ekDto.Dosya.FileName;
-                    }
-                    evrak.Ekler.Add(yeniEk);
-                }
-            }
 
             await evrakRepository.AddAsync(evrak);
             await evrakRepository.SaveAsync();
@@ -169,120 +111,11 @@ namespace EBYS.Application.Services.GidenEvrakService
 
             mapper.Map(updateDto, mevcutEvrak);
 
-            var muhatapListesi = updateDto.Muhataplar ?? new List<GidenEvrakMuhatapSecimDTO>();
-            var dtoMuhatapIds = muhatapListesi.Where(x => x.MuhatapId > 0).Select(x => x.MuhatapId).ToList();
-            var silinecekMuhataplar = mevcutEvrak.Muhataplar.Where(x => !dtoMuhatapIds.Contains(x.MuhatapId)).ToList();
-
-            foreach (var sil in silinecekMuhataplar) mevcutEvrak.Muhataplar.Remove(sil);
-
-            foreach (var mDto in muhatapListesi)
-            {
-                var mevcutMuhatap = mevcutEvrak.Muhataplar.FirstOrDefault(x => x.MuhatapId == mDto.MuhatapId);
-                if (mevcutMuhatap == null)
-                {
-                    mevcutEvrak.Muhataplar.Add(new GidenEvrakMuhatap { MuhatapId = mDto.MuhatapId, IsBilgi = mDto.IsBilgi });
-                }
-                else
-                {
-                    mevcutMuhatap.IsBilgi = mDto.IsBilgi;
-                }
-            }
+            GuncelleMuhataplar(mevcutEvrak, updateDto.Muhataplar);
+            GuncelleIlgiler(mevcutEvrak, updateDto.Ilgiler);
+            await GuncelleEklerAsync(mevcutEvrak, updateDto.Ekler);
 
 
-
-            var ilgiListesi = updateDto.Ilgiler ?? new List<GidenEvrakIlgiUpdateDTO>();
-            var dtoIlgiIds = ilgiListesi.Where(x => x.Id > 0).Select(x => x.Id).ToList();
-
-            var silinecekIlgiler = mevcutEvrak.İlgiler.Where(x => !dtoIlgiIds.Contains(x.Id)).ToList();
-            foreach (var sil in silinecekIlgiler) mevcutEvrak.İlgiler.Remove(sil);
-
-            foreach (var iDto in ilgiListesi)
-            {
-                if (iDto.Id == 0)
-                {
-                    mevcutEvrak.İlgiler.Add(new GidenEvrakIlgi { IlgiMetni = iDto.IlgiMetni });
-                }
-                else
-                {
-                    var mevcutIlgi = mevcutEvrak.İlgiler.FirstOrDefault(x => x.Id == iDto.Id);
-                    if (mevcutIlgi != null) mevcutIlgi.IlgiMetni = iDto.IlgiMetni;
-                }
-            }
-
-
-
-            var ekListesi = updateDto.Ekler ?? new List<GidenEvrakEkUpdateDTO>();
-            var dtoEkIds = ekListesi.Where(x => x.Id > 0).Select(x => x.Id).ToList();
-
-            // Silinecek Ekler
-            var silinecekEkler = mevcutEvrak.Ekler.Where(x => !dtoEkIds.Contains(x.Id)).ToList();
-            foreach (var sil in silinecekEkler) mevcutEvrak.Ekler.Remove(sil);
-
-            // Ekleme/Güncelleme
-            foreach (var ekDto in ekListesi)
-            {
-                if (ekDto.Id == 0 && ekDto.Dosya != null)
-                {
-                    var fileData = await ProcessFileAsync(ekDto.Dosya);
-                    mevcutEvrak.Ekler.Add(new GidenEvrakEk
-                    {
-                        Ad = ekDto.Ad ?? ekDto.Dosya.FileName,
-                        DosyaVerisi = fileData.Data,
-                        DosyaUzantisi = fileData.Extension,
-                        MimeType = fileData.MimeType
-                    });
-                }
-                else if (ekDto.Id > 0)
-                {
-                    var mevcutEk = mevcutEvrak.Ekler.FirstOrDefault(x => x.Id == ekDto.Id);
-                    if (mevcutEk != null)
-                    {
-                        mevcutEk.Ad = ekDto.Ad;
-                        if (ekDto.Dosya != null)
-                        {
-                            var fileData = await ProcessFileAsync(ekDto.Dosya);
-                            mevcutEk.DosyaVerisi = fileData.Data;
-                            mevcutEk.DosyaUzantisi = fileData.Extension;
-                            mevcutEk.MimeType = fileData.MimeType;
-                        }
-                    }
-                }
-            }
-
-
-            // 6. Rota/Akış Değişikliği Kontrolü
-            if (mevcutEvrak.ImzaRotaId != updateDto.ImzaRotaId)
-            {
-                mevcutEvrak.AkisAdimlari.Clear(); 
-
-              
-                mevcutEvrak.AkisAdimlari.Add(new GidenEvrakAkis
-                {
-                    KullaniciId = evrakRepository.GetContextUserId(),
-                    ParafMiImzaMi = Enums.ImzaTipi.Imza,
-                    SiraNo = 1,
-                    AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
-                    SiradakiMi = true
-                });
-
-                var yeniRota = await imzaRotaRepository.GetImzaRotaVeAdimlariDetay(updateDto.ImzaRotaId);
-                if (yeniRota != null)
-                {
-                    foreach (var adim in yeniRota.ImzaRotaAdimlari.OrderBy(x => x.SiraNo))
-                    {
-                        mevcutEvrak.AkisAdimlari.Add(new GidenEvrakAkis
-                        {
-                            KullaniciId = adim.KullaniciId,
-                            ParafMiImzaMi = adim.ParafMiImzaMi,
-                            SiraNo = adim.SiraNo + 1,
-                            AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
-                            SiradakiMi = false
-                        });
-                    }
-                }
-            }
-
-          
             evrakRepository.UpdateAsync(mevcutEvrak);
             await evrakRepository.SaveAsync();
         }
@@ -303,6 +136,212 @@ namespace EBYS.Application.Services.GidenEvrakService
             throw new NotImplementedException();
         }
 
-    
+        private void GuncelleMuhataplar(GidenEvrak mevcutEvrak, List<GidenEvrakMuhatapSecimDTO> muhatapListesi)
+        {
+            var liste = muhatapListesi ?? new List<GidenEvrakMuhatapSecimDTO>();
+            var dtoMuhatapIds = liste.Where(x => x.MuhatapId > 0).Select(x => x.MuhatapId).ToList();
+
+            // Silinecekler
+            var silinecekMuhataplar = mevcutEvrak.Muhataplar.Where(x => !dtoMuhatapIds.Contains(x.MuhatapId)).ToList();
+            foreach (var sil in silinecekMuhataplar) mevcutEvrak.Muhataplar.Remove(sil);
+
+            // Ekleme veya Güncelleme
+            foreach (var mDto in liste)
+            {
+                var mevcutMuhatap = mevcutEvrak.Muhataplar.FirstOrDefault(x => x.MuhatapId == mDto.MuhatapId);
+                if (mevcutMuhatap == null)
+                    mevcutEvrak.Muhataplar.Add(new GidenEvrakMuhatap { MuhatapId = mDto.MuhatapId, IsBilgi = mDto.IsBilgi });
+                else
+                    mevcutMuhatap.IsBilgi = mDto.IsBilgi;
+            }
+        }
+
+        private void GuncelleIlgiler(GidenEvrak mevcutEvrak, List<GidenEvrakIlgiUpdateDTO> ilgiListesi)
+        {
+            var liste = ilgiListesi ?? new List<GidenEvrakIlgiUpdateDTO>();
+            var dtoIlgiIds = liste.Where(x => x.Id > 0).Select(x => x.Id).ToList();
+
+            // Silinecekler
+            var silinecekIlgiler = mevcutEvrak.İlgiler.Where(x => !dtoIlgiIds.Contains(x.Id)).ToList();
+            foreach (var sil in silinecekIlgiler) mevcutEvrak.İlgiler.Remove(sil);
+
+            // Ekleme veya Güncelleme
+            foreach (var iDto in liste)
+            {
+                if (iDto.Id == 0)
+                    mevcutEvrak.İlgiler.Add(new GidenEvrakIlgi { IlgiMetni = iDto.IlgiMetni });
+                else
+                {
+                    var mevcutIlgi = mevcutEvrak.İlgiler.FirstOrDefault(x => x.Id == iDto.Id);
+                    if (mevcutIlgi != null) mevcutIlgi.IlgiMetni = iDto.IlgiMetni;
+                }
+            }
+        }
+
+        private async Task GuncelleEklerAsync(GidenEvrak mevcutEvrak, List<GidenEvrakEkUpdateDTO> ekListesi)
+        {
+            if (mevcutEvrak.Ekler == null) mevcutEvrak.Ekler = new List<GidenEvrakEk>();
+            var liste = ekListesi ?? new List<GidenEvrakEkUpdateDTO>();
+
+            // Aynı anlamsal ayrım (Ekleme koduyla birebir simetrik 🎯)
+            var incomingAsilEk = liste.FirstOrDefault(x => x.IsAsilEvrak || x.Ad == "Üst Yazı");
+            var incomingYanEkler = liste.Where(x => !x.IsAsilEvrak && x.Ad != "Üst Yazı").ToList();
+
+            // 🎯 A) SİLME AKSİYONU: Listede olmayan yan ekleri uçur, asıl evraka dokunma
+            var dtoYanEkIds = incomingYanEkler.Where(x => x.Id > 0).Select(x => x.Id).ToList();
+            var silinecekYanEkler = mevcutEvrak.Ekler.Where(x => !x.IsAsilEvrak && !dtoYanEkIds.Contains(x.Id)).ToList();
+            foreach (var sil in silinecekYanEkler) mevcutEvrak.Ekler.Remove(sil);
+
+            // 🎯 B) ASIL EVRAK (ÜST YAZI) GÜNCELLEME: Varsa ez, yoksa ekle
+            if (incomingAsilEk != null && incomingAsilEk.Dosya != null)
+            {
+                var dbdekiAsilEvrak = mevcutEvrak.Ekler.FirstOrDefault(x => x.IsAsilEvrak == true);
+                var fileData = await ProcessFileAsync(incomingAsilEk.Dosya);
+
+                if (dbdekiAsilEvrak != null)
+                {
+                    dbdekiAsilEvrak.DosyaVerisi = fileData.Data;
+                    dbdekiAsilEvrak.DosyaUzantisi = fileData.Extension;
+                    dbdekiAsilEvrak.MimeType = fileData.MimeType;
+                    dbdekiAsilEvrak.Ad = "Üst Yazı";
+                }
+                else
+                {
+                    mevcutEvrak.Ekler.Add(new GidenEvrakEk
+                    {
+                        Ad = "Üst Yazı",
+                        DosyaVerisi = fileData.Data,
+                        DosyaUzantisi = fileData.Extension,
+                        MimeType = fileData.MimeType,
+                        IsAsilEvrak = true
+                    });
+                }
+            }
+
+            // 🎯 C) HARİCİ YAN EKLERİ EKLE / GÜNCELLE
+            foreach (var ekDto in incomingYanEkler)
+            {
+                if (ekDto.Id == 0 && ekDto.Dosya != null)
+                {
+                    var fileData = await ProcessFileAsync(ekDto.Dosya);
+                    mevcutEvrak.Ekler.Add(new GidenEvrakEk
+                    {
+                        Ad = ekDto.Ad ?? ekDto.Dosya.FileName,
+                        DosyaVerisi = fileData.Data,
+                        DosyaUzantisi = fileData.Extension,
+                        MimeType = fileData.MimeType,
+                        IsAsilEvrak = false
+                    });
+                }
+                else if (ekDto.Id > 0)
+                {
+                    var mevcutEk = mevcutEvrak.Ekler.FirstOrDefault(x => x.Id == ekDto.Id);
+                    if (mevcutEk != null)
+                    {
+                        mevcutEk.Ad = ekDto.Ad;
+                        if (ekDto.Dosya != null)
+                        {
+                            var fileData = await ProcessFileAsync(ekDto.Dosya);
+                            mevcutEk.DosyaVerisi = fileData.Data; mevcutEk.DosyaUzantisi = fileData.Extension; mevcutEk.MimeType = fileData.MimeType;
+                        }
+                    }
+                }
+            }
+        }
+
+        private async Task OlusturAkisAdimlariAsync(GidenEvrak evrak, int imzaRotaId)
+        {
+            // İlk adım (Evrakı oluşturan kişi)
+            evrak.AkisAdimlari.Add(new GidenEvrakAkis
+            {
+                KullaniciId = evrakRepository.GetContextUserId(),
+                ParafMiImzaMi = Enums.ImzaTipi.Imza,
+                SiraNo = 0,
+                AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
+                SiradakiMi = true
+            });
+
+            // Rota adımları
+            var rota = await imzaRotaRepository.GetImzaRotaVeAdimlariDetay(imzaRotaId);
+            if (rota?.ImzaRotaAdimlari == null || !rota.ImzaRotaAdimlari.Any())
+            {
+                throw new ImzaRotasıBos();
+            }
+
+            foreach (var adim in rota.ImzaRotaAdimlari.OrderBy(x => x.SiraNo))
+            {
+                evrak.AkisAdimlari.Add(new GidenEvrakAkis
+                {
+                    KullaniciId = adim.KullaniciId,
+                    ParafMiImzaMi = adim.ParafMiImzaMi,
+                    SiraNo = adim.SiraNo,
+                    AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
+                    SiradakiMi = false
+                });
+            }
+        }
+
+        private void OlusturMuhataplarVeIlgiler(GidenEvrak evrak, GidenEvrakCreateDTO createDto)
+        {
+            if (createDto.Muhataplar?.Any() == true)
+            {
+                evrak.Muhataplar = mapper.Map<List<GidenEvrakMuhatap>>(createDto.Muhataplar);
+            }
+
+            if (createDto.Ilgiler?.Any() == true)
+            {
+                evrak.İlgiler = mapper.Map<List<GidenEvrakIlgi>>(createDto.Ilgiler);
+            }
+        }
+
+        private async Task OlusturEklerAsync(GidenEvrak evrak, List<GidenEvrakEkCreateDTO> ekListesi)
+        {
+            if (evrak.Ekler == null) evrak.Ekler = new List<GidenEvrakEk>();
+            var liste = ekListesi ?? new List<GidenEvrakEkCreateDTO>();
+
+            // 🎯 A) ASIL EVRAK (ÜST YAZI) İŞLEMLERİ
+            var asilEkDto = liste.FirstOrDefault(x => x.IsAsilEvrak || x.Ad == "Üst Yazı");
+            if (asilEkDto?.Dosya != null)
+            {
+                var fileResult = await ProcessFileAsync(asilEkDto.Dosya);
+                var asilEk = mapper.Map<GidenEvrakEk>(asilEkDto);
+
+                asilEk.Ad = "Üst Yazı";
+                asilEk.DosyaVerisi = fileResult.Data;
+                asilEk.DosyaUzantisi = fileResult.Extension;
+                asilEk.MimeType = fileResult.MimeType;
+                asilEk.IsAsilEvrak = true; // Üst yazı mührü çakıldı
+
+                // Grid simetrisi için listenin en başına koyuyoruz
+                evrak.Ekler.Add(asilEk);
+            }
+            else
+            {
+                throw new Exception("Asıl evrak (Üst Yazı) içeriği boş olamaz.");
+            }
+
+            // 🎯 B) HARİCİ YAN EKLERİN DÖNGÜSÜ
+            // Üst yazı haricindeki gerçek yan ekleri tertemiz dönüyoruz:
+            foreach (var ekDto in liste.Where(x => !x.IsAsilEvrak && x.Ad != "Üst Yazı"))
+            {
+                if (ekDto.Dosya == null && string.IsNullOrEmpty(ekDto.Ad)) continue;
+
+                var yeniEk = mapper.Map<GidenEvrakEk>(ekDto);
+                yeniEk.IsAsilEvrak = false;
+
+                if (ekDto.Dosya != null)
+                {
+                    var fileResult = await ProcessFileAsync(ekDto.Dosya);
+                    yeniEk.DosyaVerisi = fileResult.Data;
+                    yeniEk.DosyaUzantisi = fileResult.Extension;
+                    yeniEk.MimeType = fileResult.MimeType;
+
+                    if (string.IsNullOrEmpty(yeniEk.Ad))
+                        yeniEk.Ad = ekDto.Dosya.FileName;
+                }
+                evrak.Ekler.Add(yeniEk);
+            }
+        }
+
     }
 }

@@ -29,7 +29,9 @@
             var alicilar = AliciModule.getData();
             var bilgiler = EvrakBilgiModule.getData();
             var ilgiler = IlgilerModule.getData();
-            var ekler = EklerModule.getData(); 
+            var yanEkler = EklerModule.getData(); // Kullanıcının eklediği ek dosyalar
+           
+
             var formData = new FormData();
 
 
@@ -49,17 +51,36 @@
                 formData.append(`Ilgiler[${index}].IlgiMetni`, ilgi.IlgiMetni);
             });
 
-          
-            ekler.forEach((ek, index) => {
-               
-                formData.append(`Ekler[${index}].Id`, ek.Id || 0);
-                formData.append(`Ekler[${index}].Ad`, ek.Ad);
+            var ekIndex = 0;
 
            
-                if (ek.Dosya) {
-                    formData.append(`Ekler[${index}].Dosya`, ek.Dosya);
-                }
-            });
+            var asilUstYazi = OnizlemeModule.getGeneratedPdfFile();
+            if (asilUstYazi) {
+                formData.append(`Ekler[${ekIndex}].Id`, 0);
+                formData.append(`Ekler[${ekIndex}].Ad`, "Üst Yazı");
+                formData.append(`Ekler[${ekIndex}].Dosya`, asilUstYazi);
+                formData.append(`Ekler[${ekIndex}].IsAsilEvrak`, true);
+                ekIndex++;
+            } else {
+                showNotification("Lütfen önce evrak görünümünü oluşturup önizleyin!", "error");
+                return;
+            }
+
+
+            if (yanEkler && Array.isArray(yanEkler)) {
+                yanEkler.forEach((ek) => {
+                    formData.append(`Ekler[${ekIndex}].Id`, ek.Id || 0);
+                    formData.append(`Ekler[${ekIndex}].Ad`, ek.Ad);
+                    // 🚀 KRİTİK DÜZELTME: Bu dosyaların yan ek olduğunu backend'e açıkça söylüyoruz
+                    formData.append(`Ekler[${ekIndex}].IsAsilEvrak`, false);
+                    if (ek.Dosya) {
+                        formData.append(`Ekler[${ekIndex}].Dosya`, ek.Dosya);
+                    }
+                    ekIndex++;
+                });
+            }
+          
+
 
        
             var action = bilgiler.Id > 0 ? "GidenEvrak/EvrakGuncelle" : "GidenEvrak/EvrakOlustur";

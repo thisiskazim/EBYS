@@ -36,7 +36,8 @@
                                 Id: { type: "number", defaultValue: 0 },
                                 Ad: { type: "string" },
                                 DosyaAdi: { type: "string" },
-                                DosyaObj: { nullable: true } 
+                                DosyaObj: { nullable: true },
+                                IsAsilEvrak: { type: "boolean", defaultValue: false }
                             }
                         }
                     }
@@ -68,7 +69,8 @@
                 Id: 0,
                 Ad: ad || (_tempFile ? _tempFile.name : ""),
                 DosyaAdi: _tempFile ? _tempFile.name : "",
-                DosyaObj: _tempFile 
+                DosyaObj: _tempFile,
+                IsAsilEvrak: false
             });
 
   

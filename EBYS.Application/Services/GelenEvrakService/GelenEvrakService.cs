@@ -52,7 +52,7 @@ namespace EBYS.Application.Services.GelenEvrakService
 
                           
                             if (string.IsNullOrEmpty(yeniEk.Ad))
-                                yeniEk.Ad = ekDto.Dosya.FileName;
+                                yeniEk.Ad = ekDto.Dosya.FileName;   
                         }
                         evrak.Ekler.Add(yeniEk);
                     }
@@ -140,6 +140,7 @@ namespace EBYS.Application.Services.GelenEvrakService
                 var dtoIlgiIds = ilgiListesi.Where(x => x.Id > 0).Select(x => x.Id).ToList();
 
                 var silinecekIlgiler = mevcutEvrak.Ilgileri.Where(x => !dtoIlgiIds.Contains(x.Id)).ToList();
+
                 foreach (var sil in silinecekIlgiler)
                 {
                     mevcutEvrak.Ilgileri.Remove(sil);
