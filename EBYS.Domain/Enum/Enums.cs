@@ -49,7 +49,8 @@ namespace EBYS.Domain.Enum
             Reddedildi = 0,
             Onaylandi = 1,
             Bekliyor = 2,
-            IadeEdildi= 3
+            IadeEdildi= 3,
+            GeriCekildi = 4
         }
         public enum GelenEvrakDurumu
         {

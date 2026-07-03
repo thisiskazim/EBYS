@@ -27,6 +27,7 @@ namespace EBYS.Application.DTOs.EvrakDTO
                     Enums.AkisAdimDurumu.Onaylandi => "Onayladı",
                     Enums.AkisAdimDurumu.Reddedildi => "Reddetti",
                     Enums.AkisAdimDurumu.IadeEdildi => "İade Etti",
+                    Enums.AkisAdimDurumu.GeriCekildi => "Geri Çekti",
                     _ => "Bilinmiyor"
                 };
             }

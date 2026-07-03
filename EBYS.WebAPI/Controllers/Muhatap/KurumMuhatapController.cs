@@ -4,8 +4,6 @@ using EBYS.Application.Interfaces.IService.IMuhatapService;
 using EBYS.Application.Services;
 using EBYS.Domain.Entities;
 using EBYS.Persistence;
-using Kendo.Mvc.Extensions;
-using Kendo.Mvc.UI; 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

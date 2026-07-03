@@ -52,7 +52,7 @@ namespace EBYS.Persistence.Repository
             return await _context.EvrakAkislari
                     .Include(x => x.Kullanici)
                     .Where(x => x.EvrakId == evrakId)
-                    .OrderBy(x => x.SiraNo)
+                    .OrderBy(x => x.Id)
                     .AsNoTracking()
                     .ToListAsync();
         }

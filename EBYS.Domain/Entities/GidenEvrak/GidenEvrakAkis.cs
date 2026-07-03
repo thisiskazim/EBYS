@@ -9,6 +9,9 @@ namespace EBYS.Domain.Entities.GidenEvrak
 {
     public class GidenEvrakAkis : BaseEntity
     {
+        /// <summary>Rota adımları bu değerin altında; durum değişikliği hareket kayıtları bu değer ve üzerinde tutulur.</summary>
+        public const int HareketBaslangicSiraNo = 1000;
+
         public int EvrakId { get; set; }
         public virtual GidenEvrak Evrak { get; set; }
 
