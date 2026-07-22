@@ -132,12 +132,12 @@ namespace EBYS.Application.Services.GidenEvrakService
             suankiAdim.Not = $"Evrak Reddedildi. Gerekçe: {not}";
             suankiAdim.SiradakiMi = false;
 
-            GidenEvrakAkisYonetimi.HareketKaydet(
-                entities,
-                suankiAdim.KullaniciId,
-                suankiAdim.ParafMiImzaMi,
-                Enums.AkisAdimDurumu.Reddedildi,
-                suankiAdim.Not);
+            //GidenEvrakAkisYonetimi.HareketKaydet(
+            //    entities,
+            //    suankiAdim.KullaniciId,
+            //    suankiAdim.ParafMiImzaMi,
+            //    Enums.AkisAdimDurumu.Reddedildi,
+            //    suankiAdim.Not);
 
             foreach (var adim in entities.AkisAdimlari.Where(a => a.SiraNo != suankiAdim.SiraNo))
             {
@@ -206,13 +206,13 @@ namespace EBYS.Application.Services.GidenEvrakService
                 benimAdimim.SiradakiMi = true;
                 benimAdimim.AdimDurumu = Enums.AkisAdimDurumu.Bekliyor;
 
-                GidenEvrakAkisYonetimi.HareketKaydet(
-                    entities,
-                    userId,
-                    benimAdimim.ParafMiImzaMi,
-                    Enums.AkisAdimDurumu.GeriCekildi);
+            //GidenEvrakAkisYonetimi.HareketKaydet(
+            //    entities,
+            //    userId,
+            //    benimAdimim.ParafMiImzaMi,
+            //    Enums.AkisAdimDurumu.GeriCekildi);
 
-                if (benimAdimim.SiraNo == 1)
+            if (benimAdimim.SiraNo == 1)
                 {
                     entities.BelgeDurum = Enums.GidenEvrakDurum.Taslak;
                 }
