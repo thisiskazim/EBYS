@@ -9,7 +9,7 @@ using EBYS.Domain.Utilities;
 
 namespace EBYS.Application.Services.GidenEvrakService
 {
-    public class GidenEvrakAkisService(IGidenEvrakRepository evrakRepository,IImzaRotaRepository imzaRotaRepository, IMapper mapper) : IGidenEvrakAkisService
+    public class GidenEvrakAkisService(IGidenEvrakRepository evrakRepository,IImzaRotaRepository imzaRotaRepository,IEimzaService imzaService, IMapper mapper) : IGidenEvrakAkisService
     {
 
         public async Task<List<GidenEvrakAkisListeDTO>> ImzaBekleyenleriGetirAsync()
@@ -21,7 +21,7 @@ namespace EBYS.Application.Services.GidenEvrakService
         {
             return await IslemBekleyenler(Enums.ImzaTipi.Paraf);
         }
-        public async Task<IslemSonuc> OnaylaAsync(int evrakId)
+        public async Task<IslemSonuc> OnaylaAsync(int evrakId, string pinKodu)
         {
      
                 var entities = await evrakRepository.AkisAdimlariSorguAsync(evrakId);
@@ -32,6 +32,26 @@ namespace EBYS.Application.Services.GidenEvrakService
 
                 if(suankiAdim != null)
                 {
+
+                if (string.IsNullOrWhiteSpace(pinKodu))
+                {
+                    return new IslemSonuc(false, "Onay işlemi için E-İmza PIN kodunuzu girmeniz gerekmektedir.");
+                }
+
+                try
+                {
+                    var asilEk = entities.Ekler?.FirstOrDefault(x => x.IsAsilEvrak);
+                    if (asilEk != null && asilEk.DosyaVerisi != null)
+                    {
+                        var imzaliPdf = await imzaService.EvrakImzalaAsync(asilEk.DosyaVerisi, pinKodu);
+                        asilEk.DosyaVerisi = imzaliPdf; 
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return new IslemSonuc(false, ex.Message);
+                }
+
                     suankiAdim.AdimDurumu = Enums.AkisAdimDurumu.Onaylandi;
                     suankiAdim.SiradakiMi = false;
                     suankiAdim.creat_time = DateTime.Now;
@@ -252,5 +272,7 @@ namespace EBYS.Application.Services.GidenEvrakService
 
             return entities;
         }
+
+
     }
 }

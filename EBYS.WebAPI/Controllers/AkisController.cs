@@ -6,7 +6,7 @@ namespace EBYS.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AkisController(IGidenEvrakAkisService akisService) : ControllerBase
+    public class AkisController(IGidenEvrakAkisService akisService, IEimzaService imzaService) : ControllerBase
     {
         [HttpGet("imza-bekleyen-listele")]
         public async Task<IActionResult> ImzaBekleyenEvrakListele()
@@ -14,12 +14,10 @@ namespace EBYS.WebAPI.Controllers
             try
             {
                 var data = await akisService.ImzaBekleyenleriGetirAsync();
-
                 return Ok(data);
             }
             catch (Exception e)
             {
-
                 return BadRequest(e.Message);
             }
             
@@ -32,21 +30,34 @@ namespace EBYS.WebAPI.Controllers
             try
             {
                 var data = await akisService.ParafBekleyenleriGetirAsync();
-
                 return Ok(data);
             }
             catch (Exception e)
             {
-
                 return BadRequest(e.Message);
             }
 
         }
 
-        [HttpPost("Onayla/{id}")]   
-        public async Task<IActionResult> EvrakOnayla(int id)
+        [HttpGet("TakiliKartlariGetir")]
+        public async Task<IActionResult> TakiliKartlariGetir()
         {
-            var sonuc = await akisService.OnaylaAsync(id);
+            try
+            {
+                // MockEmzaService içindeki metot tetiklenir
+                var kartlar = await imzaService.TakiliKartlariGetirAsync();
+                return Ok(kartlar);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("Onayla/{id}/")]   
+        public async Task<IActionResult> EvrakOnayla(int id, [FromQuery] string pinKodu)
+        {
+            var sonuc = await akisService.OnaylaAsync(id,pinKodu);
 
             if (sonuc.BasariliMi)
                 return Ok(sonuc); 

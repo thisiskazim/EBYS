@@ -1,0 +1,38 @@
+﻿<!-- 🎯 E-İMZA PIN GİRİŞ MODALI -->
+<div class="modal fade" id="emzaModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title font-weight-bold">
+                    <i class="fas fa-key me-2"></i>E-İmza Güvenlik Onayı
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="alert alert-info py-2 px-3 mb-3 small">
+                    <i class="fas fa-info-circle me-1"></i> Bu işlem E-İmza (Test NES) ile mühürlenecektir.
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label font-weight-bold text-dark">Seçili Sertifika:</label>
+                    <!-- 🎯 İÇİ BOŞ BIRAKILDI, JAVASCRIPT DINAMIK DOLDURACAK -->
+                    <select id="cmbSertifikaListesi" class="form-select bg-light" disabled>
+                        <option value="">Sertifikalar yükleniyor...</option>
+                    </select>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label font-weight-bold text-dark">E-İmza PIN Kodu <span class="text-danger">*</span></label>
+                    <input type="password" id="txtEmzaPinKodu" class="form-control form-control-lg" placeholder="••••" maxlength="6" autocomplete="off">
+                    <small class="text-muted mt-1 d-block">Test PIN Kodu: <strong class="text-primary">1234</strong></small>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Vazgeç</button>
+                <button type="button" id="btnEmzaOnaylaSubmit" class="btn btn-success px-4 font-weight-bold">
+                    <i class="fas fa-check-circle me-1"></i> İmzala ve Onayla
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

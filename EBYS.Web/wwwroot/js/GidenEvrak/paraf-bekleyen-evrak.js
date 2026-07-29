@@ -46,11 +46,11 @@
                                             </a>
                                         </li>
 
-                                          <li>
-                                    <a class='dropdown-item py-2 text-warning' href='#' onclick='EvrakBekleyenListModule.iadePopupAc("${dataItem.id}")'>
-                                        <i class='fas fa-reply me-2'></i>İade Et
-                                    </a>
-                                </li>
+                                              <li>
+                                        <a class='dropdown-item py-2 text-warning' href='#' onclick='EvrakBekleyenListModule.iadePopupAc("${dataItem.id}")'>
+                                            <i class='fas fa-reply me-2'></i>İade Et
+                                        </a>
+                                    </li>
 
                                 <li>
                                     <a class='dropdown-item py-2 text-danger' href='#' onclick='EvrakBekleyenListModule.redPopupAc("${dataItem.id}")'>

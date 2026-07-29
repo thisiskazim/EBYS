@@ -8,14 +8,13 @@ namespace EBYS.Application.Interfaces.IService.IGidenEvrakService
     {
         Task<List<GidenEvrakAkisListeDTO>> ImzaBekleyenleriGetirAsync();
 
-    
         Task<List<GidenEvrakAkisListeDTO>> ParafBekleyenleriGetirAsync();
 
         Task<List<GidenEvrakAkisListeDTO>> ImzayaGonderdigimAsync();
 
         Task<List<GidenEvrakAkisHareketleriDTO>> EvrakHareketleriGetirAsync(int evrakId);
 
-        Task<IslemSonuc> OnaylaAsync(int evrakId);
+        Task<IslemSonuc> OnaylaAsync(int evrakId, string pinKodu);
 
         Task<IslemSonuc> GeriCekAsync(int evrakId);
 

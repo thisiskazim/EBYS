@@ -15,7 +15,6 @@ namespace EBYS.Application.Interfaces.Repository
         Task<List<GidenEvrakAkisListeDTO>> ImzayaGonderdigimEvraklarAsync(int userId);
         Task<List<GidenEvrakAkis>> EvrakHareketleriGetirAsync(int evrakId);
         Task<GidenEvrak> AkisAdimlariSorguAsync(int evrakId);
-
         Task<GidenEvrakEk> GidenEvrakEkDosyaByIdAsync(int ekId);
         Task<List<GidenEvrakAkisListeDTO>> IslemBekleyenler(int userId,Enums.ImzaTipi imzaTipi);
         Task<List<GidenEvrakAkisListeDTO>> FiltreliEvrakGetirAsync(int? currentUserId, GidenEvrakFiltreTipi? filtreTipi);

@@ -78,6 +78,8 @@ builder.Services.AddScoped<IGidenEvrakRepository, GidenEvrakRepository>();
 builder.Services.AddScoped<IGidenEvrakService, GidenEvrakService>();
 
 builder.Services.AddScoped<IGidenEvrakAkisService, GidenEvrakAkisService>();
+builder.Services.AddScoped<IEimzaService, MockEimzaService>();
+
 
 builder.Services.AddScoped<IKonuKoduService, KonuKoduService>();
 
@@ -92,6 +94,7 @@ builder.Services.AddScoped<IMuhatapRepository, MuhatapRepository>();
 builder.Services.AddScoped<IMuhatapKurumService,KurumService>();
 
 builder.Services.AddScoped<IMuhatapTuzelKisiService, TuzelKisiService>();
+
 
 
 builder.Services.AddScoped<IGelenEvrakService, GelenEvrakService>();

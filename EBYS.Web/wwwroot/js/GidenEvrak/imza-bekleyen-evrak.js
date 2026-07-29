@@ -42,7 +42,7 @@ var EvrakBekleyenListModule = (function () {
                             </button>
                             <ul class='dropdown-menu dropdown-menu-end shadow-lg border-0' style='border-radius: 12px; min-width: 160px;'>
                                     <li>
-                                        <a class='dropdown-item py-2' href='#' onclick='AkisOnayRedEditModule.onayla("${dataItem.id}", "#gridBekleyenler", () => EvrakBekleyenListModule.loadData())'>
+                                        <a class='dropdown-item py-2' href='#' onclick='AkisOnayRedEditModule.onaylaPopUpAc("${dataItem.id}", "#gridBekleyenler", () => EvrakBekleyenListModule.loadData())'>
                                             <i class='fas fa-file-signature text-success me-2'></i>İmzala
                                         </a>
                                     </li>
