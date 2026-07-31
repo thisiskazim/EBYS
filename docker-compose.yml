@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  ebys-db:
+    image: postgres:15-alpine
+    container_name: ebys_postgres
+    environment:
+      POSTGRES_DB: ebys_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "123456"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  ebys-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TELERIK_USERNAME: "lisans_doldu@gmail.com"
+        TELERIK_PASSWORD: "123"
+    container_name: ebys_webapi
+    ports:
+      - "5000:8080"
+    environment:
+      - ConnectionStrings__DbConnection=Host=ebys-db;Port=5432;Database=ebys_db;Username=postgres;Password=123456
+      - JwtSettings__Secret=EBYS_Cok_Gizli_Anahtar_1234567890_Eimza_Hazirlik
+      - JwtSettings__Issuer=EBYSApp
+      - JwtSettings__Audience=EBYSAppUsers
+      - JwtSettings__ExpiryMinutes=60
+    depends_on:
+      - ebys-db
+
+volumes:
+  postgres_data:
