@@ -146,6 +146,7 @@ Veritabanı `init.sql` ile container ilk ayağa kalktığında otomatik oluştur
 **Giden Evrak**
 
 ![Evrak oluşturma](EBYS.Web/wwwroot/images/evrak-olustur.png)
+![Evrak oluşturma](EBYS.Web/wwwroot/images/aI_ile_yazi_olustur.png)
 ![Alıcı ekleme](EBYS.Web/wwwroot/images/alıcı-ekle.png)
 ![Evrak görünümü](EBYS.Web/wwwroot/images/evrak_gorunum.png)
 ![İmza bekleyen](EBYS.Web/wwwroot/images/imza-bekleyen.png)
