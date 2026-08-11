@@ -1,91 +1,179 @@
-﻿# EBYS (Elektronik Belge Yönetim Sistemi)
+﻿# EBYS — Elektronik Belge Yönetim Sistemi
 
-Bu proje; kurumsal organizasyonlardaki evrak süreçlerini dijitalleştirmek, hiyerarşik imza akışlarını yönetmek ve belgeleri güvenli bir şekilde arşivlemek amacıyla geliştirilmiş modern bir **Elektronik Belge Yönetim Sistemi (EBYS)** uygulamasıdır.
+Kurumsal giden/gelen evrak, hiyerarşik imza akışı, muhatap yönetimi ve belge arşivleme.
 
----
-
-## 🚀 Öne Çıkan Özellikler
-
-* **Evrak Yönetimi:** Gelen ve Giden evrakların sisteme kaydedilmesi, sınıflandırılması ve takibi.
-* **Hiyerarşik Düzen:** Kurum içi hiyerarşiye uygun kullanıcı ve rol yönetimi.
-* **Sıralı ve Güvenli İmza Akışı:** İmza sürecine dahil edilen kişilerin, hiyerarşik sıraya göre (asenkron/senkron) evrakı görüntülemesi ve güvenli bir şekilde imzalayabilmesi.
-* **Asenkron PDF Dönüştürme:** Formlara girilen dinamik verilerin, arka planda asenkron bir şekilde resmi PDF şablonlarına dönüştürülmesi.
+[![.NET 9](https://img.shields.io/badge/.NET-9.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 
 ---
 
-## 🛠️ Kullanılan Teknolojiler ve Rolleri
+## Mimari
 
-Projede sürdürülebilirlik, performans ve güvenlik odaklı modern bir teknoloji yığını tercih edilmiştir:
+![Mimari Diyagram](docs/architecture-diagram.png)
 
-### Backend & Mimari
-* **ASP.NET Core 9.0:** Yüksek performanslı, cross-platform ve ölçeklenebilir backend servisleri için kullanıldı.
-* **Clean Architecture:** Projenin iş mantığını (Domain/Application) dış dünyadan (Infrastructure/UI) soyutlayarak; test edilebilir, bakımı kolay ve gevşek bağlı (loosely coupled) bir yapı kuruldu.
-* **DTO & AutoMapper:** Veritabanı modelleri ile arayüze sunulan verileri (DTO) birbirinden ayırmak ve bu nesneler arasındaki eşlemeyi (mapping) otomatik ve performanslı hale getirmek için tercih edildi.
+```mermaid
+graph TB
+    subgraph Presentation
+        WEB["EBYS.Web<br/>(MVC + Kendo UI)"]
+        API["EBYS.WebAPI<br/>(REST + Swagger)"]
+    end
 
-### Veritabanı
-* **PostgreSQL:** Evrak verilerinin, kullanıcı hiyerarşisinin ve imza akış süreçlerinin güvenli, performanslı ve ilişkisel bir şekilde saklanması için güçlü bir açık kaynaklı ilişkisel veritabanı (RDBMS) olarak seçildi.
+    subgraph Application
+        APP["EBYS.Application<br/>Services · DTO · Validator · Mapper"]
+    end
 
-### Frontend & Arayüz
-* **AJAX & jQuery:** Asenkron veri gönderimi/alımı sağlayarak, kullanıcı deneyimini akıcı hale getirmek için kullanıldı.
-* **Telerik UI:** Gelişmiş veri tabloları, dinamik form elemanları ve kurumsal raporlama arayüzleri için zengin UI bileşen kütüphanesinden yararlanıldı.
+    subgraph Domain
+        DOM["EBYS.Domain<br/>Entity · Enum · Exception"]
+    end
+
+    subgraph Infrastructure
+        PER["EBYS.Persistence<br/>EF Core · Repository · JWT · Gemini"]
+    end
+
+    DB[("PostgreSQL")]
+
+    WEB -->|HTTP + JWT| API
+    API --> APP
+    WEB --> APP
+    APP --> DOM
+    PER --> APP
+    PER --> DOM
+    PER --> DB
+```
 
 ---
 
-## 🏗️ Mimari Yapı (Clean Architecture)
+## İstek Akışı
 
-Proje, bağımlılıkların içeriye doğru aktığı 4 ana katmandan oluşmaktadır:
+```mermaid
+sequenceDiagram
+    participant UI as EBYS.Web
+    participant API as WebAPI Controller
+    participant SVC as Application Service
+    participant REPO as Repository
+    participant DB as PostgreSQL
 
-1. **Domain:** Entity'ler, value object'ler ve çekirdek kurallar.
-2. **Application:** DTO'lar, AutoMapper profilleri ve iş mantığı (Business Logic).
-3. **Infrastructure:** Veritabanı bağlantıları (PostgreSQL), JWT servisleri ve dış entegrasyonlar.
-4. **WebUI / Presentation:** Kullanıcının etkileşime girdiği ASP.NET Core MVC / API katmanı (Telerik & Ajax entegreli).
+    UI->>API: HTTP Request + Bearer Token
+    API->>API: ValidationFilter
+    API->>SVC: DTO
+    SVC->>REPO: Domain işlemi
+    REPO->>DB: EF Core (AsNoTracking / ProjectTo)
+    DB-->>REPO: Sonuç
+    REPO-->>SVC: Entity / DTO
+    SVC-->>API: Response
+    API-->>UI: JSON
 
+    Note over API: Hata → GlobalExceptionHandler
+```
 
-## 🔧 Kurulum ve Çalıştırma
+---
 
-Projeyi yerel bilgisayarınızda çalıştırmak için aşağıdaki adımları takip edebilirsiniz:
+## İmza Akışı
 
-1. **Projeyi Klonlayın:**
-   ```bash
-   git clone [https://github.com/thisiskazim/EBYS.git](https://github.com/thisiskazim/EBYS.git)
+```mermaid
+stateDiagram-v2
+    [*] --> Taslak: Evrak oluştur
+    Taslak --> Imzada: İmza rotasına gönder
 
-2. **Bağımlılıkları Yükleyin:**
-   ```bash
-   cd EBYS
-   dotnet restore
-   ```
+    state Imzada {
+        [*] --> Paraf1: Sıradaki adım
+        Paraf1 --> Paraf2: Onayla
+        Paraf2 --> Imza: Onayla
+        Imza --> [*]: E-İmza + Onayla
+    }
 
-3. **Veritabanı Bağlantısını Yapılandırın:**
-   WebAPI projesinin `appsettings.json` dosyasını açın ve PostgreSQL bağlantı dizesini güncelleyin:
-   ```json
-   "ConnectionStrings": {
-     "DefaultConnection": "Host=localhost;Port=5432;Database=EbysDb;Username=postgres;Password=your_password"
-   }
-   ```
+    Imzada --> Tamamlandi: Son adım onaylandı
+    Imzada --> GeriIade: İade et
+    Imzada --> Reddedildi: Reddet
+    GeriIade --> Imzada: Düzenle & tekrar gönder
+    Tamamlandi --> [*]
+    Reddedildi --> [*]
+```
 
-4. **Veritabanını Oluşturun ve Migrasyonları Uygulayın:**
-   ```bash
-   dotnet ef database update
-   ```
+---
 
-## 🖼️ Görünümler
-   1. **Giden Evrak İçin Bazı Görünümler:**
-    ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/evrak-olustur.png)
-    ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/alıcı-ekle.png)
-    ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/evrak_gorunum.png)
-    ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/imza-bekleyen.png)
-    ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/evrak-akıs-gecmisi.png)
-    ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/imzaya-gonderdiklerim.png)
-    ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/imza-rota.png)
- 
-   2. **Gelen Evrak İçin Bazı Görünümler:**
-    ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/gelen-evrak-kayıt.png)
-    ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/gelen-evrak-liste.png)
+## Modüller
 
-   3. **Diğer Bazı Görünümler:**
-    ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/evrak-onizleme.png)
-    ![Evrak Yönetimi ](EBYS.Web/wwwroot/images/api2.png)
+| Modül | İşlev |
+|---|---|
+| Giden Evrak | Oluşturma, alıcı/ek/ilgi, konu kodu, AI taslak |
+| Gelen Evrak | Kayıt, sevk, teslim alma |
+| İmza Akışı | Paraf/imza sırası, onay, red, iade, geri çek |
+| İmza Rotası | Tekrar kullanılabilir imza şablonları |
+| Muhatap | Kurum / tüzel kişi / bireysel |
+| Evrak Önizleme | PDF görüntüleme |
 
+---
 
+## Teknolojiler
 
+| | |
+|---|---|
+| Backend | ASP.NET Core 9, Clean Architecture |
+| Veritabanı | PostgreSQL, EF Core |
+| Auth | JWT Bearer, multi-tenant filtre |
+| Mapping | AutoMapper (`ProjectTo`) |
+| Validasyon | FluentValidation |
+| Loglama | Serilog |
+| AI | Google Gemini API |
+| Frontend | MVC, jQuery, Telerik Kendo UI, Bootstrap 5 |
 
+---
+
+## Kurulum
+
+```bash
+git clone https://github.com/thisiskazim/EBYS.git
+cd EBYS
+dotnet restore
+```
+
+`EBYS.WebAPI/appsettings.json` → PostgreSQL bağlantı dizesi:
+
+```json
+"ConnectionStrings": {
+  "DbConnection": "Host=localhost;Port=5432;Database=ebys_db;Username=postgres;Password=your_password"
+}
+```
+
+```bash
+dotnet ef database update --project EBYS.Persistence --startup-project EBYS.WebAPI
+dotnet run --project EBYS.WebAPI   # https://localhost:7060
+dotnet run --project EBYS.Web      # https://localhost:7183
+```
+
+---
+
+## Ekran Görüntüleri
+
+**Giden Evrak**
+
+![Evrak oluşturma](EBYS.Web/wwwroot/images/evrak-olustur.png)
+![Alıcı ekleme](EBYS.Web/wwwroot/images/alıcı-ekle.png)
+![Evrak görünümü](EBYS.Web/wwwroot/images/evrak_gorunum.png)
+![İmza bekleyen](EBYS.Web/wwwroot/images/imza-bekleyen.png)
+![Akış geçmişi](EBYS.Web/wwwroot/images/evrak-akıs-gecmisi.png)
+![İmza rotası](EBYS.Web/wwwroot/images/imza-rota.png)
+
+**Gelen Evrak**
+
+![Gelen evrak kayıt](EBYS.Web/wwwroot/images/gelen-evrak-kayıt.png)
+![Gelen evrak liste](EBYS.Web/wwwroot/images/gelen-evrak-liste.png)
+
+**Diğer**
+
+![PDF önizleme](EBYS.Web/wwwroot/images/evrak-onizleme.png)
+![Swagger](EBYS.Web/wwwroot/images/api2.png)
+
+---
+
+## Proje Yapısı
+
+```
+EBYS/
+├── EBYS.Domain/
+├── EBYS.Application/
+├── EBYS.Persistence/
+├── EBYS.WebAPI/
+└── EBYS.Web/
+```
