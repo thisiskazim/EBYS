@@ -17,6 +17,7 @@ using EBYS.Persistence.Gemini.Instructions;
 using EBYS.Persistence.Gemini.Options;
 using EBYS.Persistence.Repository;
 using EBYS.Persistence.Services;
+using EBYS.WebAPI.Helpers;
 using EBYS.WebAPI.Middlewares;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -34,7 +35,8 @@ using System.Text;
 
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-var builder =WebApplication.CreateBuilder(args);
+EnvLoader.Load(Directory.GetCurrentDirectory());
+var builder = WebApplication.CreateBuilder(args);
 
 
 

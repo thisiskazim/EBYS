@@ -1,15 +1,14 @@
-version: '3.8'
-
 services:
   ebys-db:
     image: postgres:17-alpine
     container_name: ebys_postgres
+    env_file: .env
     environment:
-      POSTGRES_DB: ebys_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: "123456"
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5433:5432"
+      - "${DB_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -19,17 +18,19 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        TELERIK_USERNAME: "ulvikazim02@gmail.com"
-        TELERIK_PASSWORD: "123456"
+        TELERIK_USERNAME: ${TELERIK_USERNAME}
+        TELERIK_PASSWORD: ${TELERIK_PASSWORD}
     container_name: ebys_webapi
+    env_file: .env
     ports:
-      - "5000:8080"
+      - "${API_PORT}:8080"
     environment:
-      - ConnectionStrings__DbConnection=Host=ebys-db;Port=5432;Database=ebys_db;Username=postgres;Password=123456
-      - JwtSettings__Secret=EBYS_Cok_Gizli_Anahtar_1234567890_Eimza_Hazirlik
-      - JwtSettings__Issuer=EBYSApp
-      - JwtSettings__Audience=EBYSAppUsers
-      - JwtSettings__ExpiryMinutes=60
+      ConnectionStrings__DbConnection: Host=ebys-db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      JwtSettings__Secret: ${JWT_SECRET}
+      JwtSettings__Issuer: ${JWT_ISSUER}
+      JwtSettings__Audience: ${JWT_AUDIENCE}
+      JwtSettings__ExpiryMinutes: ${JWT_EXPIRY_MINUTES}
+      GeminiSettings__ApiKey: ${GEMINI_API_KEY}
     depends_on:
       - ebys-db
 
@@ -37,11 +38,15 @@ services:
     build:
       context: .
       dockerfile: EBYS.Web/Dockerfile
+      args:
+        TELERIK_USERNAME: ${TELERIK_USERNAME}
+        TELERIK_PASSWORD: ${TELERIK_PASSWORD}
     container_name: ebys_web
+    env_file: .env
     ports:
-      - "5001:8080"
+      - "${WEB_PORT}:8080"
     environment:
-      - ApiSettings__BaseUrl=http://ebys-api:8080/api/
+      ApiSettings__BaseUrl: http://ebys-api:8080/api/
     depends_on:
       - ebys-api
 

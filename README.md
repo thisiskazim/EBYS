@@ -139,10 +139,6 @@ docker compose up --build
 
 Veritabanı `init.sql` ile container ilk ayağa kalktığında otomatik oluşturulur. Kullanıcının .NET SDK veya PostgreSQL kurmasına gerek yoktur.
 
-**Telerik build:** İlk build sırasında NuGet kimlik bilgisi gerekir. `docker-compose.yml` içindeki `TELERIK_USERNAME` / `TELERIK_PASSWORD` değerlerini kendi hesabınızla güncelleyin.
-
-**Gemini AI (opsiyonel):** `ebys-api` servisine `GeminiSettings__ApiKey` environment değişkeni ekleyin.
-
 ---
 
 ## Ekran Görüntüleri
