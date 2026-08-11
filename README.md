@@ -4,6 +4,7 @@ Kurumsal giden/gelen evrak, hiyerarşik imza akışı, muhatap yönetimi ve belg
 
 [![.NET 9](https://img.shields.io/badge/.NET-9.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 
 ---
 
@@ -122,25 +123,25 @@ stateDiagram-v2
 
 ## Kurulum
 
+**Gereksinim:** [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
 ```bash
 git clone https://github.com/thisiskazim/EBYS.git
 cd EBYS
-dotnet restore
+docker compose up --build
 ```
 
-`EBYS.WebAPI/appsettings.json` → PostgreSQL bağlantı dizesi:
+| Servis | Adres |
+|---|---|
+| Web UI | http://localhost:5001 |
+| API | http://localhost:5000 |
+| PostgreSQL | localhost:5433 |
 
-```json
-"ConnectionStrings": {
-  "DbConnection": "Host=localhost;Port=5432;Database=ebys_db;Username=postgres;Password=your_password"
-}
-```
+Veritabanı `init.sql` ile container ilk ayağa kalktığında otomatik oluşturulur. Kullanıcının .NET SDK veya PostgreSQL kurmasına gerek yoktur.
 
-```bash
-dotnet ef database update --project EBYS.Persistence --startup-project EBYS.WebAPI
-dotnet run --project EBYS.WebAPI   # https://localhost:7060
-dotnet run --project EBYS.Web      # https://localhost:7183
-```
+**Telerik build:** İlk build sırasında NuGet kimlik bilgisi gerekir. `docker-compose.yml` içindeki `TELERIK_USERNAME` / `TELERIK_PASSWORD` değerlerini kendi hesabınızla güncelleyin.
+
+**Gemini AI (opsiyonel):** `ebys-api` servisine `GeminiSettings__ApiKey` environment değişkeni ekleyin.
 
 ---
 
