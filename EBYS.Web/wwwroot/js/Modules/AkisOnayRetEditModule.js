@@ -3,16 +3,14 @@
     var _selectedEvrakId = null;
     var _currentGridSelector = null;
     var _successCallback = null;
-    var _modalInstance = null;
 
-    function getModalInstance() {
-        if (!_modalInstance) {
-            var modalEl = document.getElementById('emzaModal');
-            if (modalEl) {
-                _modalInstance = new bootstrap.Modal(modalEl);
-            }
-        }
-        return _modalInstance;
+    function getEmzaModal() {
+        var modalEl = document.getElementById('emzaModal');
+        return modalEl ? bootstrap.Modal.getOrCreateInstance(modalEl) : null;
+    }
+
+    function closeEmzaModal() {
+        getEmzaModal()?.hide();
     }
 
 
@@ -44,10 +42,8 @@
 
             $("#txtEmzaPinKodu").val("");
 
-            var modalEl = document.getElementById('emzaModal');
-            if (modalEl) {
-                // Bootstrap Singleton: Varsa mevcut modalı getirir, yoksa yenisini türetir
-                var modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            var modal = getEmzaModal();
+            if (modal) {
                 modal.show();
 
                 var $select = $("#cmbSertifikaListesi");
@@ -90,9 +86,7 @@
 
             var $gridEl = $(_currentGridSelector);
 
-            // Modalı kapat
-            var modal = getModalInstance();
-            if (modal) modal.hide();
+            closeEmzaModal();
 
             // Grid üzerinde loading başlat
             if ($gridEl.length) kendo.ui.progress($gridEl, true);
@@ -101,7 +95,7 @@
 
             ApiService.postJson(url, {})
                 .done(function (response) {
-                    if (response && response.isSuccess !== false) {
+                    if (response && response.basariliMi !== false) {
                         showNotification(response.mesaj || "Evrak E-İmza ile başarıyla onaylandı.", "success");
                         if (typeof _successCallback === "function") _successCallback();
                     } else {

@@ -1,0 +1,103 @@
+<div class="modal fade" id="aiResmiYaziModal" tabindex="-1" aria-labelledby="aiResmiYaziModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content ai-modal-content border-0 shadow-lg">
+            <div class="modal-header ai-modal-header text-white">
+                <h5 class="modal-title fw-semibold" id="aiResmiYaziModalLabel">
+                    <i class="fas fa-wand-magic-sparkles me-2"></i>AI ile Resmi Yazı Oluştur
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+
+            <div class="modal-body p-4 position-relative">
+                <div id="aiModalLoadingOverlay" class="ai-loading-overlay d-none">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+                            <span class="visually-hidden">Yükleniyor...</span>
+                        </div>
+                        <p class="mb-0 fw-semibold text-primary">AI metninizi resmi yazıya dönüştürüyor...</p>
+                        <small class="text-muted">Bu işlem birkaç saniye sürebilir.</small>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold text-secondary" for="AiYaziTuru">Yazı Türü *</label>
+                        @(Html.Kendo().DropDownList()
+                            .Name("AiYaziTuru")
+                            .HtmlAttributes(new { style = "width:100%", @class = "form-control bg-white" })
+                            .OptionLabel("Seçiniz")
+                            .DataTextField("text")
+                            .DataValueField("value")
+                            .BindTo(new[]
+                            {
+                                new { text = "Dilekçe", value = "1" },
+                                new { text = "Üst Yazı", value = "2" },
+                                new { text = "İç Yazışma", value = "3" }
+                            })
+                        )
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold text-secondary" for="AiYaziUzunlugu">Yazı Uzunluğu *</label>
+                        @(Html.Kendo().DropDownList()
+                            .Name("AiYaziUzunlugu")
+                            .HtmlAttributes(new { style = "width:100%", @class = "form-control bg-white" })
+                            .DataTextField("text")
+                            .DataValueField("value")
+                            .Value("2")
+                            .BindTo(new[]
+
+                            {
+                                new { text = "Kısa ve Öz", value = "1" },
+                                new { text = "Orta Uzunlukta", value = "2" },
+                                new { text = "Uzun Yazı", value = "3" }
+                            })
+                        )
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <small class="text-muted pb-2">
+                            <i class="fas fa-sliders me-1"></i>
+                            Uzunluk seçimi AI çıktısının kapsamını belirler.
+                        </small>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold text-secondary" for="aiKullaniciNotu">Kullanıcı Notu / Talep *</label>
+                        <textarea id="aiKullaniciNotu"
+                                  class="form-control ai-textarea"
+                                  rows="5"
+                                  maxlength="4000"
+                                  placeholder="Örn: Sayın müdür, geçen hafta talep ettiğimiz malzeme henüz gelmedi. Acil ihtiyaç var, sevk edilmesini rica ederim."></textarea>
+                        <div class="d-flex justify-content-between mt-1">
+                            <small class="text-muted">En az 10 karakter giriniz.</small>
+                            <small class="text-muted"><span id="aiKarakterSayaci">0</span> / 4000</small>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold text-secondary" for="aiOnizlemeKonu">Üretilen Konu</label>
+                        <input type="text"
+                               id="aiOnizlemeKonu"
+                               class="form-control ai-preview-input"
+                               readonly
+                               placeholder="AI tarafından üretilen konu burada görünecek..." />
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold text-secondary" for="aiOnizlemeIcerik">Üretilen İçerik</label>
+                        <textarea id="aiOnizlemeIcerik"
+                                  class="form-control ai-preview-textarea"
+                                  rows="10"
+                                  readonly
+                                  placeholder="AI tarafından üretilen gövde metni burada görünecek..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer bg-light border-0 px-4 py-3">
+                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Vazgeç</button>
+                <button type="button" id="btnAiDonustur" class="btn btn-primary px-4 ai-btn-donustur">
+                    <i class="fas fa-arrows-rotate me-1"></i> Dönüştür
+                </button>
+                <button type="button" id="btnAiEvrakaAktar" class="btn btn-success px-4" disabled>
+                    <i class="fas fa-file-import me-1"></i> Evraka Aktar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -23,7 +23,8 @@
                 noRecords: { template: "<div class='p-5 text-center text-muted'>Kayıtlı giden evrak bulunamadı.</div>" },
                 sortable: true,
                 resizable: true,
-                pageable: { pageSize: 15, refresh: true, buttonCount: 5 },
+
+
                 columns: [ 
                     
                     {
@@ -149,24 +150,7 @@
                 ]
             }).data("kendoGrid");
         },
-        //loadData: function () {
-        //    var $gridEl = $("#gridGidenEvraklar");
-        //    kendo.ui.progress($gridEl, true);
 
-        //    // 🎯 FormData karmaşasını kaldırdık, projenin yeni parametrik standardına geçtik:
-        //    var url = "GidenEvrak/GidenEvrakListesi?filtreTipi=" + _aktifOlanFiltre;
-
-        //    ApiService.postJson(url, {})
-        //        .done(function (res) {
-        //            // Grid veri kaynağını yeniliyoruz
-        //            _grid.dataSource.data(res);
-        //            // 🎯 Veri yenilendiğinde kolonların kendilerini ve içindeki template mantığını yeniden tetiklemesini sağlıyoruz:
-        //            _grid.refresh();
-        //        })
-        //        .always(function () {
-        //            kendo.ui.progress($gridEl, false);
-        //        });
-        //},
         loadData: function () {
             kendo.ui.progress($("#gridGidenEvraklar"), true);
             var formData = new FormData();
@@ -182,7 +166,6 @@
         dosyaIndir: function (ekId) {
             window.location.href = _apiBaseUrl + "GidenEvrak/DosyaIndir/" + ekId;
         },
-
         history: function (id) {
          
             ApiService.getJson("GidenEvrak/evrak-hareketleri/" + id).done(function (res) {
@@ -249,7 +232,6 @@
                 win.center().open();
             });
         },
-       
         tabFiltrele: function (tabKey) {
             _aktifOlanFiltre = _enumMap[tabKey];
             GidenEvrakListModule.loadData();

@@ -4,6 +4,7 @@ using EBYS.Application.Interfaces.IService;
 using EBYS.Application.Interfaces.IService.IGelenEvrakService;
 using EBYS.Application.Interfaces.IService.IGidenEvrakService;
 using EBYS.Application.Interfaces.IService.IMuhatapService;
+using EBYS.Application.Interfaces.IService.IResmiYaziService;
 using EBYS.Application.Interfaces.Repository;
 using EBYS.Application.Mapping;
 using EBYS.Application.Services;
@@ -11,6 +12,9 @@ using EBYS.Application.Services.GelenEvrakService;
 using EBYS.Application.Services.GidenEvrakService;
 using EBYS.Application.Services.MuhatapService;
 using EBYS.Persistence;
+using EBYS.Persistence.Gemini;
+using EBYS.Persistence.Gemini.Instructions;
+using EBYS.Persistence.Gemini.Options;
 using EBYS.Persistence.Repository;
 using EBYS.Persistence.Services;
 using EBYS.WebAPI.Middlewares;
@@ -35,7 +39,7 @@ var builder =WebApplication.CreateBuilder(args);
 
 
 var connections = builder.Configuration.GetConnectionString("DbConnection");
-// Log tablosundaki kolon şablonunu belirliyoruz (Hata mesajı, StackTrace vb.)
+// Log tablosundaki kolon ablonunu belirliyoruz (Hata mesaj, StackTrace vb.)
 var columnOptions = new Dictionary<string, ColumnWriterBase>
 {
     { "message", new RenderedMessageColumnWriter(NpgsqlDbType.Text) },
@@ -49,15 +53,15 @@ var columnOptions = new Dictionary<string, ColumnWriterBase>
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
-    .Enrich.WithExceptionDetails() // Hatanın tüm detaylarını (inner exception vb.) yakalar
+    .Enrich.WithExceptionDetails() // Hatann tm detaylarn (inner exception vb.) yakalar
     .WriteTo.PostgreSQL(
         connectionString: connections,
-        tableName: "logs", // Veritabanında otomatik açılacak tablo adı
+        tableName: "logs", // Veritabannda otomatik alacak tablo ad
         columnOptions: columnOptions,
-        needAutoCreateTable: true) // Tablo yoksa otomatik oluştur!
+        needAutoCreateTable: true) // Tablo yoksa otomatik olutur!
     .CreateLogger();
 
-// .NET'in kendi loglama mekanizmasını Serilogq'a bağlıyoruz
+// .NET'in kendi loglama mekanizmasn Serilogq'a balyoruz
 builder.Host.UseSerilog();
 
 
@@ -100,16 +104,24 @@ builder.Services.AddScoped<IMuhatapTuzelKisiService, TuzelKisiService>();
 builder.Services.AddScoped<IGelenEvrakService, GelenEvrakService>();
 builder.Services.AddScoped<IGelenEvrakRepository, GelenEvrakRepository>();
 
+builder.Services.Configure<GeminiSettings>(builder.Configuration.GetSection("GeminiSettings"));
+builder.Services.AddSingleton<ResmiYaziSystemInstructionFactory>();
+builder.Services.AddSingleton<IResmiYaziSystemInstructionStrategy, DilekceSystemInstructionStrategy>();
+builder.Services.AddSingleton<IResmiYaziSystemInstructionStrategy, UstYaziSystemInstructionStrategy>();
+builder.Services.AddSingleton<IResmiYaziSystemInstructionStrategy, IcYazismaSystemInstructionStrategy>();
+builder.Services.AddHttpClient<IResmiYaziGeneratorService, GeminiResmiYaziService>()
+    .ConfigureHttpClient(client => client.Timeout = TimeSpan.FromSeconds(90));
+
 
 builder.Services.AddValidatorsFromAssemblies(new[] { Assembly.Load("EBYS.Application") });
 
-// 1. Handler'ı servislere kaydet
+// 1. Handler' servislere kaydet
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
-// API davranış ayarlarını yapılandırıyoruz
+// API davran ayarlarn yaplandryoruz
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
-    // .NET'in kendi kafasına göre otomatik 400 (ProblemDetails) dönmesini engeller
+    // .NET'in kendi kafasna gre otomatik 400 (ProblemDetails) dnmesini engeller
     options.SuppressModelStateInvalidFilter = true;
 });
 

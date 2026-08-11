@@ -44,7 +44,7 @@ namespace EBYS.WebAPI.Controllers
         {
             try
             {
-                // MockEmzaService içindeki metot tetiklenir
+           
                 var kartlar = await imzaService.TakiliKartlariGetirAsync();
                 return Ok(kartlar);
             }

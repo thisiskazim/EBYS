@@ -69,5 +69,19 @@ namespace EBYS.Domain.Enum
             BanaRedDonen = 5
         }
 
+        public enum DocumentType
+        {
+            Dilekce = 1,
+            UstYazi = 2,
+            IcYazisma = 3
+        }
+
+        public enum YaziUzunlugu
+        {
+            KisaVeOz = 1,
+            OrtaUzunlukta = 2,
+            Uzun = 3
+        }
+
     }
 }

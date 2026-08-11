@@ -67,11 +67,15 @@
         </div>
 
         <div class="col-md-7">
-            <div class="mb-2 d-flex justify-content-between align-items-center">
+            <div class="mb-2 d-flex justify-content-between align-items-center flex-wrap ai-content-toolbar">
                 <div>
                     <label class="form-label mb-0 text-secondary">Evrak İçeriği *</label>
                 </div>
-                <div class="text-muted small">Yazı tipi, hizalama ve tablo seçenekleri kullanılabilir.</div>
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" id="btnAiTaslakOlustur" class="btn btn-sm ai-btn-taslak">
+                        ✨ AI ile Taslak Oluştur
+                    </button>
+                </div>
             </div>
 
             @(Html.Kendo().Editor()

@@ -120,6 +120,7 @@ $(document).ready(function () {
     if (typeof EvrakBilgiModule !== "undefined") EvrakBilgiModule.init();
     if (typeof EklerModule !== "undefined") EklerModule.init();
     if (typeof IlgilerModule !== "undefined") IlgilerModule.init();
+    if (typeof AiResmiYaziModal !== "undefined") AiResmiYaziModal.init();
   
 
     EvrakOlustur.init();

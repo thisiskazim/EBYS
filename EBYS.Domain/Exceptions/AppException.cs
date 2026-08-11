@@ -16,4 +16,6 @@ namespace EBYS.Domain.Exceptions
 
     public class EvrakZatenSevkEdilmis() : BusinessException("Bu evrakın sevk işlemi daha önce zaten yapılmış.");
     public class ImzaRotasıBos() : BusinessException("İmza Rota Adımları Boş. 'İmza Rotası' Menüsünden Doldurunuz");
+    public class DesteklenmeyenYaziTuru() : BusinessException("Desteklenmeyen yazı türü.");
+    public class GeminiServisHatasi(string mesaj) : BusinessException(mesaj);
 }
