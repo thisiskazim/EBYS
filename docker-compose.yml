@@ -16,7 +16,7 @@ services:
   ebys-api:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./EBYS.WebAPI/Dockerfile
       args:
         TELERIK_USERNAME: ${TELERIK_USERNAME}
         TELERIK_PASSWORD: ${TELERIK_PASSWORD}
@@ -37,7 +37,7 @@ services:
   ebys-web:
     build:
       context: .
-      dockerfile: EBYS.Web/Dockerfile
+      dockerfile: ./EBYS.Web/Dockerfile
       args:
         TELERIK_USERNAME: ${TELERIK_USERNAME}
         TELERIK_PASSWORD: ${TELERIK_PASSWORD}
