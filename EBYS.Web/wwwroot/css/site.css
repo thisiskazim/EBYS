@@ -4,63 +4,69 @@
 
 
 /* Modern left sidebar styles */
-.ebys-app { min-height: 100vh; }
+.ebys-app {
+    min-height: 100vh;
+}
 
 .ebys-sidebar-modern {
     width: 280px;
     max-width: 85vw;
     flex-shrink: 0;
-    /* Arka plan rengini buraya ekliyoruz */
     background-color: #066a9b !important;
     color: white !important;
+    transition: margin-left .3s ease;
 }
 
-.ebys-sidebar-modern .sidebar-inner { 
-    height: 100%; 
-    display: flex; 
-    flex-direction: column; 
-}
+    .ebys-sidebar-modern .sidebar-inner {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
 
-/* Ýkon kutularýný sidebarýn yeni rengine göre ayarlayalým */
-.ebys-sidebar-modern .menu-icon { 
-    width: 42px; 
-    height: 42px; 
-    border-radius: 8px; 
-    background-color: rgba(255, 255, 255, 0.1) !important; /* Hafif þeffaf beyaz */
-    color: white !important;
-}
+    /* Ýkon kutularýný sidebarýn yeni rengine göre ayarlayalým */
+    .ebys-sidebar-modern .menu-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 8px;
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+    }
+    /* Sidebar içindeki tüm yazýlarýn beyaz kalmasýný garantiye alalým */
+    .ebys-sidebar-modern .menu-title,
+    .ebys-sidebar-modern .menu-sub,
+    .ebys-sidebar-modern .menu-header {
+        color: white !important;
+    }
 
-/* Sidebar içindeki tüm yazýlarýn beyaz kalmasýný garantiye alalým */
-.ebys-sidebar-modern .menu-title, 
-.ebys-sidebar-modern .menu-sub,
-.ebys-sidebar-modern .menu-header {
-    color: white !important;
-}
+    /* Alt menü linkleri (collapse içindekiler) */
+    .ebys-sidebar-modern .collapse .nav-link {
+        color: rgba(255, 255, 255, 0.6) !important;
+    }
 
-/* Alt menü linkleri (collapse içindekiler) */
-.ebys-sidebar-modern .collapse .nav-link {
-    color: rgba(255, 255, 255, 0.6) !important;
-}
-
-.ebys-sidebar-modern .collapse .nav-link:hover {
-    color: #60a5fa !important; /* Hover olunca tatlý bir açýk mavi */
-}
+        .ebys-sidebar-modern .collapse .nav-link:hover {
+            color: #60a5fa !important;
+        }
 
 /* Make main content push to the right on larger screens */
 @media (min-width: 768px) {
-  .ebys-main { margin-left: 0; }
+    .ebys-main {
+        margin-left: 0;
+    }
 }
 
 /* mobile: sidebar stacks above content (or can be toggled) */
 @media (max-width: 767.98px) {
-  .ebys-sidebar-modern { position: relative; width: 100%; }
+    .ebys-sidebar-modern {
+        position: relative;
+        width: 100%;
+    }
 }
 
 /* Bildirim kutusunu büyütüyoruz */
 .k-notification-wrap {
     padding: 20px 30px !important;
     font-size: 22px !important; /* Yazýlarý büyüttük */
-  
+
     border-radius: 8px !important;
     box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
 }
@@ -87,8 +93,16 @@
 /*Login*/
 
 /* Imza Rota modal customizations */
-.imza-rota-grid { height: 300px; }
-.imza-rota-actions { display: flex; justify-content: flex-end; gap: .5rem; }
+.imza-rota-grid {
+    height: 300px;
+}
+
+.imza-rota-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: .5rem;
+}
+
 .rounded-t-5 {
     border-top-left-radius: 0.5rem;
     border-top-right-radius: 0.5rem;
@@ -280,21 +294,21 @@
 /*.belge-imza {
     float: right;
     width: 250px;*/ /* Ýmza alanýnýn geniþliði */
-    /*text-align: center;*/ /* Ýsim ve unvaný kendi içinde ortalar */
-    /*margin-top: 50px;
+/*text-align: center;*/ /* Ýsim ve unvaný kendi içinde ortalar */
+/*margin-top: 50px;
     margin-right: 50px;
     font-weight: bold;
 }
 
 #view-imza-ad {
     text-transform: uppercase;*/ /* Ýsmi otomatik büyük harf yapar */
-    /*display: block;
+/*display: block;
     margin-bottom: 2px;
 }
 
 #view-imza-unvan {
     font-weight: normal;*/ /* Unvan genelde bold olmaz, isteðe baðlý */
-    /*font-size: 11pt;
+/*font-size: 11pt;
 }
 
 
@@ -345,27 +359,27 @@
 /*.belge-ust-bilgi {
     position: absolute;
     top: 50mm;*/ /* Kaðýdýn tepesinden uzaklýk */
-    /*left: 20mm;
+/*left: 20mm;
 }*/
 
 /* Alýcý (Muhatap) Orta-Sað Üstte */
 /*.belge-muhatap-alaný {
     margin-top: 20mm;
     text-align: center;*/ /* Genelde ortalanýr */
-    /*width: 100%;
+/*width: 100%;
 }*/
 
 /* Ýmza Sað Alt */
 /*.belge-imza-alani {
     position: absolute;
     bottom: 60mm;*/ /* Alttan yükseklik */
-    /*right: 20mm;
+/*right: 20mm;
     text-align: center;
 }
 
 .belge-onizleme-container {
     background-color: #ced4da;*/ /* Arka plan gri */
-    /*padding: 30px;
+/*padding: 30px;
     display: flex;
     justify-content: center;
 }
@@ -374,7 +388,7 @@
 .belge-header {
     display: flex;
     justify-content: space-between;*/ /* Logo - Metin - Logo dizilimi */
-    /*align-items: center;
+/*align-items: center;
     text-align: center;
     font-weight: bold;
 }
@@ -413,8 +427,8 @@
     display: flex;
     flex-direction: column;
     min-height: 297mm;*/ /* Standart A4 yüksekliði */
-    /*padding: 20mm;*/ /* Standart kenar boþluðu */
-    /*box-sizing: border-box;
+/*padding: 20mm;*/ /* Standart kenar boþluðu */
+/*box-sizing: border-box;
     background: white;
     position: relative;
 }*/
@@ -427,7 +441,7 @@
 /* Footer'ýn her zaman en altta kalmasý için */
 /*.belge-footer {
     margin-top: auto;*/ /* Üstteki boþluðu otomatik doldurur */
-    /*padding-top: 20px;
+/*padding-top: 20px;
     font-size: 0.75rem;
     color: #555;
 }*/
@@ -578,7 +592,8 @@
     display: block;
     margin-bottom: 2px;
 }
-tamam 
+
+tamam
 #view-imza-unvan {
     font-weight: normal;
     font-size: 10.5pt;
@@ -808,4 +823,57 @@ tamam
 .bg-warning {
     background-color: #fef3c7 !important;
     color: #b45309 !important;
+}
+/* ============ HAMBURGER BUTON ============ */
+.ebys-sidebar-toggle {
+    position: static;
+    transform: none;
+    width: 20px;
+    height: 38px;
+    border: none;
+    border-radius: 10px;
+    background: #f1f5f9;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: all .2s ease;
+    flex-shrink: 0;
+}
+
+    .ebys-sidebar-toggle:hover {
+        background: #e2e8f0;
+    }
+
+.hamburger-line {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: #1e293b;
+    border-radius: 2px;
+    transition: transform .25s ease, opacity .25s ease;
+}
+
+.ebys-sidebar-toggle.active .hamburger-line:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.ebys-sidebar-toggle.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.ebys-sidebar-toggle.active .hamburger-line:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Daraltma davranýþý ayný kalýyor */
+.ebys-main {
+    margin-left: 0;
+}
+
+.ebys-sidebar-modern.collapsed {
+    margin-left: -280px;
 }
