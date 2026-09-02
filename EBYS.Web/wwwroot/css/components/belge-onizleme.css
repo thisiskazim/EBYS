@@ -1,0 +1,203 @@
+.belge-onizleme-container {
+    background-color: #ced4da;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.a4-sayfa {
+    background: white;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 20mm 20mm 15mm 20mm;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    font-family: "Times New Roman", Times, serif;
+    font-size: 11pt;
+    color: black;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.belge-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.logo-left,
+.logo-right {
+    width: 90px;
+    flex-shrink: 0;
+}
+
+    .logo-left img,
+    .logo-right img {
+        max-width: 100%;
+    }
+
+.logo-right {
+    text-align: right;
+}
+
+.kurum-bilgi {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 11pt;
+    line-height: 1.5;
+}
+
+.belge-ust-bilgi {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 16px;
+}
+
+.ust-bilgi-satir {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.etiket {
+    width: 60px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+#view-tarih-right {
+    text-align: right;
+    min-width: 120px;
+}
+
+.belge-muhatap-baslik {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 28px;
+    margin-bottom: 0;
+    text-transform: uppercase;
+    line-height: 1.5;
+}
+
+.belge-ilgi {
+    margin-top: 16px;
+    font-size: 11pt;
+    line-height: 1.45;
+}
+
+.belge-metin {
+    margin-top: 25px;
+    text-align: justify;
+    line-height: 1.55;
+    flex-grow: 1;
+}
+
+.belge-imza-alti-icerik {
+    margin-top: 12px;
+    margin-bottom: 8px;
+}
+
+.belge-imza-alani {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 40px;
+    width: 100%;
+}
+
+.imza-kutusu {
+    width: 250px;
+    text-align: center;
+    font-weight: bold;
+}
+
+#view-imza-ad {
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 2px;
+}
+
+#view-imza-unvan {
+    font-weight: normal;
+    font-size: 10.5pt;
+    display: block;
+    padding-bottom: 20px;
+}
+
+.belge-alt-bolum {
+    margin-top: 24px;
+}
+
+.dagitim-baslik {
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 4px;
+}
+
+.belge-footer {
+    margin-top: auto;
+    padding-top: 8px;
+    font-size: 8.5pt;
+    color: #555;
+    text-align: center;
+}
+
+.footer-line {
+    height: 1px;
+    background: #000;
+    margin-bottom: 6px;
+}
+
+.e-imza-notu {
+    font-size: 7.5pt;
+    color: #b00;
+    margin-top: 6px;
+}
+
+.pdf-page-break {
+    page-break-after: always;
+}
+
+#onizlemeDialog {
+    overflow: hidden !important;
+    padding: 0 !important;
+}
+
+.preview-mode-parent {
+    height: 100%;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+    .preview-mode-parent::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .preview-mode-parent::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+
+.preview-mode {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px 0;
+    background-color: #525659 !important;
+}
+
+    .preview-mode .a4-preview-wrapper {
+        transform: scale(0.70);
+        transform-origin: top center;
+        margin-bottom: -350px;
+    }
+
+    .preview-mode .a4-sayfa {
+        width: 210mm !important;
+        min-height: 297mm !important;
+        margin: 0 !important;
+        padding: 20mm !important;
+        box-shadow: 0 0 15px rgba(0,0,0,0.3) !important;
+        background: white !important;
+        overflow: hidden;
+    }

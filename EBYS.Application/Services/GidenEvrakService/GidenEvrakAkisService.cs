@@ -33,31 +33,30 @@ namespace EBYS.Application.Services.GidenEvrakService
                 if(suankiAdim != null)
                 {
 
-                if (string.IsNullOrWhiteSpace(pinKodu))
-                {
-                    return new IslemSonuc(false, "Onay işlemi için E-İmza PIN kodunuzu girmeniz gerekmektedir.");
-                }
-
-                try
-                {
-                    var asilEk = entities.Ekler?.FirstOrDefault(x => x.IsAsilEvrak);
-                    if (asilEk != null && asilEk.DosyaVerisi != null)
+                    if (string.IsNullOrWhiteSpace(pinKodu))
                     {
-                        var imzaliPdf = await imzaService.EvrakImzalaAsync(asilEk.DosyaVerisi, pinKodu);
-                        asilEk.DosyaVerisi = imzaliPdf; 
+                        return new IslemSonuc(false, "Onay işlemi için E-İmza PIN kodunuzu girmeniz gerekmektedir.");
                     }
-                }
-                catch (Exception ex)
-                {
-                    return new IslemSonuc(false, ex.Message);
-                }
 
-                    suankiAdim.AdimDurumu = Enums.AkisAdimDurumu.Onaylandi;
-                    suankiAdim.SiradakiMi = false;
-                    suankiAdim.creat_time = DateTime.Now;
-                    suankiAdim.Not = null;
+                    try
+                    {
+                        var asilEk = entities.Ekler?.FirstOrDefault(x => x.IsAsilEvrak);
+                        if (asilEk != null && asilEk.DosyaVerisi != null)
+                        {
+                            var imzaliPdf = await imzaService.EvrakImzalaAsync(asilEk.DosyaVerisi, pinKodu);
+                            asilEk.DosyaVerisi = imzaliPdf; 
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return new IslemSonuc(false, ex.Message);
+                    }
 
-                    
+                        suankiAdim.AdimDurumu = Enums.AkisAdimDurumu.Onaylandi;
+                        suankiAdim.SiradakiMi = false;
+                        suankiAdim.creat_time = DateTime.Now;
+                        suankiAdim.Not = null;
+  
                 }
                 else
                     throw new Exception("Herhangi bir adım bulunamadı.");

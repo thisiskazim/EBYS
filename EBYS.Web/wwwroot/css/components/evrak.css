@@ -1,0 +1,50 @@
+.evrak-dosya-konteynir {
+    cursor: pointer;
+    user-select: none;
+}
+
+.ek-listesi-gizli {
+    display: none;
+    padding-left: 15px;
+    border-left: 1px dashed #ccc;
+    margin-top: 5px;
+}
+
+.evrak-ek-link:hover {
+    text-decoration: underline !important;
+    color: #0056b3 !important;
+}
+
+#pdf-frame-popup {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 750px !important;
+    background-color: #525659;
+    border: none;
+}
+
+#evrakTabs .nav-link {
+    border: none;
+    background: none;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+    #evrakTabs .nav-link:hover {
+        color: #3b82f6 !important;
+    }
+
+    #evrakTabs .nav-link.active {
+        color: #2563eb !important;
+    }
+
+        #evrakTabs .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 24px;
+            right: 24px;
+            height: 3px;
+            background-color: #2563eb;
+            border-radius: 3px 3px 0 0;
+        }

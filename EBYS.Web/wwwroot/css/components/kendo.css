@@ -1,0 +1,89 @@
+html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw;
+}
+
+.k-notification-wrap {
+    padding: 20px 30px !important;
+    font-size: 22px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
+}
+
+    .k-notification-wrap .k-icon {
+        font-size: 20px !important;
+        margin-right: 30px !important;
+    }
+
+.k-notification-success {
+    background-color: #28a745 !important;
+    color: white !important;
+    border: none !important;
+}
+
+.k-notification-error {
+    background-color: #dc3545 !important;
+    color: white !important;
+    border: none !important;
+}
+
+.k-grid {
+    width: 100% !important;
+    max-width: 100% !important;
+    border: none !important;
+    font-family: inherit;
+}
+
+.k-grid-content,
+.k-grid-content-locked {
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+}
+
+.k-grid td {
+    padding: 12px 14px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    color: #334155 !important;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+}
+
+    .k-grid td.k-command-cell,
+    .k-grid td:first-child {
+        overflow: visible !important;
+        position: relative;
+    }
+
+.k-grid tr:hover {
+    background-color: #f8faff !important;
+    transition: background 0.2s;
+}
+
+.k-grid-header {
+    background-color: #f1f5f9 !important;
+    border-bottom: 2px solid #e2e8f0 !important;
+}
+
+    .k-grid-header th.k-header {
+        background: none !important;
+        color: #475569 !important;
+        font-weight: 700 !important;
+        font-size: 11px;
+        letter-spacing: 0.5px;
+        padding: 14px !important;
+        white-space: normal !important;
+    }
+
+#rotaListGrid {
+    border: none !important;
+}
+
+.dropdown-menu {
+    z-index: 999999 !important;
+}
+
+.dropdown.show {
+    position: relative;
+    z-index: 1000;
+}

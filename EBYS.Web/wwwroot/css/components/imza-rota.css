@@ -1,0 +1,9 @@
+.imza-rota-grid {
+    height: 300px;
+}
+
+.imza-rota-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: .5rem;
+}
