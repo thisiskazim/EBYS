@@ -1,0 +1,18 @@
+<div class="container-fluid py-4">
+    <div class="card shadow-sm border-0">
+        @await Component.InvokeAsync("PageHeader", new PageHeaderModel
+        {
+            Title = "Vatandaş Alıcı Listesi",
+                BreadcrumbParent = "Alıcılar",
+                BreadcrumbCurrent = "Vatandaş Alıcı Listesi",
+                NewActionUrl = "/BireyselMuhatap/Ekle",
+                NewActionText = "Yeni Kayıt"
+                })
+
+        <div class="card-body p-0">
+            <div id="rotaListGrid"></div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/BireyselMuhatap/listele.js"></script>

@@ -101,6 +101,8 @@ builder.Services.AddScoped<IMuhatapKurumService,KurumService>();
 
 builder.Services.AddScoped<IMuhatapTuzelKisiService, TuzelKisiService>();
 
+builder.Services.AddScoped<IMuhatapBireyselService, BireyselService>();
+
 
 
 builder.Services.AddScoped<IGelenEvrakService, GelenEvrakService>();
