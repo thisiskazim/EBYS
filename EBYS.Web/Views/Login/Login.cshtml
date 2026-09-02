@@ -2,70 +2,103 @@
 
 @{
     ViewData["HideMenu"] = true;
+    ViewData["Title"] = "Giriş";
 }
 
-<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
-    <div class="card shadow-sm" style="max-width:920px; width:100%;">
-        <div class="row g-0">
-            <div class="col-lg-4 d-none d-lg-flex bg-white align-items-center justify-content-center p-4">
-                <img src="@Url.Content("~/images/ebys.png")" alt="EBYS" style="max-width:180px;" />
-            </div>
-            <div class="col-lg-8">
-                <div class="card-body p-5">
-                    <h3 class="mb-4">Giriş Yap</h3>
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/login.css" asp-append-version="true" />
+}
 
-                    <div class="mb-3">
-                        <label class="form-label">Kimlik No</label>
-                        @(Html.Kendo().TextBoxFor(m => m.KimlikNo)
-                            .HtmlAttributes(new { @class = "form-control", placeholder = "TC Kimlik No veya kullanıcı adı" }))
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Şifre</label>
-                        @(Html.Kendo().TextBoxFor(m => m.Sifre)
-                            .HtmlAttributes(new { @class = "form-control", type = "password", placeholder = "Şifrenizi girin" }))
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-               
-                        <div>
-                            @(Html.Kendo().Button()
-                                .Name("btnLogin")
-                                .Content("Giriş Yap")
-                                .HtmlAttributes(new { @class = "btn btn-primary", id = "btnLogin" })
-                            )
-                        </div>
-                    </div>
-
-                    <hr />
-
+<div class="login-shell">
+    <aside class="login-brand">
+        <div class="login-brand-inner">
+            <img src="~/images/ebys-logo.png" alt="EBYS" class="login-logo"
+                 onerror="this.style.display='none'" />
+            <h1>Kurumsal belge süreçleriniz tek ekranda.</h1>
+            <p>Giden ve gelen evrak, paraf, imza ve dağıtım adımlarını güvenli biçimde yönetin.</p>
+            <div class="login-pills">
+                <span class="login-pill"><i class="fas fa-file-signature"></i> E-imza akışı</span>
+                <span class="login-pill"><i class="fas fa-shield-halved"></i> Güvenli oturum</span>
+                <span class="login-pill"><i class="fas fa-inbox"></i> Evrak takibi</span>
             </div>
         </div>
-    </div>
+        <div class="login-brand-footer">Elektronik Belge Yönetim Sistemi</div>
+    </aside>
+
+    <section class="login-panel">
+        <div class="login-card">
+            <div class="login-card-kicker"><i class="fas fa-lock"></i> Güvenli giriş</div>
+            <h2>Hoş geldiniz</h2>
+            <p class="login-card-lead">Devam etmek için kimlik bilgilerinizi girin.</p>
+
+            <div class="login-field">
+                <label for="KimlikNo">Kimlik no veya kullanıcı adı</label>
+                <div class="login-input-wrap">
+                    <i class="fas fa-id-card"></i>
+                    <input asp-for="KimlikNo" id="KimlikNo" class="login-input" autocomplete="username"
+                           placeholder="TC Kimlik No veya kullanıcı adı" />
+                </div>
+            </div>
+
+            <div class="login-field">
+                <label for="Sifre">Şifre</label>
+                <div class="login-input-wrap">
+                    <i class="fas fa-key"></i>
+                    <input asp-for="Sifre" id="Sifre" type="password" class="login-input" autocomplete="current-password"
+                           placeholder="Şifrenizi girin" />
+                    <button type="button" class="login-toggle-password" id="togglePassword" aria-label="Şifreyi göster">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="button" class="login-submit" id="btnLogin">
+                <span class="login-submit-text">Giriş yap</span>
+            </button>
+
+            <p class="login-hint">Oturumunuz kurumsal güvenlik politikalarına göre korunur.</p>
+        </div>
+    </section>
 </div>
 
 <script>
     (function () {
-
         $(function () {
-            $("#btnLogin").on('click', function (e) {
+            $("#btnLogin").on("click", function (e) {
                 e.preventDefault();
                 girisYap();
             });
 
-
-            $(document).on('keypress', function (e) {
+            $(document).on("keypress", function (e) {
                 if (e.which === 13) {
                     girisYap();
                 }
             });
+
+            $("#togglePassword").on("click", function () {
+                var input = $("#Sifre");
+                var isPassword = input.attr("type") === "password";
+                input.attr("type", isPassword ? "text" : "password");
+                $(this).find("i").toggleClass("fa-eye fa-eye-slash");
+                $(this).attr("aria-label", isPassword ? "Şifreyi gizle" : "Şifreyi göster");
+            });
         });
 
+        function setLoading(isLoading) {
+            var btn = $("#btnLogin");
+            btn.prop("disabled", isLoading);
+            btn.find(".login-submit-text").text(isLoading ? "Giriş yapılıyor..." : "Giriş yap");
+        }
+
         function girisYap() {
+            if ($("#btnLogin").prop("disabled")) return;
+
             var formData = {
                 KimlikNo: $("#KimlikNo").val(),
                 Sifre: $("#Sifre").val()
             };
+
+            setLoading(true);
 
             $.ajax({
                 url: "https://localhost:7060/api/Auth/Login",
@@ -75,12 +108,12 @@
                 success: function (response) {
                     document.cookie = "AuthToken=" + response.token + "; path=/; SameSite=Strict";
                     localStorage.setItem("token", response.token);
-
                     window.location.href = "/GidenEvrak/GidenEvrakOlustur";
                 },
                 error: function (error) {
-                    var msg = error && error.responseText ? error.responseText : 'Giriş hatası';
-                    try { showNotification(msg, 'error'); } catch (e) { alert(msg); }
+                    setLoading(false);
+                    var msg = error && error.responseText ? error.responseText : "Giriş hatası";
+                    try { showNotification(msg, "error"); } catch (e) { alert(msg); }
                 }
             });
         }

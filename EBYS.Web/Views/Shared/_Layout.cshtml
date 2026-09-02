@@ -1,4 +1,6 @@
-﻿
+﻿@{
+    var hideMenu = ViewData["HideMenu"] as bool? ?? false;
+}
 <!DOCTYPE html>
 <html lang="tr" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; color: #343a40;">
 <head>
@@ -31,13 +33,13 @@
      <script src="~/js/Modules/AkisOnayRetEditModule.js"></script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    @await RenderSectionAsync("Styles", required: false)
 
     <style>
-        /* Small inline helper to ensure body stretches full height for sidebar */
         html, body { height: 100%; }
     </style>
 </head>
-  @if (!(ViewData["HideMenu"] as bool? ?? false))
+  @if (!hideMenu)
         {
             <nav class="navbar navbar-expand navbar-light bg-white shadow-sm ebys-top-nav">
              <div class="container-fluid px-4 position-relative" style="padding-left: 3.5rem !important;">
@@ -75,10 +77,10 @@
                 </div>
             </nav>
 }
-<body class="k-body">
+<body class="k-body@(hideMenu ? " login-body" : "")">
 
     <div class="ebys-app d-flex">
-        @if (!(ViewData["HideMenu"] as bool? ?? false))
+        @if (!hideMenu)
         {
   
        <aside class="ebys-sidebar-modern ebys-sidebar-blue text-white shadow-lg" id="ebysSidebar">
@@ -169,7 +171,7 @@
 
         <!-- Main content area -->
         <main class="ebys-main flex-fill">
-            <div class="container-fluid p-4">
+            <div class="container-fluid @(hideMenu ? "p-0" : "p-4")">
             @RenderBody()
             </div>
         </main>
