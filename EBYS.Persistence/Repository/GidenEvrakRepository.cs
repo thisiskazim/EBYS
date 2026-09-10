@@ -26,16 +26,16 @@ namespace EBYS.Persistence.Repository
             _mapper = mapper;
         }
 
-        public async Task<GidenEvrak> AkisAdimlariSorguAsync(int evrakId)
+        public async Task<GidenEvrak?> AkisAdimlariSorguAsync(int evrakId)
         {
 
             return await _context.Evraklar
                       .Include(x => x.AkisAdimlari)
                       .ThenInclude(a => a.Kullanici)
-                      .FirstOrDefaultAsync(e => e.Id == evrakId); ;
+                      .FirstOrDefaultAsync(e => e.Id == evrakId); 
         }
 
-        public async Task<GidenEvrak> DetayliGetirAsync(int id)
+        public async Task<GidenEvrak?> DetayliGetirAsync(int id)
         {
             return await _context.Evraklar
                  .Include(x => x.Muhataplar)
@@ -60,16 +60,16 @@ namespace EBYS.Persistence.Repository
         public async Task<List<GidenEvrakAkisListeDTO>> ImzayaGonderdigimEvraklarAsync(int userId)
         {
             return await _context.Evraklar
-        .Where(e => e.BelgeDurum == Enums.GidenEvrakDurum.Imzada &&
-                    e.AkisAdimlari.Any(a => a.KullaniciId == userId && a.AdimDurumu == Enums.AkisAdimDurumu.Onaylandi))
-        .OrderByDescending(e => e.creat_time)
-        .AsNoTracking()
-        .ProjectTo<GidenEvrakAkisListeDTO>(_mapper.ConfigurationProvider)
-        .ToListAsync();
+                    .Where(e => e.BelgeDurum == Enums.GidenEvrakDurum.Imzada &&
+                                e.AkisAdimlari.Any(a => a.KullaniciId == userId && a.AdimDurumu == Enums.AkisAdimDurumu.Onaylandi))
+                    .OrderByDescending(e => e.creat_time)
+                    .AsNoTracking()
+                    .ProjectTo<GidenEvrakAkisListeDTO>(_mapper.ConfigurationProvider)
+                    .ToListAsync();
         }
 
 
-        public async Task<GidenEvrakEk> GidenEvrakEkDosyaByIdAsync(int ekId)
+        public async Task<GidenEvrakEk?> GidenEvrakEkDosyaByIdAsync(int ekId)
         {
             return await _context.EvrakEkler
                  .AsNoTracking()

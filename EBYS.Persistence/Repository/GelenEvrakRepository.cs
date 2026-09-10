@@ -29,7 +29,7 @@ namespace EBYS.Persistence.Repository
             return await _context.GelenEvraklar.CountAsync(x => x.EvrakTarihi.Year == yil);
         }
 
-        public async Task<GelenEvrak> DetayliGetirByIdAsync(int id)
+        public async Task<GelenEvrak?> DetayliGetirByIdAsync(int id)
         {
             return await _context.GelenEvraklar
                  .Include(x => x.Ilgileri)
@@ -51,36 +51,36 @@ namespace EBYS.Persistence.Repository
                     case GelenEvrakDurumu.TeslimAlindi:
                         query = query.Where(x => x.Sevkler
                             .OrderByDescending(s => s.SevkTarihi)
-                            .FirstOrDefault().AlanKullaniciId == currentUserId);
+                            .Select(s => s.AlanKullaniciId)
+                            .FirstOrDefault() == currentUserId);
                         break;
 
                     case GelenEvrakDurumu.IadeEdildi:
                         query = query.Where(x => x.Sevkler
                             .OrderByDescending(s => s.SevkTarihi)
-                            .FirstOrDefault().GelenEvrakDurumEnum == GelenEvrakDurumu.IadeEdildi
-                            && x.Sevkler.OrderByDescending(s => s.SevkTarihi).FirstOrDefault().AlanKullaniciId == null);
+                            .Select(s => s.GelenEvrakDurumEnum)
+                            .FirstOrDefault() == GelenEvrakDurumu.IadeEdildi
+                            && x.Sevkler.OrderByDescending(s => s.SevkTarihi).Select(s => s.AlanKullaniciId).FirstOrDefault() == null);
                         break;
 
                     case GelenEvrakDurumu.Cevaplandi:
-                        query = query.Where(x => x.Sevkler
+                        query = query?.Where(x => x.Sevkler
                             .OrderByDescending(s => s.SevkTarihi)
-                            .FirstOrDefault().GelenEvrakDurumEnum == GelenEvrakDurumu.Cevaplandi);
+                            .Select(s => s.GelenEvrakDurumEnum)
+                            .FirstOrDefault() == GelenEvrakDurumu.Cevaplandi);
                         break;
 
                 }
             }
 
-
-
             return await query
              .OrderByDescending(x => x.creat_time)
              .ProjectTo<GelenEvrakListDTO>(_mapper.ConfigurationProvider)
              .ToListAsync();
-            //projectto kullanarak direkt olarak veritabanından DTO'ya dönüşüm yapıyoruz, bu sayede gereksiz verilerin çekilmesini engelliyoruz ve performansı artırıyoruz.
 
         }
 
-        public async Task<GelenEvrakEk> GelenEvrakEkDosyaByIdAsync(int ekId)
+        public async Task<GelenEvrakEk?> GelenEvrakEkDosyaByIdAsync(int ekId)
         {
             return await _context.GelenEvrakEkler
                  .AsNoTracking()
@@ -97,7 +97,7 @@ namespace EBYS.Persistence.Repository
                             .ToListAsync();
         }
 
-        public async Task<GelenEvrakSevk> SevkGetirByIdAsync(int gelenEvrakId)
+        public async Task<GelenEvrakSevk?> SevkGetirByIdAsync(int gelenEvrakId)
         {
             return await _context.GelenEvrakSevkler
                     .Where(x => x.GelenEvrakId == gelenEvrakId && x.AlanKullaniciId == null && !x.isDelete)

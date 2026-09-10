@@ -4,20 +4,20 @@ using EBYS.Domain.Enum;
 
 namespace EBYS.Application.DTOs.EvrakDTO
 {
-    public class GidenEvrakAkisListeDTO  //GİDEN EVRAK LİSTE AYNI ZAMANDA
+    public class GidenEvrakAkisListeDTO  //GİDEN EVRAK LİSTE AYNI ZAMANDA... degisecek
     {
         public int Id { get; set; }
         public string OlusturanKullanici { get; set; }
         public int OlusturanKullaniciId { get; set; } 
-        public string Konu { get; set; } /// bunu kullan
-        public string FullKonuKodu { get; set; } // bunu kullan
+        public string Konu { get; set; } 
+        public string FullKonuKodu { get; set; } 
         public string SuAnKimde { get; set; } 
         
-        public DateTime creat_time { get; set; } //bunu kullan
+        public DateTime creat_time { get; set; } 
         public bool EditYapabilirMi { get; set; } 
         public bool GeriCekilebilirMi { get; set; }
         public Enums.GidenEvrakDurum BelgeDurum { get; set; }
-        public List<GidenEvrakEkBaseDTO> Ekler { get; set; } = new List<GidenEvrakEkBaseDTO>(); //bunu kullan
+        public List<GidenEvrakEkBaseDTO> Ekler { get; set; } = new List<GidenEvrakEkBaseDTO>(); 
         public List<AkisAdimDTO> AkisAdimlari { get; set; } = new List<AkisAdimDTO>();
     }
 

@@ -22,13 +22,13 @@ namespace EBYS.Application.Services.GidenEvrakService
             evrak.EvrakSayisi= 0;
             evrak.IsGelenEvrak = false;
 
-            // 1. Akış adımlarını (İlk adımı ve rotayı) yükle
+         
             await OlusturAkisAdimlariAsync(evrak, createDto.ImzaRotaId);
 
-            // 2. Muhataplar ve İlgiler listesini harita metotlarına pasla
+        
             OlusturMuhataplarVeIlgiler(evrak, createDto);
 
-            // 3. Ekler havuzunu (Yan ekler ve Asıl Üst Yazı) tertemiz inşa et
+         
             await OlusturEklerAsync(evrak, createDto.Ekler);    
 
 
@@ -56,11 +56,6 @@ namespace EBYS.Application.Services.GidenEvrakService
             var olusturanId = evrakRepository.GetContextUserId();
 
             var getVeri = await evrakRepository.FiltreliEvrakGetirAsync(olusturanId, filtreTipi);
-
-            if (getVeri is null)
-            {
-                throw new EvrakBulunamadi();
-            }
 
             return getVeri;
         }
@@ -183,16 +178,16 @@ namespace EBYS.Application.Services.GidenEvrakService
             if (mevcutEvrak.Ekler == null) mevcutEvrak.Ekler = new List<GidenEvrakEk>();
             var liste = ekListesi ?? new List<GidenEvrakEkUpdateDTO>();
 
-            // Aynı anlamsal ayrım (Ekleme koduyla birebir simetrik 🎯)
+            
             var incomingAsilEk = liste.FirstOrDefault(x => x.IsAsilEvrak || x.Ad == "Üst Yazı");
             var incomingYanEkler = liste.Where(x => !x.IsAsilEvrak && x.Ad != "Üst Yazı").ToList();
 
-            // 🎯 A) SİLME AKSİYONU: Listede olmayan yan ekleri uçur, asıl evraka dokunma
+           
             var dtoYanEkIds = incomingYanEkler.Where(x => x.Id > 0).Select(x => x.Id).ToList();
             var silinecekYanEkler = mevcutEvrak.Ekler.Where(x => !x.IsAsilEvrak && !dtoYanEkIds.Contains(x.Id)).ToList();
             foreach (var sil in silinecekYanEkler) mevcutEvrak.Ekler.Remove(sil);
+  
 
-            // 🎯 B) ASIL EVRAK (ÜST YAZI) GÜNCELLEME: Varsa ez, yoksa ekle
             if (incomingAsilEk != null && incomingAsilEk.Dosya != null)
             {
                 var dbdekiAsilEvrak = mevcutEvrak.Ekler.FirstOrDefault(x => x.IsAsilEvrak == true);
@@ -218,7 +213,7 @@ namespace EBYS.Application.Services.GidenEvrakService
                 }
             }
 
-            // 🎯 C) HARİCİ YAN EKLERİ EKLE / GÜNCELLE
+          
             foreach (var ekDto in incomingYanEkler)
             {
                 if (ekDto.Id == 0 && ekDto.Dosya != null)
