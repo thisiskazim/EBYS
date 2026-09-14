@@ -1,15 +1,17 @@
-﻿
-var ImzaRotaModule = (function () {
-
+﻿var ImzaRotaModule = (function () {
     var _grid = null;
-
+    var _isViewMode = false;
 
     var _fillForm = function (data) {
         if (!data) return;
 
-
         var rotaAdiTxt = $("#RotaAdi").data("kendoTextBox");
-        if (rotaAdiTxt) rotaAdiTxt.value(data.rotaAdi);
+        if (rotaAdiTxt) {
+            rotaAdiTxt.value(data.rotaAdi);
+            if (_isViewMode) {
+                rotaAdiTxt.enable(false);
+            }
+        }
 
         var gridData = (data.rotaAdimlari || []).map(function (x) {
             return {
@@ -26,6 +28,20 @@ var ImzaRotaModule = (function () {
         _grid.dataSource.data(gridData);
     };
 
+    var _applyViewModeRules = function () {
+       
+        $("#btnKaydet").hide();
+        $("#btnEkle").hide();
+        $("#btnTemizle").hide(); 
+
+        var personelDdl = $("#Personel").data("kendoDropDownList");
+        if (personelDdl) personelDdl.enable(false);
+
+        // Grid'deki Sil buton sütununu gizle
+        if (_grid) {
+            _grid.hideColumn("Islem");
+        }
+    };
 
     var _validatePayload = function (items, rotaAdi) {
         if (!rotaAdi || rotaAdi.trim() === "") return "Rota adı boş olamaz.";
@@ -36,24 +52,33 @@ var ImzaRotaModule = (function () {
         var sonImzaTuru = parseInt(items[sonIndex].ImzaTuru);
         if (sonImzaTuru === 0) return 'İmza rotasında son kişi mutlaka "İmza" tipinde olmalıdır.';
 
-        return null; 
+        return null;
     };
 
-   
     return {
         init: function () {
+            var id = $("#RotaId").val();
+            _isViewMode = !!(id && id !== "0" && id !== "");
+
             this.initGrid();
             this.initEvents();
             this.loadInitialData();
+
+            if (_isViewMode) {
+                _applyViewModeRules();
+            }
         },
 
         initGrid: function () {
             _grid = $("#rotaGrid").kendoGrid({
                 columns: [
+                    { field: "SiraNo", title: "Sıra", width: 60, template: "#= SiraNo ? SiraNo : '' #" },
                     { field: "AdSoyad", title: "Ad Soyad" },
                     { field: "RolAdi", title: "Rol", width: 200 },
                     { field: "ImzaTuruLabel", title: "İmza Türü", width: 120 },
                     {
+                        name: "Islem",
+                        hidden: _isViewMode,
                         command: [{
                             text: "Sil",
                             click: function (e) {
@@ -69,10 +94,12 @@ var ImzaRotaModule = (function () {
                 editable: false,
                 dataSource: {
                     data: [],
-                    schema: { model: { id: "Id" } } 
+                    schema: { model: { id: "Id" } }
                 },
                 dataBound: function () {
-       
+                  
+                    if (_isViewMode) return;
+
                     var tbody = this.tbody;
                     if (!tbody.data('kendoSortable')) {
                         tbody.kendoSortable({
@@ -92,9 +119,8 @@ var ImzaRotaModule = (function () {
         },
 
         initEvents: function () {
-            var self = this;
+            if (_isViewMode) return; 
 
-    
             $("#btnEkle").on('click', function () {
                 var ddl = $("#Personel").data('kendoDropDownList');
                 var dataItem = ddl ? ddl.dataItem() : null;
@@ -119,40 +145,36 @@ var ImzaRotaModule = (function () {
                     AdSoyad: ddl.text(),
                     RolAdi: dataItem.RolAdi || dataItem.rolAdi || "",
                     ImzaTuru: imzaVal,
+                    SiraNo: currentItems.length + 1,
                     ImzaTuruLabel: imzaVal === 1 ? "İmza" : "Paraf"
                 });
 
                 ddl.value("");
             });
 
-           
             $("#btnKaydet").on('click', function () {
-                var rotaId = $("#RotaId").val();
                 var rotaAdi = $("#RotaAdi").val();
                 var gridItems = _grid.dataSource.data();
 
-           
                 var errorMsg = _validatePayload(gridItems, rotaAdi);
                 if (errorMsg) {
                     showNotification(errorMsg, "error");
                     return;
                 }
 
-              
+               
                 var payload = {
-                    Id: rotaId ? parseInt(rotaId) : 0,
+                    Id: 0,
                     RotaAdi: rotaAdi,
                     RotaAdimlari: gridItems.map((item, index) => ({
-                        Id: item.Id || 0,
+                        Id: 0,
                         KullaniciId: item.KullaniciId,
                         ParafMiImzaMi: item.ImzaTuru,
-                        SiraNo: index + 1 
+                        SiraNo: index + 1
                     }))
                 };
 
-                var action = payload.Id > 0 ? "ImzaRota/ImzaRotaGuncelle" : "ImzaRota/ImzaRotaEkle";
-
-                ApiService.postJson(action, payload).done(function () {
+                ApiService.postJson("ImzaRota/ImzaRotaEkle", payload).done(function () {
                     showNotification('İmza rotası başarıyla kaydedildi.', 'success');
                     setTimeout(function () { window.location.href = "/ImzaRota/ImzaRotaListe"; }, 1000);
                 });
@@ -161,7 +183,7 @@ var ImzaRotaModule = (function () {
 
         loadInitialData: function () {
             var id = $("#RotaId").val();
-            if (id && id !== "0" && id !== "") {
+            if (_isViewMode) {
                 ApiService.getJson("ImzaRota/ImzaRotaGetir/" + id).done(function (response) {
                     _fillForm(response);
                 });
@@ -169,7 +191,6 @@ var ImzaRotaModule = (function () {
         }
     };
 })();
-
 
 $(document).ready(function () {
     ImzaRotaModule.init();

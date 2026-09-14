@@ -46,7 +46,7 @@ namespace EBYS.Application.Services.GidenEvrakService
                 throw new Exception("Evrak bulunamadı");
 
             }
-            evrakRepository.DeleteAsync(getVeri);
+            evrakRepository.Delete(getVeri);
             await evrakRepository.SaveAsync();
         }
 
@@ -246,15 +246,7 @@ namespace EBYS.Application.Services.GidenEvrakService
 
         private async Task OlusturAkisAdimlariAsync(GidenEvrak evrak, int imzaRotaId)
         {
-            // İlk adım (Evrakı oluşturan kişi)
-            evrak.AkisAdimlari.Add(new GidenEvrakAkis
-            {
-                KullaniciId = evrakRepository.GetContextUserId(),
-                ParafMiImzaMi = Enums.ImzaTipi.Imza,
-                SiraNo = 0,
-                AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
-                SiradakiMi = true
-            });
+            var olusturanId = evrakRepository.GetContextUserId();
 
             // Rota adımları
             var rota = await imzaRotaRepository.GetImzaRotaVeAdimlariDetay(imzaRotaId);
@@ -263,13 +255,29 @@ namespace EBYS.Application.Services.GidenEvrakService
                 throw new ImzaRotasıBos();
             }
 
-            foreach (var adim in rota.ImzaRotaAdimlari.OrderBy(x => x.SiraNo))
+            int aktifSiraNo = 1;
+
+            // İlk adım (Evrakı oluşturan kişi)
+            evrak.AkisAdimlari.Add(new GidenEvrakAkis
             {
+                KullaniciId = olusturanId,
+                ParafMiImzaMi = Enums.ImzaTipi.Imza,
+                SiraNo = aktifSiraNo++,
+                AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
+                SiradakiMi = true
+            });
+
+            var rotaAdimlari = rota.ImzaRotaAdimlari.Where(x => x.KullaniciId != olusturanId)
+                .OrderBy(x => x.SiraNo).ToList();
+     
+            foreach (var adim in rotaAdimlari)
+            {
+
                 evrak.AkisAdimlari.Add(new GidenEvrakAkis
                 {
                     KullaniciId = adim.KullaniciId,
                     ParafMiImzaMi = adim.ParafMiImzaMi,
-                    SiraNo = adim.SiraNo,
+                    SiraNo = aktifSiraNo++,
                     AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
                     SiradakiMi = false
                 });

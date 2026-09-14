@@ -13,10 +13,12 @@ namespace EBYS.Application.Interfaces.Repository
         Task<List<T>> GetAllAsync();
         Task AddAsync(T entity);
         void UpdateAsync(T entity);
-        void DeleteAsync(T entity);
+        void Delete(T entity);
         Task<int> SaveAsync();
         IQueryable<T> GetReadOnly();
         int GetContextUserId();
+
+        Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
 
         //Derived olanları kalıtım olan sınıflarda kullanırız. GetAll() Base sınıfı tüm verileri getirir. bu ise alt sınıflarda hangisini istersek getirir
         Task<bool> AnyDerivedAsync<TDerived>(Expression<Func<TDerived, bool>> predicate)

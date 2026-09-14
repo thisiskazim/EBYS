@@ -85,7 +85,7 @@ namespace EBYS.Application.Services.GelenEvrakService
                 throw new Exception("Evrak bulunamadı");
 
             }
-            evrakRepository.DeleteAsync(getVeri);
+            evrakRepository.Delete(getVeri);
             await evrakRepository.SaveAsync();
         }
 

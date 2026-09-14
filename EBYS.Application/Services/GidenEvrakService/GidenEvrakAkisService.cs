@@ -103,10 +103,17 @@ namespace EBYS.Application.Services.GidenEvrakService
             if (suankiAdim == null)
                 throw new Exception("İade edilebilecek aktif bir akış adımı bulunamadı.");
 
+            var olusturanKullanici= evrakRepository.GetContextUserId();
+            if (olusturanKullanici == entities.OlusturanId)
+            {
+                throw new KendiOlusturdugunuzEvrakiIadeEdemezsiniz();
+            }
+
             entities.BelgeDurum = Enums.GidenEvrakDurum.GeriIadeEdildi;
             suankiAdim.Not = $"İade Edildi. Gerekçe: {not}";
             suankiAdim.SiradakiMi = false;
             suankiAdim.AdimDurumu = Enums.AkisAdimDurumu.IadeEdildi;
+            suankiAdim.creat_time = DateTime.Now;
 
 
 
@@ -145,6 +152,13 @@ namespace EBYS.Application.Services.GidenEvrakService
 
             if (suankiAdim == null)
                 throw new Exception("Reddedilebilecek aktif bir akış adımı bulunamadı.");
+
+            var olusturanKullanici = evrakRepository.GetContextUserId();
+            if (olusturanKullanici == entities.OlusturanId)
+            {
+                throw new KendiOlusturdugunuzEvrakiReddedemezsiniz();
+            }
+
 
             entities.BelgeDurum = Enums.GidenEvrakDurum.Reddedildi;
             suankiAdim.AdimDurumu = Enums.AkisAdimDurumu.Reddedildi;

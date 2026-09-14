@@ -23,57 +23,57 @@ namespace EBYS.Application.Services
             await imzaRotaRepository.AddAsync(entity);
             await imzaRotaRepository.SaveAsync();
         }
-        public async Task UpdateAsync(ImzaRotaUpdateDTO dto)
-        {
-            var getRota = await imzaRotaRepository.GetImzaRotaVeAdimlariDetay(dto.Id);
+        //public async Task UpdateAsync(ImzaRotaUpdateDTO dto)
+        //{
+        //    var getRota = await imzaRotaRepository.GetImzaRotaVeAdimlariDetay(dto.Id);
 
            
 
-            if (getRota is null)
-            {
-                throw new Exception("Rota Bulunamadı");
-            }
+        //    if (getRota is null)
+        //    {
+        //        throw new Exception("Rota Bulunamadı");
+        //    }
 
-            RotaValidasyonalari(dto,
-                dto.RotaAdimlari.Select(x => x.KullaniciId).ToList(),
-                dto.RotaAdimlari.Count,
-                dto.RotaAdimlari.OrderBy(x => x.SiraNo).LastOrDefault()?.ParafMiImzaMi == Enums.ImzaTipi.Paraf);
+        //    RotaValidasyonalari(dto,
+        //        dto.RotaAdimlari.Select(x => x.KullaniciId).ToList(),
+        //        dto.RotaAdimlari.Count,
+        //        dto.RotaAdimlari.OrderBy(x => x.SiraNo).LastOrDefault()?.ParafMiImzaMi == Enums.ImzaTipi.Paraf);
 
             
-            getRota.RotaAdi = dto.RotaAdi;//bunu sorhulayalım
+        //    getRota.RotaAdi = dto.RotaAdi;//bunu sorhulayalım
 
-            var silinecekAdimlar = getRota.ImzaRotaAdimlari
-                .Where(dbAdim => !dto.RotaAdimlari.Any(dtoAdim => dtoAdim.Id == dbAdim.Id))
-                .ToList();
+        //    var silinecekAdimlar = getRota.ImzaRotaAdimlari
+        //        .Where(dbAdim => !dto.RotaAdimlari.Any(dtoAdim => dtoAdim.Id == dbAdim.Id))
+        //        .ToList();
 
-            foreach (var adim in silinecekAdimlar)
-            {
-                getRota.ImzaRotaAdimlari.Remove(adim);
-            }
+        //    foreach (var adim in silinecekAdimlar)
+        //    {
+        //        getRota.ImzaRotaAdimlari.Remove(adim);
+        //    }
 
            
 
 
-            foreach (var dtoAdim in dto.RotaAdimlari)
-            {
-                var dbAdim = getRota.ImzaRotaAdimlari.FirstOrDefault(x => x.Id == dtoAdim.Id && x.Id != 0);
+        //    foreach (var dtoAdim in dto.RotaAdimlari)
+        //    {
+        //        var dbAdim = getRota.ImzaRotaAdimlari.FirstOrDefault(x => x.Id == dtoAdim.Id && x.Id != 0);
 
-                if (dbAdim != null)
-                {
-                    mapper.Map(dtoAdim, dbAdim);
-                }
-                else
-                {
+        //        if (dbAdim != null)
+        //        {
+        //            mapper.Map(dtoAdim, dbAdim);
+        //        }
+        //        else
+        //        {
 
-                    var yeniAdim = mapper.Map<ImzaRotaAdimi>(dtoAdim);
-                    getRota.ImzaRotaAdimlari.Add(yeniAdim);
-                }
-            }
+        //            var yeniAdim = mapper.Map<ImzaRotaAdimi>(dtoAdim);
+        //            getRota.ImzaRotaAdimlari.Add(yeniAdim);
+        //        }
+        //    }
 
-            imzaRotaRepository.UpdateAsync(getRota);
-            await imzaRotaRepository.SaveAsync();
+        //    imzaRotaRepository.UpdateAsync(getRota);
+        //    await imzaRotaRepository.SaveAsync();
 
-        }
+        //}
 
         public async Task<List<ImzaRotaListDTO>> GetAllAsync()
         {
@@ -92,9 +92,15 @@ namespace EBYS.Application.Services
             if (getVeri == null)
             {
                 throw new Exception("Rota bulunamadı");
-
             }
-            imzaRotaRepository.DeleteAsync(getVeri);
+            bool evrakVarmi =await evrakRepository.AnyAsync(s => s.ImzaRotaId == id);
+
+            if (evrakVarmi)
+            {
+                throw new Exception("Bu rotayı kullanan evrak olduğundan silinemez.");
+            }
+
+            imzaRotaRepository.Delete(getVeri);
             await imzaRotaRepository.SaveAsync();
         }
 
@@ -133,8 +139,11 @@ namespace EBYS.Application.Services
                 throw new Exception("İmza rotasında son kişi mutlaka 'İmza' tipinde olmalıdır.");
 
         }
-    
-    
+
+        public Task UpdateAsync(ImzaRotaUpdateDTO updateDto)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 

@@ -23,10 +23,10 @@
                         attributes: { style: "text-align: center" },
                         command: [
                             {
-                                name: "customEdit",
-                                text: " Düzenle",
+                                name: "customView",
+                                text: " Görüntüle",
                                 className: "btn-grid-action btn btn-outline-primary",
-                                iconClass: "k-icon k-i-edit",
+                                iconClass: "k-icon k-i-view",
                                 click: function (e) {
                                     e.preventDefault();
                                     var grid = $("#rotaListGrid").data("kendoGrid");

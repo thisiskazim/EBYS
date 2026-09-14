@@ -33,7 +33,7 @@ namespace EBYS.Application.Services.MuhatapService
             {
                 throw new InvalidOperationException("Kurum Muhatap bulunamadı.");
             }
-            kurumRepository.DeleteAsync(getVeri);
+            kurumRepository.Delete(getVeri);
             await kurumRepository.SaveAsync();
 
         }

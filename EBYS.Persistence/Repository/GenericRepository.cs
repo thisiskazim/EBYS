@@ -12,7 +12,7 @@ namespace EBYS.Persistence.Repository
         public async Task<List<T>> GetAllAsync() => await _context.Set<T>().AsNoTracking().ToListAsync();
         public async Task AddAsync(T entity) => await _context.Set<T>().AddAsync(entity);
         public void UpdateAsync(T entity) => _context.Set<T>().Update(entity);
-        public void DeleteAsync(T entity) => _context.Set<T>().Remove(entity);
+        public void Delete(T entity) => _context.Set<T>().Remove(entity);
         public async Task<int> SaveAsync() => await _context.SaveChangesAsync();
 
         public IQueryable<T> GetReadOnly()=> _context.Set<T>().AsNoTracking();

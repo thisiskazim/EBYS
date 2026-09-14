@@ -29,7 +29,7 @@ namespace EBYS.Application.Services.MuhatapService
             {
                 throw new InvalidOperationException("Vatandaş Muhatap bulunamadı.");
             }
-            bireyselRepository.DeleteAsync(getVeri);
+            bireyselRepository.Delete(getVeri);
             await bireyselRepository.SaveAsync();
         }
 

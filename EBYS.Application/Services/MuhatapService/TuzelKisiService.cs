@@ -31,7 +31,7 @@ namespace EBYS.Application.Services.MuhatapService
             {
                 throw new InvalidOperationException("Tüzel Kişi bulunamadı.");
             }
-            tuzelKisiRepository.DeleteAsync(getVeri);
+            tuzelKisiRepository.Delete(getVeri);
             await tuzelKisiRepository.SaveAsync();
         }
 

@@ -25,4 +25,10 @@ namespace EBYS.Application.DTOs.ImzaRotaDTO
 
     }
 
+    public class NoAction
+    {
+      
+
+    }
+
 }
