@@ -129,7 +129,7 @@ namespace EBYS.Application.Services.GidenEvrakService
                     ParafMiImzaMi = eskiAdim.ParafMiImzaMi,
                     SiraNo = enSonSiraNo,
                     AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
-                    SiradakiMi = (eskiAdim.SiraNo == 0), 
+                    SiradakiMi = (eskiAdim.SiraNo == 1), 
                     creat_time = DateTime.Now
                 });
             }   

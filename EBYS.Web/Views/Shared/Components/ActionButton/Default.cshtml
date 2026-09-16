@@ -1,0 +1,26 @@
+@model EBYS.Web.Models.Ui.ActionButtonModel
+@{
+    var variant = Model.Variant.ToString().ToLowerInvariant();
+    var classes = $"ebys-btn ebys-btn--{variant}" + (Model.IsBlock ? " ebys-btn--block" : string.Empty);
+}
+
+@if (Model.IsLink)
+{
+    <a id="@Model.Id" class="@classes" href="@Model.Href" onclick="@Model.OnClick">
+        @if (!string.IsNullOrWhiteSpace(Model.IconClass))
+        {
+            <i class="@Model.IconClass" aria-hidden="true"></i>
+        }
+        <span>@Model.Text</span>
+    </a>
+}
+else
+{
+    <button id="@Model.Id" type="@Model.Type" class="@classes" onclick="@Model.OnClick" data-bs-dismiss="@Model.DataBsDismiss" disabled="@Model.Disabled">
+        @if (!string.IsNullOrWhiteSpace(Model.IconClass))
+        {
+            <i class="@Model.IconClass" aria-hidden="true"></i>
+        }
+        <span>@Model.Text</span>
+    </button>
+}

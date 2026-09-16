@@ -1,0 +1,335 @@
+:root {
+    --ebys-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --ebys-color-primary: #0879b8;
+    --ebys-color-primary-hover: #066a9b;
+    --ebys-color-danger: #c2414c;
+    --ebys-color-text: #1e293b;
+    --ebys-color-muted: #64748b;
+    --ebys-color-border: #d8e1eb;
+    --ebys-color-surface: #ffffff;
+    --ebys-color-canvas: #f7f9fc;
+    --ebys-radius-sm: 6px;
+    --ebys-radius-md: 10px;
+    --ebys-control-height: 40px;
+    --ebys-font-size-control: 0.875rem;
+    --ebys-font-weight-action: 600;
+    --ebys-shadow-surface: 0 4px 14px rgba(15, 23, 42, 0.07);
+}
+
+html,
+body {
+    font-family: var(--ebys-font-sans);
+    color: var(--ebys-color-text);
+    background: var(--ebys-color-canvas);
+}
+
+.ebys-main {
+    background: var(--ebys-color-canvas);
+}
+
+/* Bootstrap kullanan eski ekranlar da aynı ölçü ve yazı diliyle kalır. */
+.btn:not(.btn-close),
+.ebys-btn {
+    align-items: center;
+    border-radius: var(--ebys-radius-sm) !important;
+    display: inline-flex;
+    font-family: var(--ebys-font-sans);
+    font-size: var(--ebys-font-size-control);
+    font-weight: var(--ebys-font-weight-action) !important;
+    gap: 0.5rem;
+    justify-content: center;
+    line-height: 1.25;
+    min-height: var(--ebys-control-height);
+    padding: 0 1rem !important;
+    transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.btn:not(.btn-close):focus-visible,
+.ebys-btn:focus-visible {
+    box-shadow: 0 0 0 3px rgba(8, 121, 184, 0.22);
+    outline: 0;
+}
+
+.btn:not(.btn-close):hover,
+.ebys-btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-sm:not(.btn-close) {
+    font-size: 0.8125rem;
+    min-height: 34px;
+    padding: 0 0.75rem !important;
+}
+
+/* Eski Bootstrap varyantları ortak eylem renklerine eşlenir. */
+.btn-primary,
+.btn-success,
+.btn-info,
+.btn-warning {
+    --bs-btn-bg: var(--ebys-color-primary);
+    --bs-btn-border-color: var(--ebys-color-primary);
+    --bs-btn-color: #fff;
+    --bs-btn-hover-bg: var(--ebys-color-primary-hover);
+    --bs-btn-hover-border-color: var(--ebys-color-primary-hover);
+    --bs-btn-active-bg: var(--ebys-color-primary-hover);
+    --bs-btn-active-border-color: var(--ebys-color-primary-hover);
+    --bs-btn-disabled-bg: var(--ebys-color-primary);
+    --bs-btn-disabled-border-color: var(--ebys-color-primary);
+}
+
+.btn-secondary,
+.btn-light,
+.btn-outline-secondary {
+    --bs-btn-bg: #fff;
+    --bs-btn-border-color: var(--ebys-color-border);
+    --bs-btn-color: #475569;
+    --bs-btn-hover-bg: #f1f5f9;
+    --bs-btn-hover-border-color: #cbd5e1;
+    --bs-btn-hover-color: #1e293b;
+    --bs-btn-active-bg: #e2e8f0;
+    --bs-btn-active-border-color: #cbd5e1;
+}
+
+.btn-outline-primary,
+.btn-outline-info {
+    --bs-btn-bg: #fff;
+    --bs-btn-border-color: var(--ebys-color-primary);
+    --bs-btn-color: var(--ebys-color-primary);
+    --bs-btn-hover-bg: #e8f4fa;
+    --bs-btn-hover-border-color: var(--ebys-color-primary);
+    --bs-btn-hover-color: var(--ebys-color-primary-hover);
+    --bs-btn-active-bg: #d6edf8;
+    --bs-btn-active-border-color: var(--ebys-color-primary);
+}
+
+.btn-danger {
+    --bs-btn-bg: var(--ebys-color-danger);
+    --bs-btn-border-color: var(--ebys-color-danger);
+    --bs-btn-hover-bg: #a8323d;
+    --bs-btn-hover-border-color: #a8323d;
+}
+
+.ebys-btn {
+    border: 1px solid transparent;
+    box-shadow: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.ebys-btn--primary {
+    background: var(--ebys-color-primary);
+    border-color: var(--ebys-color-primary);
+    color: #fff;
+}
+
+.ebys-btn--primary:hover {
+    background: var(--ebys-color-primary-hover);
+    border-color: var(--ebys-color-primary-hover);
+    color: #fff;
+}
+
+.ebys-btn--secondary {
+    background: #fff;
+    border-color: var(--ebys-color-border);
+    color: #475569;
+}
+
+.ebys-btn--secondary:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: var(--ebys-color-text);
+}
+
+.ebys-btn--danger {
+    background: var(--ebys-color-danger);
+    border-color: var(--ebys-color-danger);
+    color: #fff;
+}
+
+.ebys-btn--block {
+    display: flex;
+    width: 100%;
+}
+
+.ebys-btn:disabled,
+.ebys-btn.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+}
+
+.ebys-page {
+    margin: 0 auto;
+    max-width: 1440px;
+}
+
+.ebys-page-header {
+    align-items: center;
+    border-bottom: 1px solid var(--ebys-color-border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+}
+
+.ebys-page-title {
+    color: var(--ebys-color-text);
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+
+.ebys-page-title i {
+    color: var(--ebys-color-primary);
+    font-size: 1.25rem;
+    margin-right: 0.5rem;
+}
+
+.ebys-surface {
+    background: var(--ebys-color-surface);
+    border: 1px solid #edf1f5;
+    border-radius: var(--ebys-radius-md);
+    box-shadow: var(--ebys-shadow-surface);
+}
+
+.ebys-form-surface {
+    padding: 1.75rem;
+}
+
+.ebys-form-section + .ebys-form-section {
+    border-left: 1px solid var(--ebys-color-border);
+    padding-left: 1.875rem;
+}
+
+.ebys-field {
+    margin-bottom: 1.125rem;
+}
+
+.ebys-field-label {
+    color: #475569;
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+}
+
+.ebys-field-control,
+.ebys-field-control.k-input,
+.ebys-field-control.k-textbox,
+.ebys-field-control textarea,
+.ebys-field-control input,
+.k-input.ebys-field-control {
+    border-color: var(--ebys-color-border) !important;
+    border-radius: var(--ebys-radius-sm) !important;
+    box-shadow: none !important;
+    font-family: var(--ebys-font-sans) !important;
+    font-size: var(--ebys-font-size-control) !important;
+    min-height: var(--ebys-control-height);
+}
+
+.ebys-field-control:focus,
+.ebys-field-control.k-focus,
+.ebys-field-control:focus-within {
+    border-color: var(--ebys-color-primary) !important;
+    box-shadow: 0 0 0 3px rgba(8, 121, 184, 0.12) !important;
+}
+
+.ebys-form-actions {
+    align-items: center;
+    border-top: 1px solid var(--ebys-color-border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+}
+
+/* Belge önizleme ekranlarında başlık sabit, içerik ise kalan yüksekliği doldurur. */
+.ebys-document-panel {
+    display: flex;
+    flex-direction: column;
+    height: 78vh;
+    min-height: 620px;
+    overflow: hidden;
+}
+
+.ebys-document-panel__header {
+    flex: 0 0 auto;
+}
+
+.ebys-document-panel__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+}
+
+.ebys-document-panel__body iframe {
+    height: 100%;
+}
+
+.ebys-page-titlebar {
+    align-items: center;
+    background: var(--ebys-color-surface);
+    border: 1px solid #edf1f5;
+    border-left: 4px solid var(--ebys-color-primary);
+    border-radius: var(--ebys-radius-md);
+    box-shadow: var(--ebys-shadow-surface);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+}
+
+.ebys-page-titlebar__title {
+    color: var(--ebys-color-text);
+    font-size: 1.25rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.25rem;
+}
+
+.ebys-page-titlebar__title i {
+    color: var(--ebys-color-primary);
+    font-size: 1rem;
+    margin-right: 0.45rem;
+}
+
+.ebys-page-titlebar__summary {
+    color: var(--ebys-color-muted);
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.ebys-page-titlebar .breadcrumb {
+    font-size: 0.8125rem;
+}
+
+@media (max-width: 767.98px) {
+    .ebys-form-surface {
+        padding: 1.25rem;
+    }
+
+    .ebys-form-section + .ebys-form-section {
+        border-left: 0;
+        border-top: 1px solid var(--ebys-color-border);
+        margin-top: 0.5rem;
+        padding-left: calc(var(--bs-gutter-x) * .5);
+        padding-top: 1.25rem;
+    }
+
+    .ebys-form-actions,
+    .ebys-page-header {
+        align-items: stretch;
+    }
+
+    .ebys-form-actions .ebys-btn,
+    .ebys-page-header .ebys-btn {
+        flex: 1 1 auto;
+    }
+}

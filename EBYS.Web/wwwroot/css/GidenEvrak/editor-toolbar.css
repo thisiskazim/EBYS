@@ -1,0 +1,109 @@
+.ebys-giden-evrak .k-editor {
+    overflow: hidden;
+    border: 1px solid #dce6f0;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.07);
+}
+
+.ebys-giden-evrak .k-editor .k-editor-toolbar.k-toolbar,
+.ebys-giden-evrak .k-editor .k-toolbar {
+    min-height: 54px;
+    padding: 7px 9px;
+    gap: 2px;
+    border: 0;
+    border-bottom: 1px solid #e7edf4;
+    border-radius: 13px 13px 0 0;
+    background: #ffffff;
+    box-shadow: 0 3px 10px rgba(15, 23, 42, 0.045);
+}
+
+.ebys-giden-evrak .k-editor .k-toolbar-group {
+    gap: 2px;
+}
+
+.ebys-giden-evrak .k-editor .k-toolbar-separator,
+.ebys-giden-evrak .k-editor .k-separator {
+    width: 1px;
+    height: 26px;
+    min-width: 1px;
+    margin: 0 7px;
+    border: 0;
+    background: #e6ebf1;
+}
+
+.ebys-giden-evrak .k-editor .k-toolbar .k-button,
+.ebys-giden-evrak .k-editor .k-toolbar .k-tool {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+    color: #42556d;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    background: transparent;
+    box-shadow: none;
+    transition: color .16s ease, background-color .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+
+.ebys-giden-evrak .k-editor .k-toolbar .k-button:hover:not(.k-disabled),
+.ebys-giden-evrak .k-editor .k-toolbar .k-tool:hover:not(.k-disabled) {
+    color: #076fa6;
+    border-color: #cfe4f1;
+    background: #edf8fd;
+}
+
+.ebys-giden-evrak .k-editor .k-toolbar .k-button:focus-visible,
+.ebys-giden-evrak .k-editor .k-toolbar .k-tool:focus-visible {
+    outline: 2px solid #40a9dd;
+    outline-offset: 1px;
+    box-shadow: none;
+}
+
+.ebys-giden-evrak .k-editor .k-toolbar .k-button.k-selected,
+.ebys-giden-evrak .k-editor .k-toolbar .k-button.k-active,
+.ebys-giden-evrak .k-editor .k-toolbar .k-tool.k-selected,
+.ebys-giden-evrak .k-editor .k-toolbar .k-tool.k-active {
+    color: #066a9b;
+    border-color: #b8ddf0;
+    background: #dff3fc;
+}
+
+.ebys-giden-evrak .k-editor .k-toolbar .k-icon,
+.ebys-giden-evrak .k-editor .k-toolbar .k-svg-icon {
+    font-size: 17px;
+}
+
+.ebys-giden-evrak .k-editor .k-toolbar .k-picker,
+.ebys-giden-evrak .k-editor .k-toolbar .k-dropdownlist,
+.ebys-giden-evrak .k-editor .k-toolbar .k-combobox {
+    min-height: 36px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    background: #ffffff;
+    box-shadow: none;
+    transition: border-color .16s ease, background-color .16s ease;
+}
+
+.ebys-giden-evrak .k-editor .k-toolbar .k-picker:hover,
+.ebys-giden-evrak .k-editor .k-toolbar .k-dropdownlist:hover,
+.ebys-giden-evrak .k-editor .k-toolbar .k-combobox:hover {
+    border-color: #cfe4f1;
+    background: #f8fcff;
+}
+
+.ebys-giden-evrak .k-editor .k-toolbar .k-input-inner,
+.ebys-giden-evrak .k-editor .k-toolbar .k-button-text {
+    color: #42556d;
+    font-weight: 500;
+}
+
+.ebys-giden-evrak .k-editor .k-editable-area,
+.ebys-giden-evrak .k-editor .k-editor-content {
+    border: 0;
+    background: #ffffff;
+}

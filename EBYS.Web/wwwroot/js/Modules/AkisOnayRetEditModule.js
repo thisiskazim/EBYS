@@ -173,7 +173,7 @@
         },
 
     
-        edit: function (id) {
+        "edit": function (id) {
             window.location.href = '/GidenEvrak/GidenEvrakOlustur?id=' + id;
         },
 

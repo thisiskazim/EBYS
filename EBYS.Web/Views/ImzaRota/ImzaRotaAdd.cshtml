@@ -1,68 +1,93 @@
-﻿@{
+@{
     ViewData["Title"] = "İmza Rota";
 }
 
-<div class="modal-dialog modal-xl mx-auto">
-    <div class="modal-content">
-        <input type="hidden" id="RotaId" value="@(ViewBag.RotaId ?? 0)" />
-        <div class="modal-header">
-            <h5 class="modal-title" id="modalTitle">İmza Rota Oluştur</h5>
-        </div>
-        <hr />
-        <div class="modal-body">
-                <div class="container-fluid">
-                    <div class="row g-3 align-items-center">
-                        <div class="col-md-6">
-                            <label class="form-label">Rota Adı</label>
-                            @(Html.Kendo().TextBox().Name("RotaAdi").HtmlAttributes(new { @class = "form-control", id = "RotaAdi" }))
-                        </div>
-                    
-                        <div class="col-md-6">
-                            <label class="form-label">Personel</label>
-                            @(Html.Kendo().DropDownList()
-                                .Name("Personel")
-                                .HtmlAttributes(new { style = "width:100%", id = "Personel" })
-                                .OptionLabel("Seçiniz")
-                                .DataTextField("adSoyad")
-                                .DataValueField("id")
-                                                .DataSource(ds => ds.Read(r => r.Url("https://localhost:7060/api/Kullanici/KullanicilariListele").Type(HttpVerbs.Get)))
-                            )
-                        </div>
-                    </div>
+<div class="ebys-page py-4">
+    <input type="hidden" id="RotaId" value="@(ViewBag.RotaId ?? 0)" />
 
-                    <div class="row mt-3 g-3 align-items-center">
+    <header class="ebys-page-titlebar">
+        <h1 class="ebys-page-titlebar__title" id="modalTitle">İmza Rota Oluştur</h1>
+    </header>
 
-                        <div class="col-md-6">
-                            <div class="form-label">İmza Türü</div>
-                            <label class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="ImzaTuru" value="0" checked />
-                                <span class="form-check-label">Paraf</span>
-                            </label>
-                            <label class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="ImzaTuru" value="1" />
-                                <span class="form-check-label">İmza</span>
-                            </label>
-                        </div>
-
-                        <div class="col-md-6 d-flex align-items-end justify-content-end gap-2">
-                            <button id="btnEkle" type="button" class="btn btn-warning"><span class="k-icon k-i-plus"></span> Ekle</button>
-                            <button id="btnTemizle" type="button" class="btn btn-info text-white">Temizle</button>
-                        </div>
-                    </div>
-
-                    <div class="row mt-3">
-                        <div class="col-12">
-                            <div id="rotaGrid" class="imza-rota-grid"></div>
-                        </div>
+    <section class="ebys-surface ebys-form-surface">
+        <div class="container-fluid p-0">
+            <div class="row g-4 align-items-end">
+                <div class="col-md-6">
+                    <div class="ebys-field mb-0">
+                        <label class="ebys-field-label" for="RotaAdi">Rota Adı</label>
+                        @(Html.Kendo().TextBox().Name("RotaAdi")
+                            .HtmlAttributes(new { style = "width:100%", @class = "ebys-field-control", id = "RotaAdi" }))
                     </div>
                 </div>
+
+                <div class="col-md-6">
+                    <div class="ebys-field mb-0">
+                        <label class="ebys-field-label" for="Personel">Personel</label>
+                        @(Html.Kendo().DropDownList()
+                            .Name("Personel")
+                            .HtmlAttributes(new { style = "width:100%", @class = "ebys-field-control", id = "Personel" })
+                            .OptionLabel("Seçiniz")
+                            .DataTextField("adSoyad")
+                            .DataValueField("id")
+                            .DataSource(ds => ds.Read(r => r.Url("https://localhost:7060/api/Kullanici/KullanicilariListele").Type(HttpVerbs.Get)))
+                        )
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="ebys-field mb-0">
+                        <div class="ebys-field-label">İmza Türü</div>
+                        <label class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="ImzaTuru" value="0" checked />
+                            <span class="form-check-label">Paraf</span>
+                        </label>
+                        <label class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="ImzaTuru" value="1" />
+                            <span class="form-check-label">İmza</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-6 d-flex flex-wrap justify-content-md-end gap-2">
+                    @await Component.InvokeAsync("ActionButton", new ActionButtonModel
+                    {
+                        Id = "btnEkle",
+                        Text = "Ekle",
+                        IconClass = "k-icon k-i-plus",
+                        Variant = ActionButtonVariant.Primary
+                    })
+                    @await Component.InvokeAsync("ActionButton", new ActionButtonModel
+                    {
+                        Id = "btnTemizle",
+                        Text = "Temizle",
+                        Variant = ActionButtonVariant.Secondary
+                    })
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div id="rotaGrid" class="imza-rota-grid"></div>
+                </div>
+            </div>
+
+            <footer class="ebys-form-actions">
+                @await Component.InvokeAsync("ActionButton", new ActionButtonModel
+                {
+                    Text = "Kapat",
+                    Href = "/ImzaRota/ImzaRotaListe",
+                    Variant = ActionButtonVariant.Secondary
+                })
+                @await Component.InvokeAsync("ActionButton", new ActionButtonModel
+                {
+                    Id = "btnKaydet",
+                    Text = "Kaydet",
+                    IconClass = "k-icon k-i-save",
+                    Variant = ActionButtonVariant.Primary
+                })
+            </footer>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-            <button id="btnKaydet" type="button" class="btn btn-primary">Kaydet</button>
-        </div>
-    </div>
+    </section>
 </div>
 
 <script src="~/js/ImzaRota/imza-rota-add-view.js"></script>
-

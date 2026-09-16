@@ -46,6 +46,8 @@ namespace EBYS.Application.Services.GidenEvrakService
                 throw new Exception("Evrak bulunamadı");
 
             }
+
+            YetkiliOlusturanKontrolu(getVeri);
             evrakRepository.Delete(getVeri);
             await evrakRepository.SaveAsync();
         }
@@ -57,6 +59,11 @@ namespace EBYS.Application.Services.GidenEvrakService
 
             var getVeri = await evrakRepository.FiltreliEvrakGetirAsync(olusturanId, filtreTipi);
 
+            foreach (var evrak in getVeri)
+            {
+                evrak.EditYapabilirMi = evrak.OlusturanKullaniciId == olusturanId;
+            }
+
             return getVeri;
         }
 
@@ -66,8 +73,10 @@ namespace EBYS.Application.Services.GidenEvrakService
 
             if (getVeri is null)
             {
-                throw new Exception("Rota Bulunamadı");
+                throw new Exception("Evrak bulunamadı.");
             }
+
+            YetkiliOlusturanKontrolu(getVeri);
             var dto = mapper.Map<GidenEvrakUpdateDTO>(getVeri);
 
             return dto;
@@ -104,6 +113,7 @@ namespace EBYS.Application.Services.GidenEvrakService
             if (mevcutEvrak == null)
                 throw new Exception("Güncellenecek evrak sistemde bulunamadı.");
 
+            YetkiliOlusturanKontrolu(mevcutEvrak);
             mapper.Map(updateDto, mevcutEvrak);
 
             GuncelleMuhataplar(mevcutEvrak, updateDto.Muhataplar);
@@ -114,6 +124,16 @@ namespace EBYS.Application.Services.GidenEvrakService
             evrakRepository.UpdateAsync(mevcutEvrak);
             await evrakRepository.SaveAsync();
         }
+
+        private void YetkiliOlusturanKontrolu(GidenEvrak evrak)
+        {
+            var aktifKullaniciId = evrakRepository.GetContextUserId();
+            if (evrak.OlusturanId != aktifKullaniciId)
+            {
+                throw new UnauthorizedAccessException("Bu evrağı yalnızca oluşturan kullanıcı düzenleyebilir veya silebilir.");
+            }
+        }
+
         private async Task<(byte[] Data, string Extension, string MimeType)> ProcessFileAsync(IFormFile file)
         {
             using var memoryStream = new MemoryStream();

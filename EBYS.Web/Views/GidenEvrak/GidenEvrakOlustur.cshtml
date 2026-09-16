@@ -1,18 +1,27 @@
-﻿@{
+@using EBYS.Web.Models.Ui
+@{
     ViewData["Title"] = "Evrak Oluştur";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="m-0"><span class="k-icon k-i-file-pdf"></span> Evrak Oluştur <small class="text-muted ms-2">Bilgileri doldurun</small></h4>
-    <input type="hidden" id="EvrakId" value="@ViewBag.EvrakId" />
-    <div>
-      
-        <button id="evrakKaydet" class="btn btn-primary"><span class="k-icon k-i-file"></span> Evrak Oluştur</button>
-    </div>
-</div>
 
-<div class="card">
-    <div class="card-body">
+
+<div class="ebys-page ebys-giden-evrak py-4">
+    <input type="hidden" id="EvrakId" value="@ViewBag.EvrakId" />
+    <header class="ebys-page-titlebar">
+        <div>
+            <h1 class="ebys-page-titlebar__title"><i class="k-icon k-i-file-pdf" aria-hidden="true"></i>Evrak Oluştur</h1>
+        </div>
+        @await Component.InvokeAsync("ActionButton", new ActionButtonModel
+        {
+            Id = "evrakKaydet",
+            Text = "Evrak Oluştur",
+            IconClass = "k-icon k-i-file",
+            Variant = ActionButtonVariant.Primary
+        })
+    </header>
+
+    <section class="ebys-surface">
+        <div class="card-body p-4">
         <ul class="nav nav-tabs mb-3" id="evrakTabs" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="bilgiler-tab" data-bs-toggle="tab" data-bs-target="#bilgiler" type="button" role="tab">Bilgileri</button>
@@ -57,11 +66,17 @@
             
         </div>
     </div>
+    </section>
 </div>
 
 
-<link rel="stylesheet" href="~/css/GidenEvrak/ai-resmi-yazi-modal.css" asp-append-version="true" />
 @await Html.PartialAsync("Components/GidenEvrak/_AiResmiYaziModalPartial")
 <script src="~/js/GidenEvrak/ai-resmi-yazi-modal.js" asp-append-version="true"></script>
 <script src="~/js/GidenEvrak/evrak-olustur.js"></script>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/GidenEvrak/editor-toolbar.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/GidenEvrak/ai-resmi-yazi-modal.css" asp-append-version="true" />
+
+}
 

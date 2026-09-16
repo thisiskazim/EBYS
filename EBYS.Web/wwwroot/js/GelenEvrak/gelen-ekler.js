@@ -11,7 +11,7 @@
                     {
                         field: "DosyaAdi",
                         title: "Dosya",
-                        template: "#= DosyaAdi ? '<i class=\"k-icon k-i-file\"></i> ' + DosyaAdi : '<span class=\"text-muted\">Dosya Yok</span>' #"
+                        template: "#= DosyaAdi ? '<i class=\"fas fa-file-upload\"></i> ' + DosyaAdi : '<span class=\"text-muted\">Dosya Yok</span>' #"
                     },
                     {
                         command: [{

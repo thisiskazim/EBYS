@@ -2,7 +2,7 @@
     var hideMenu = ViewData["HideMenu"] as bool? ?? false;
 }
 <!DOCTYPE html>
-<html lang="tr" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; color: #343a40;">
+<html lang="tr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="~/css/components/imza-rota.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/components/evrak.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/components/belge-onizleme.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/design-system.css" asp-append-version="true" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -42,18 +43,15 @@
   @if (!hideMenu)
         {
             <nav class="navbar navbar-expand navbar-light bg-white shadow-sm ebys-top-nav">
-             <div class="container-fluid px-4 position-relative" style="padding-left: 3.5rem !important;">
-
-                 <div class="d-flex align-items-center position-relative" style="min-width: 200px; height: 100%;">
-                    <div class="logo-wrapper d-flex align-items-center" style="z-index: 10;">
-                        <img src="~/images/ebys-logo.png" alt="EBYS Logo" class="img-fluid" style="height: 60px; width: auto; object-fit: contain;" />
-                        <button class="ebys-sidebar-toggle ms-2" id="sidebarToggleBtn" aria-label="Menüyü aç/kapat" aria-expanded="true">
-                            <span class="hamburger-line"></span>
-                            <span class="hamburger-line"></span>
-                            <span class="hamburger-line"></span>
-                        </button>
-                    </div>
-                </div>
+             <div class="container-fluid ebys-navbar-content">
+                 <div class="ebys-brand">
+                    <img src="~/images/ebys-logo.png" alt="e-BYS" class="ebys-logo" />
+                 </div>
+                 <button class="ebys-sidebar-toggle" id="sidebarToggleBtn" type="button" aria-label="Menüyü aç/kapat" aria-expanded="true">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                 </button>
 
                     <ul class="navbar-nav ms-auto align-items-center">
                         <li class="nav-item">
@@ -89,7 +87,7 @@
   
 
         <nav class="nav flex-column">
-            <a class="nav-link menu-item d-flex align-items-center text-white mb-3" href="/GidenEvrak/GidenEvrakOlustur">
+            <a class="nav-link menu-item d-flex align-items-center text-white mb-3" href="/GidenEvrak/GidenEvrakOlustur" title="Ana Sayfa" aria-label="Ana Sayfa">
                 <div class="menu-icon me-3 d-flex align-items-center justify-content-center bg-white text-dark shadow-sm">
                     <i class="fas fa-th-large"></i> </div>
                 <div class="menu-text">
@@ -98,7 +96,7 @@
             </a>
 
             <div class="menu-section mb-3">
-                <a class="nav-link menu-item d-flex align-items-start text-white" data-bs-toggle="collapse" href="#evrakCollapse" role="button" aria-expanded="false" aria-controls="evrakCollapse">
+                <a class="nav-link menu-item d-flex align-items-start text-white" data-bs-toggle="collapse" href="#evrakCollapse" role="button" aria-expanded="false" aria-controls="evrakCollapse" title="Evrak İşlemleri" aria-label="Evrak İşlemleri">
                     <div class="menu-icon me-3 d-flex align-items-center justify-content-center bg-white text-dark shadow-sm">
                         <i class="fas fa-file-invoice"></i>
                     </div>
@@ -116,7 +114,7 @@
             </div>
 
             <div class="menu-section mb-3">
-                <a class="nav-link menu-item d-flex align-items-start text-white" data-bs-toggle="collapse" href="#imzaislem" role="button" aria-expanded="false" aria-controls="imzaislem">
+                <a class="nav-link menu-item d-flex align-items-start text-white" data-bs-toggle="collapse" href="#imzaislem" role="button" aria-expanded="false" aria-controls="imzaislem" title="Onay İşlemleri" aria-label="Onay İşlemleri">
                     <div class="menu-icon me-3 d-flex align-items-center justify-content-center bg-white text-dark shadow-sm">
                         <i class="fas fa-signature"></i>
                     </div>
@@ -133,7 +131,7 @@
             </div>
 
             <div class="menu-section mb-3">
-                <a class="nav-link menu-item d-flex align-items-start text-white" data-bs-toggle="collapse" href="#alicilar" role="button" aria-expanded="false" aria-controls="alicilar">
+                <a class="nav-link menu-item d-flex align-items-start text-white" data-bs-toggle="collapse" href="#alicilar" role="button" aria-expanded="false" aria-controls="alicilar" title="Alıcılar" aria-label="Alıcılar">
                     <div class="menu-icon me-3 d-flex align-items-center justify-content-center bg-white text-dark shadow-sm">
                         <i class="fas fa-users-cog"></i>
                     </div>
@@ -150,7 +148,7 @@
             </div>
 
             <div class="menu-section mb-3">
-                <a class="nav-link menu-item d-flex align-items-start text-white" data-bs-toggle="collapse" href="#imzarota" role="button" aria-expanded="false" aria-controls="imzarota">
+                <a class="nav-link menu-item d-flex align-items-start text-white" data-bs-toggle="collapse" href="#imzarota" role="button" aria-expanded="false" aria-controls="imzarota" title="İmza Rota" aria-label="İmza Rota">
                     <div class="menu-icon me-3 d-flex align-items-center justify-content-center bg-white text-dark shadow-sm">
                         <i class="fas fa-route"></i>
                     </div>
@@ -190,8 +188,10 @@
         .AutoHideAfter(5000) // 5 saniye görünsün
         .Width(450) // Genişliği artırdık
         .Templates(t => {
-            t.Add().Type("error").ClientTemplate("<div class='k-notification-error k-notification-wrap k-icon'><span class=' k-i-warning'></span> #= message #</div>");
-            t.Add().Type("success").ClientTemplate("<div class='k-notification-success k-notification-wrap'><span class='k-icon k-i-check-circle'></span> #= message #</div>");
+            t.Add().Type("warning").ClientTemplate("<div class='ebys-notification ebys-notification--warning' role='status'><span class='k-icon k-i-warning' aria-hidden='true'></span><div class='ebys-notification__message'>#: message #</div></div>");
+            t.Add().Type("error").ClientTemplate("<div class='ebys-notification ebys-notification--error' role='alert'><span class='k-icon k-i-error' aria-hidden='true'></span><div class='ebys-notification__message'>#: message #</div></div>");
+            t.Add().Type("success").ClientTemplate("<div class='ebys-notification ebys-notification--success' role='status'><span class='k-icon k-i-check-circle' aria-hidden='true'></span><div class='ebys-notification__message'>#: message #</div></div>");
+            t.Add().Type("info").ClientTemplate("<div class='ebys-notification ebys-notification--info' role='status'><span class='k-icon k-i-information' aria-hidden='true'></span><div class='ebys-notification__message'>#: message #</div></div>");
         })
     )
 
@@ -200,6 +200,20 @@
     function showNotification(msg, type) {
     var notification = $("#notification").data("kendoNotification");
     if (!notification) return;
+
+    var notificationType = ["success", "error", "warning", "info"].includes(type) ? type : "info";
+    var normalizeMessage = function (value) {
+        if (value === null || value === undefined) return "Beklenmeyen bir durum oluştu.";
+
+        if (typeof value === "object" && value.message) value = value.message;
+
+        return String(value)
+            .replace(/<br\s*\/?>/gi, "\n")
+            .trim() || "Beklenmeyen bir durum oluştu.";
+    };
+    var notify = function (value) {
+        notification.show({ message: normalizeMessage(value) }, notificationType);
+    };
 
     // Eğer gelen mesaj bir string ise ve içinde bizim API'nin JSON formatı varsa (örn: {"title": )
     if (typeof msg === "string" && msg.trim().startsWith("{") && msg.includes("detail")) {
@@ -212,22 +226,22 @@
                 // Tüm hata mesajlarını bulup aralarına <br/> (satır başı) koyarak birleştiriyoruz
                 var combinedMessages = errorObj.detail.map(function (err) {
                     return err.message; // Örn: "Konu alanı boş olamaz."
-                }).join("<br/>");
+                }).filter(Boolean).join("\n");
 
-                notification.show({ message: combinedMessages }, type);
+                notify(combinedMessages);
                 return; // İşlem bitti, fonksiyondan çık
             }
             
             // 2. Durum: Senin if (veri == null) throw new ... ile fırlattığın düz iş kuralı/404 hataları
             if (errorObj && errorObj.detail && typeof errorObj.detail === "string") {
-                notification.show({ message: errorObj.detail }, type);
+                notify(errorObj.detail);
                 return; // İşlem bitti, fonksiyondan çık
             }
         } catch (e) {
             // Eğer JSON parse ederken beklenmedik bir durum oluşursa kod patlamasın, düz metin gibi devam etsin
         }
     }
-    notification.show({ message: msg }, type);
+    notify(msg);
 }
 
 
@@ -291,10 +305,26 @@ document.addEventListener('DOMContentLoaded', function () {
     const toggleBtn = document.getElementById('sidebarToggleBtn');
     const sidebar = document.getElementById('ebysSidebar');
     if (!toggleBtn || !sidebar) return;
+
+    const setSidebarCollapsed = function (isCollapsed) {
+        sidebar.classList.toggle('collapsed', isCollapsed);
+        document.body.classList.toggle('sidebar-collapsed', isCollapsed);
+        toggleBtn.classList.toggle('active', isCollapsed);
+        toggleBtn.setAttribute('aria-expanded', String(!isCollapsed));
+    };
+
     toggleBtn.addEventListener('click', function () {
-        toggleBtn.classList.toggle('active');
-        sidebar.classList.toggle('collapsed');
-        toggleBtn.setAttribute('aria-expanded', !sidebar.classList.contains('collapsed'));
+        setSidebarCollapsed(!sidebar.classList.contains('collapsed'));
+    });
+
+    sidebar.querySelectorAll('.menu-item').forEach(function (menuItem) {
+        menuItem.addEventListener('click', function (event) {
+            if (!sidebar.classList.contains('collapsed')) return;
+
+            event.preventDefault();
+            event.stopPropagation();
+            setSidebarCollapsed(false);
+        });
     });
 });
 </script>

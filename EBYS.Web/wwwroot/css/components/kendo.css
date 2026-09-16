@@ -3,28 +3,88 @@ html, body {
     max-width: 100vw;
 }
 
-.k-notification-wrap {
-    padding: 20px 30px !important;
-    font-size: 22px !important;
-    border-radius: 8px !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
+.ebys-notification {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
+    align-items: start;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid;
+    border-left-width: 4px;
+    border-radius: 12px;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.15);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.45;
 }
 
-    .k-notification-wrap .k-icon {
-        font-size: 20px !important;
-        margin-right: 30px !important;
-    }
-
-.k-notification-success {
-    background-color: #28a745 !important;
-    color: white !important;
-    border: none !important;
+.k-notification:has(.ebys-notification) {
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
 }
 
-.k-notification-error {
-    background-color: #dc3545 !important;
-    color: white !important;
-    border: none !important;
+.ebys-notification .k-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 17px;
+}
+
+.ebys-notification__message {
+    padding-top: 4px;
+    overflow-wrap: anywhere;
+    white-space: pre-line;
+}
+
+.ebys-notification--warning {
+    color: #92400e;
+    border-color: #f4bb51;
+    background: #fffbeb;
+}
+
+.ebys-notification--warning .k-icon {
+    color: #a16207;
+    background: #fef3c7;
+}
+
+.ebys-notification--error {
+    color: #b42318;
+    border-color: #f29a94;
+    background: #fff4f3;
+}
+
+.ebys-notification--error .k-icon {
+    color: #c92a20;
+    background: #ffe1de;
+}
+
+.ebys-notification--success {
+    color: #166534;
+    border-color: #8fd6aa;
+    background: #f0fdf4;
+}
+
+.ebys-notification--success .k-icon {
+    color: #15803d;
+    background: #dcfce7;
+}
+
+.ebys-notification--info {
+    color: #075985;
+    border-color: #8ed0ed;
+    background: #f0f9ff;
+}
+
+.ebys-notification--info .k-icon {
+    color: #0369a1;
+    background: #dff3fc;
 }
 
 .k-grid {
