@@ -30,6 +30,7 @@ namespace EBYS.Persistence.Repository
         {
 
             return await _context.Evraklar
+                      .Include(x => x.Ekler)
                       .Include(x => x.AkisAdimlari)
                       .ThenInclude(a => a.Kullanici)
                       .FirstOrDefaultAsync(e => e.Id == evrakId); 

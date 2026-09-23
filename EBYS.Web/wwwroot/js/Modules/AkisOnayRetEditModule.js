@@ -95,18 +95,12 @@
 
             ApiService.postJson(url, {})
                 .done(function (response) {
-                    if (response && response.basariliMi !== false) {
-                        showNotification(response.mesaj || "Evrak E-İmza ile başarıyla onaylandı.", "success");
+                    if (response && response.basariliMi === true) {
+                        showNotification(response.mesaj, "success");
                         if (typeof _successCallback === "function") _successCallback();
                     } else {
-                        showNotification(response.mesaj || "Onay işlemi başarısız.", "error");
+                        showNotification((response && response.mesaj) || "Onay işlemi doğrulanamadı.", "error");
                     }
-                })
-                .fail(function (err) {
-                    var errMsg = (err && err.responseJSON && err.responseJSON.mesaj)
-                        ? err.responseJSON.mesaj
-                        : "İşlem sırasında bir sunucu hatası oluştu.";
-                    showNotification(errMsg, "error");
                 })
                 .always(function () {
                     if ($gridEl.length) kendo.ui.progress($gridEl, false);

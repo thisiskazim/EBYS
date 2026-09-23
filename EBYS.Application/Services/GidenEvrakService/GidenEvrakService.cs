@@ -281,7 +281,7 @@ namespace EBYS.Application.Services.GidenEvrakService
             evrak.AkisAdimlari.Add(new GidenEvrakAkis
             {
                 KullaniciId = olusturanId,
-                ParafMiImzaMi = Enums.ImzaTipi.Imza,
+                ParafMiImzaMi = Enums.ImzaTipi.Paraf,
                 SiraNo = aktifSiraNo++,
                 AdimDurumu = Enums.AkisAdimDurumu.Bekliyor,
                 SiradakiMi = true

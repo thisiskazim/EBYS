@@ -41,11 +41,23 @@ namespace EBYS.Application.Services.GidenEvrakService
                     try
                     {
                         var asilEk = entities.Ekler?.FirstOrDefault(x => x.IsAsilEvrak);
-                        if (asilEk != null && asilEk.DosyaVerisi != null)
+                        if (asilEk == null)
                         {
-                            var imzaliPdf = await imzaService.EvrakImzalaAsync(asilEk.DosyaVerisi, pinKodu);
-                            asilEk.DosyaVerisi = imzaliPdf; 
+                            return new IslemSonuc(false, "İmzalanacak asıl evrak bulunamadı. Onay işlemi yapılmadı.");
                         }
+
+                        if (asilEk.DosyaVerisi == null || asilEk.DosyaVerisi.Length == 0)
+                        {
+                            return new IslemSonuc(false, "Asıl evrakın dosya verisi boş. Onay işlemi yapılmadı.");
+                        }
+
+                        var imzaliPdf = await imzaService.EvrakImzalaAsync(asilEk.DosyaVerisi, pinKodu);
+                        if (imzaliPdf == null || imzaliPdf.Length == 0)
+                        {
+                            return new IslemSonuc(false, "E-imza servisi imzalı evrak üretmedi. Onay işlemi yapılmadı.");
+                        }
+
+                        asilEk.DosyaVerisi = imzaliPdf;
                     }
                     catch (Exception ex)
                     {

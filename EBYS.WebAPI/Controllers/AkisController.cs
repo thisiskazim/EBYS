@@ -56,7 +56,7 @@ namespace EBYS.WebAPI.Controllers
 
         [HttpPost("Onayla/{id}/")]   
         public async Task<IActionResult> EvrakOnayla(int id, [FromQuery] string pinKodu)
-        {
+            {
             var sonuc = await akisService.OnaylaAsync(id,pinKodu);
 
             if (sonuc.BasariliMi)

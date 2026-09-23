@@ -41,7 +41,7 @@ var EvrakBekleyenListModule = (function () {
                                 <i class='fas fa-ellipsis-v text-info' style='font-size: 18px;'></i>
                             </button>
                             <ul class='dropdown-menu dropdown-menu-end shadow-lg border-0' style='border-radius: 12px; min-width: 160px;'>
-                                    <li>
+                                    <li>    
                                         <a class='dropdown-item py-2' href='#' onclick='AkisOnayRedEditModule.onaylaPopUpAc("${dataItem.id}", "#gridBekleyenler", () => EvrakBekleyenListModule.loadData())'>
                                             <i class='fas fa-file-signature text-success me-2'></i>İmzala
                                         </a>

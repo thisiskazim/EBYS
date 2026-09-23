@@ -29,7 +29,7 @@
             var alicilar = AliciModule.getData();
             var bilgiler = EvrakBilgiModule.getData();
             var ilgiler = IlgilerModule.getData();
-            var yanEkler = EklerModule.getData(); // Kullanıcının eklediği ek dosyalar
+            var yanEkler = EklerModule.getData(); 
            
 
             var formData = new FormData();
@@ -71,18 +71,18 @@
                 yanEkler.forEach((ek) => {
                     formData.append(`Ekler[${ekIndex}].Id`, ek.Id || 0);
                     formData.append(`Ekler[${ekIndex}].Ad`, ek.Ad);
-                    // 🚀 KRİTİK DÜZELTME: Bu dosyaların yan ek olduğunu backend'e açıkça söylüyoruz
                     formData.append(`Ekler[${ekIndex}].IsAsilEvrak`, false);
                     if (ek.Dosya) {
                         formData.append(`Ekler[${ekIndex}].Dosya`, ek.Dosya);
                     }
                     ekIndex++;
                 });
+            } else {
+
+                showNotification("Ek oluşturulurken hata oluştu.")
+                return;
             }
-          
 
-
-       
             var action = bilgiler.Id > 0 ? "GidenEvrak/EvrakGuncelle" : "GidenEvrak/EvrakOlustur";
 
             ApiService.postFormData(action, formData).done(function () {
@@ -136,6 +136,8 @@ $(document).ready(function () {
 
 
     $("#evrakKaydet").on("click", function (e) {
+        
         EvrakOlustur.kaydet();
+
     });
 });
