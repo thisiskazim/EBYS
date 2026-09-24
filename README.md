@@ -145,22 +145,22 @@ Veritabanı `init.sql` ile container ilk ayağa kalktığında otomatik oluştur
 
 **Giden Evrak**
 
-![Evrak oluşturma](EBYS.Web/wwwroot/images/evrak-olustur.png)
-![Evrak oluşturma](EBYS.Web/wwwroot/images/aI_ile_yazi_olustur.png)
-![Alıcı ekleme](EBYS.Web/wwwroot/images/alıcı-ekle.png)
-![Evrak görünümü](EBYS.Web/wwwroot/images/evrak_gorunum.png)
-![İmza bekleyen](EBYS.Web/wwwroot/images/imza-bekleyen.png)
-![Akış geçmişi](EBYS.Web/wwwroot/images/evrak-akıs-gecmisi.png)
-![İmza rotası](EBYS.Web/wwwroot/images/imza-rota.png)
+![Evrak oluşturma](EBYS.Web/wwwroot/images/giden_evrak_olustur.jpg)
+![Evrak oluşturma](EBYS.Web/wwwroot/images/ai_yazi_uret.jpg)
+![Alıcı ekleme](EBYS.Web/wwwroot/images/alici_ekle.jpg)
+![Evrak görünümü](EBYS.Web/wwwroot/images/gorunum.jpg)
+![Paraf/İmza bekleyen](EBYS.Web/wwwroot/images/paraf_bekleyen_liste.jpg)
+![İmzaya Gönderilenler](EBYS.Web/wwwroot/images/imzaya_gonderdiklerim.jpg)
+![Giden Evrak Listesi](EBYS.Web/wwwroot/images/evraklar.jpg)
+![Akış geçmişi](EBYS.Web/wwwroot/images/evrakhareketleri.jpg)
+![İmza rotası](EBYS.Web/wwwroot/images/imza_rota.jpg)
 
 **Gelen Evrak**
 
-![Gelen evrak kayıt](EBYS.Web/wwwroot/images/gelen-evrak-kayıt.png)
-![Gelen evrak liste](EBYS.Web/wwwroot/images/gelen-evrak-liste.png)
+![Gelen evrak kayıt](EBYS.Web/wwwroot/images/gelen_evrak_kayit.jpg)
+![Gelen evrak liste](EBYS.Web/wwwroot/images/gelen_evrak_liste.jpg)
 
 **Diğer**
-
-![PDF önizleme](EBYS.Web/wwwroot/images/evrak-onizleme.png)
 ![Swagger](EBYS.Web/wwwroot/images/api2.png)
 
 ---
