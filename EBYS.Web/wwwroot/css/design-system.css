@@ -25,6 +25,8 @@ body {
 
 .ebys-main {
     background: var(--ebys-color-canvas);
+    min-width: 0;
+    max-width: 100%;
 }
 
 /* Bootstrap kullanan eski ekranlar da aynı ölçü ve yazı diliyle kalır. */

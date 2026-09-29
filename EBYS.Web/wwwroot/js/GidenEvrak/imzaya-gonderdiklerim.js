@@ -18,7 +18,7 @@
                 columns: [
                       {
                         title: "DOSYALAR",
-                        width: "200px",
+                        width: "160px",
                         template: function (dataItem) {
                             var ekListesi = dataItem.ekler || [];
                             if (ekListesi.length === 0) return "<span class='text-muted small'>Dosya yok</span>";
@@ -49,30 +49,27 @@
                     {
                         field: "konu",
                         title: "Evrak Konusu",
-                        width: "250px",
-                        template: "<strong>#: konu #</strong>"
+                        template: "<strong class='ebys-grid-text' title='#: konu || \"\" #'>#: konu || \"\" #</strong>"
                     },
                     {
                         field: "fullKonuKodu",
                         title: "Konu Kodu",
-                        width: "150px",
-                        template: "<span class='badge bg-light text-dark border'>#: fullKonuKodu #</span>"
+                        template: "<span class='badge bg-light text-dark border' title='#: fullKonuKodu || \"\" #'>#: fullKonuKodu || \"\" #</span>"
                     },
                     {
                         field: "suAnKimde",
                         title: "Durum / Şu An Kimde",
-                        width: "180px",
-                        template: "<i class='fas fa-user-clock text-primary me-2'></i>#: suAnKimde #"
+                        template: "<span class='ebys-grid-text' title='#: suAnKimde || \"\" #'><i class='fas fa-user-clock text-primary me-2'></i>#: suAnKimde || \"\" #</span>"
                     },
                     {
                         field: "creat_time",
                         title: "Gönderim Tarihi",
-                        width: "150px",
+                        width: "170px",
                         template: "#= kendo.toString(kendo.parseDate(creat_time), 'dd.MM.yyyy HH:mm') #"
                     },
                     {
                         title: "Hareketler",
-                        width: "120px",
+                        width: "150px",
                         attributes: { style: "text-align: center" },
                         template: `<button class='btn btn-outline-info btn-sm' onclick='EvrakGonderdiklerimModule.history("#: id #")'>
                                     <i class='fas fa-history'></i> Hareketler
@@ -80,7 +77,7 @@
                     },
                     {
                         title: "İşlemler",
-                        width: "100px",
+                        width: "150px",
                         attributes: { style: "text-align: center" },
                         template: function (dataItem) {
                             if (dataItem.geriCekilebilirMi) {

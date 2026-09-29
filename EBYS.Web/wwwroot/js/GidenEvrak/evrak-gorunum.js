@@ -3,6 +3,8 @@ var OnizlemeModule = (function () {
     var _imzaciAd = "";
     var _imzaciUnvan = "";
     var _generatedPdfBlob = null;
+    var _gizlilikDerecesi = 0;
+    var _ivedilikDerecesi = 0;
 
     kendo.pdf.defineFont({
         "DejaVu Sans": "https://kendo.cdn.telerik.com/2023.1.117/styles/fonts/DejaVu/DejaVuSans.ttf",
@@ -22,6 +24,24 @@ var OnizlemeModule = (function () {
         return new Blob([ab], { type: mimeString });
     };
 
+    var _sayfaSablonu = function (data) {
+        var html = '<div class="belge-sayfa-isaretleri">';
+
+        // Gizlilik her sayfada, ivedilik yalnızca ilk sayfada gösterilir.
+        if (_gizlilikDerecesi === 2) {
+            html += '<div class="belge-gizlilik-ust">GİZLİ</div>';
+            html += '<div class="belge-gizlilik-alt">GİZLİ</div>';
+        }
+
+        if (_ivedilikDerecesi === 1 && data.pageNum === 1) {
+            html += '<div class="belge-ivedilik">ACELE</div>';
+        }
+
+        html += $("#documentFooterTemplate").html();
+
+        return html + '</div>';
+    };
+
     var _renderKendoPdf = function () {
         var loaderContainer = $(".pdf-viewer-wrapper");
         kendo.ui.progress(loaderContainer, true); 
@@ -32,8 +52,9 @@ var OnizlemeModule = (function () {
         kendo.drawing.drawDOM(elementToExport, {
             paperSize: "A4",
             scale: 0.75,
-            margin: { top: "0mm", bottom: "0mm", left: "0mm", right: "0mm" },
-            forcePageBreak: ".page-break"
+            margin: { top: _gizlilikDerecesi === 2 ? "12mm" : "0mm", bottom: "30mm", left: "0mm", right: "0mm" },
+            forcePageBreak: ".page-break",
+            template: _sayfaSablonu
            
         })
             .then(function (group) {
@@ -53,6 +74,8 @@ var OnizlemeModule = (function () {
 
     // GidenEvrakUpdateDTO -> şablona bas
     var _doldur = function (evrak) {
+        _gizlilikDerecesi = parseInt(evrak.gizlilikDerecesi ?? evrak.GizlilikDerecesi ?? 0);
+        _ivedilikDerecesi = parseInt(evrak.ivedilikDerecesi ?? evrak.IvedilikDerecesi ?? 0);
        
         $("#view-sayi").text("11428951-" + (evrak.konuKoduId || evrak.KonuKoduId || "000"));
 
@@ -146,6 +169,8 @@ var OnizlemeModule = (function () {
                 var evrakObj = {
                     konuKoduId: bilgiler.KonuKoduId,
                     konu: bilgiler.Konu,
+                    gizlilikDerecesi: bilgiler.GizlilikDerecesi,
+                    ivedilikDerecesi: bilgiler.IvedilikDerecesi,
                     icerik: editorGövde ? editorGövde.value() : "",
                     imzaAltindaOlanIcerik: editorAlt ? editorAlt.value() : "",
                     muhataplar: alicilar.map(function (a) {
@@ -175,9 +200,10 @@ var OnizlemeModule = (function () {
         pdfIndir: function () {
             kendo.drawing.drawDOM($(".a4-sayfa"), {
                 paperSize: "A4",
-                margin: { top: "1cm", bottom: "1cm" },
+                margin: { top: _gizlilikDerecesi === 2 ? "12mm" : "1cm", bottom: "30mm" },
                 scale: 0.8,
-                avoidLinks: true
+                avoidLinks: true,
+                template: _sayfaSablonu
             })
                 .then(function (group) {
                     return kendo.drawing.exportPDF(group);

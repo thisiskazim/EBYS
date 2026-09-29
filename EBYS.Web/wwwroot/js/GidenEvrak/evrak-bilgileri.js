@@ -27,10 +27,10 @@
             if (ddlImzaRota) ddlImzaRota.value(data.imzaRotaId || data.ImzaRotaId);
 
             var ddlGizlilik = $("#gizlilik").data("kendoDropDownList");
-            if (ddlGizlilik) ddlGizlilik.value(data.gizlilikDerecesi || data.GizlilikDerecesi);
+            if (ddlGizlilik) ddlGizlilik.value(data.gizlilikDerecesi || data.GizlilikDerecesi || 1);
 
             var ddlIvedilik = $("#ivedilik").data("kendoDropDownList");
-            if (ddlIvedilik) ddlIvedilik.value(data.ivedilik || data.Ivedilik || data.ivedilikDurumu);
+            if (ddlIvedilik) ddlIvedilik.value(data.ivedilikDerecesi ?? data.IvedilikDerecesi ?? 0);
 
             var editorGövde = $("#EvrakEditor").data("kendoEditor");
             if (editorGövde) editorGövde.value(data.icerik || data.Icerik || "");
@@ -59,8 +59,8 @@
                 ImzaAltindaOlanIcerik: editorAlt ? editorAlt.value() : "",
                 ImzaRotaId: ddlImzaRota.value() ? parseInt(ddlImzaRota.value()) : 0,
                 GizlilikDerecesi: ddlGizlilik ? parseInt(ddlGizlilik.value()) : 0,
-                Ivedilik: ddlIvedilik ? parseInt(ddlIvedilik.value()) : 0
+                IvedilikDerecesi: ddlIvedilik ? parseInt(ddlIvedilik.value()) : 0
             };
         }
     };
-})();   
+})();

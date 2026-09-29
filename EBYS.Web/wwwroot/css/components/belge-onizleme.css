@@ -8,7 +8,6 @@
 .a4-sayfa {
     background: white;
     width: 210mm;
-    min-height: 297mm;
     padding: 20mm 20mm 15mm 20mm;
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
     font-family: "Times New Roman", Times, serif;
@@ -23,6 +22,36 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+}
+
+.belge-sayfa-isaretleri > div {
+    position: absolute;
+    left: 20mm;
+    right: 20mm;
+    font-family: "DejaVu Sans", "Times New Roman", serif;
+}
+
+.belge-gizlilik-ust,
+.belge-gizlilik-alt,
+.belge-ivedilik {
+    color: #f00;
+    font-size: 12pt;
+    font-weight: bold;
+}
+
+.belge-gizlilik-ust {
+    top: 5mm;
+    text-align: center;
+}
+
+.belge-gizlilik-alt {
+    bottom: 5mm;
+    text-align: center;
+}
+
+.belge-ivedilik {
+    top: 10mm;
+    text-align: right;
 }
 
 .logo-left,
@@ -90,7 +119,10 @@
     margin-top: 25px;
     text-align: justify;
     line-height: 1.55;
-    flex-grow: 1;
+}
+
+.belge-metin > :last-child {
+    margin-bottom: 0;
 }
 
 .belge-imza-alti-icerik {
@@ -101,7 +133,7 @@
 .belge-imza-alani {
     display: flex;
     justify-content: flex-end;
-    margin-top: 40px;
+    margin-top: 3.1em;
     width: 100%;
 }
 
@@ -135,9 +167,10 @@
 }
 
 .belge-footer {
-    margin-top: auto;
+    bottom: 12mm;
     padding-top: 8px;
     font-size: 8.5pt;
+    line-height: 1.5;
     color: #555;
     text-align: center;
 }
@@ -213,7 +246,6 @@
 
     .preview-mode .a4-sayfa {
         width: 210mm !important;
-        min-height: 297mm !important;
         margin: 0 !important;
         padding: 20mm !important;
         box-shadow: 0 0 15px rgba(0,0,0,0.3) !important;

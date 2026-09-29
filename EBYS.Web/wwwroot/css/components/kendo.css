@@ -90,8 +90,28 @@ html, body {
 .k-grid {
     width: 100% !important;
     max-width: 100% !important;
+    min-width: 0;
     border: none !important;
     font-family: inherit;
+}
+
+.k-grid .k-grid-header table,
+.k-grid .k-grid-table {
+    width: 100%;
+    min-width: 480px;
+    table-layout: fixed;
+}
+
+/* Dar ekranlarda tablo sayfayı genişletmeden kendi içinde kayar. */
+#gridGelenEvraklar .k-grid-header table,
+#gridGelenEvraklar .k-grid-table,
+#gridGidenEvraklar .k-grid-header table,
+#gridGidenEvraklar .k-grid-table,
+#gridBekleyenler .k-grid-header table,
+#gridBekleyenler .k-grid-table,
+#gridGonderdiklerim .k-grid-header table,
+#gridGonderdiklerim .k-grid-table {
+    min-width: 860px;
 }
 
 .k-grid-content,
@@ -104,16 +124,40 @@ html, body {
     padding: 12px 14px !important;
     border-bottom: 1px solid #f1f5f9 !important;
     color: #334155 !important;
-    white-space: nowrap;
+    white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis;
 }
 
     .k-grid td.k-command-cell,
-    .k-grid td:first-child {
+    .k-grid td:has(> .dropdown) {
         overflow: visible !important;
         position: relative;
     }
+
+.k-grid .ebys-grid-text,
+.k-grid td > .badge {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.k-grid td > .badge {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.k-grid td .btn:not(.btn-close),
+.k-grid td .k-button {
+    min-height: 32px;
+    max-width: 100%;
+    padding: 0 0.5rem !important;
+    gap: 0.35rem;
+    white-space: nowrap;
+}
 
 .k-grid tr:hover {
     background-color: #f8faff !important;
