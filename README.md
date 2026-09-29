@@ -123,6 +123,14 @@ stateDiagram-v2
 
 ## Kurulum
 
+### Yerel geliştirme
+
+.NET 9 SDK ve yerel PostgreSQL ile geliştirmek için `EBYS.WebAPI/appsettings.json` dosyasındaki `ConnectionStrings:DbConnection` alanına kendi bağlantını yaz. `EBYS.WebAPI` ve `EBYS.Web` projelerini Visual Studio'da `https` profilleriyle başlat. Docker'ın çalışması gerekmez; `.env` dosyasındaki JWT ve Gemini ayarları okunmaya devam eder.
+
+Uygulamayı yerelde çalıştırıp yalnızca veritabanını Docker'da kullanmak istersen `DbConnection` satırını yorum satırına al veya değerini boş bırak ve `docker compose up -d ebys-db` komutunu çalıştır. Bu durumda bağlantı `.env` içindeki `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` ve `DB_PORT` değerlerinden oluşturulur. Ayarı değiştirdikten sonra API'yi yeniden başlat.
+
+### Docker ile çalıştırma
+
 **Gereksinim:** [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
 ```bash
@@ -130,6 +138,8 @@ git clone https://github.com/thisiskazim/EBYS.git
 cd EBYS
 docker compose up --build
 ```
+
+Docker Compose, API bağlantısını `ConnectionStrings__DbConnection` ortam değişkeniyle otomatik olarak `ebys-db:5432` adresine yönlendirir. Tüm projeyi Docker ile çalıştırırken yerel `appsettings.json` bağlantısını yorum satırına alman gerekmez.
 
 | Servis | Adres |
 |---|---|

@@ -41,6 +41,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 var connections = builder.Configuration.GetConnectionString("DbConnection");
+if (string.IsNullOrWhiteSpace(connections))
+{
+    var host = Environment.GetEnvironmentVariable("POSTGRES_HOST") ?? "localhost";
+    var port = Environment.GetEnvironmentVariable("POSTGRES_PORT")
+        ?? Environment.GetEnvironmentVariable("DB_PORT") ?? "5433";
+    var db = Environment.GetEnvironmentVariable("POSTGRES_DB") ?? "ebys_db";
+    var user = Environment.GetEnvironmentVariable("POSTGRES_USER") ?? "postgres";
+    var pass = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD") ?? "";
+
+    connections = $"Host={host};Port={port};Database={db};Username={user};Password={pass}";
+}
+
 // Log tablosundaki kolon ùablonunu belirliyoruz (Hata mesajù, StackTrace vb.)
 var columnOptions = new Dictionary<string, ColumnWriterBase>
 {
@@ -77,7 +89,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddDbContext<EBYSContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection")));
+    options.UseNpgsql(connections));
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IGidenEvrakRepository, GidenEvrakRepository>();

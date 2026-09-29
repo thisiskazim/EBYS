@@ -42,19 +42,6 @@ public static class EnvLoader
         SetIfEmpty("JwtSettings__Issuer", Environment.GetEnvironmentVariable("JWT_ISSUER"));
         SetIfEmpty("JwtSettings__Audience", Environment.GetEnvironmentVariable("JWT_AUDIENCE"));
         SetIfEmpty("GeminiSettings__ApiKey", Environment.GetEnvironmentVariable("GEMINI_API_KEY"));
-
-        if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ConnectionStrings__DbConnection")))
-            return;
-
-        var host = Environment.GetEnvironmentVariable("POSTGRES_HOST") ?? "localhost";
-        var port = Environment.GetEnvironmentVariable("POSTGRES_PORT") ?? "5433";
-        var db = Environment.GetEnvironmentVariable("POSTGRES_DB") ?? "ebys_db";
-        var user = Environment.GetEnvironmentVariable("POSTGRES_USER") ?? "postgres";
-        var pass = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD") ?? "";
-
-        Environment.SetEnvironmentVariable(
-            "ConnectionStrings__DbConnection",
-            $"Host={host};Port={port};Database={db};Username={user};Password={pass}");
     }
 
     private static void SetIfEmpty(string aspNetKey, string? value)
