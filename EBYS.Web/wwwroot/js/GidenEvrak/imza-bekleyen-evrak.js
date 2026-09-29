@@ -70,7 +70,7 @@ var EvrakBekleyenListModule = (function () {
 
                     {
                         title: "DOSYALAR",
-                        width: "200px",
+                        width: "160px",
                         template: function (dataItem) {
                             var ekListesi = dataItem.ekler || [];
                             if (ekListesi.length === 0) return "<span class='text-muted small'>Dosya yok</span>";
@@ -101,25 +101,22 @@ var EvrakBekleyenListModule = (function () {
                     {
                         field: "olusturanKullanici",
                         title: "Oluşturan",
-                        template: "<div class='d-flex align-items-center'>#: olusturanKullanici #</div>",
-                        width: "120px"
+                        template: "<span class='ebys-grid-text' title='#: olusturanKullanici || \"\" #'>#: olusturanKullanici || \"\" #</span>"
                     },
                     {
                         field: "konu",
                         title: "Konu",
-                        width: "200px",
-                        template: "<div>#: konu #</div>"
+                        template: "<span class='ebys-grid-text' title='#: konu || \"\" #'>#: konu || \"\" #</span>"
                     },
                     {
                         field: "fullKonuKodu",
                         title: "Konu Kodu",
-                        width: "200px",
-                        template: "<span class='badge bg-light text-dark border'>#: fullKonuKodu #</span>"
+                        template: "<span class='badge bg-light text-dark border' title='#: fullKonuKodu || \"\" #'>#: fullKonuKodu || \"\" #</span>"
                     },
                     {
                         field: "creat_time",
                         title: "Oluşturma Zamanı",
-                        width: "250px",
+                        width: "170px",
                         template: "#= creat_time ? kendo.toString(kendo.parseDate(creat_time), 'dd.MM.yyyy HH:mm') : '' #"
                     }
                 ],

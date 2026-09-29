@@ -1,4 +1,6 @@
-﻿<div class="tab-pane fade show active" id="bilgiler" role="tabpanel">
+﻿@using EBYS.Domain.Enum
+
+<div class="tab-pane fade show active" id="bilgiler" role="tabpanel">
     <div class="card-body p-4" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; color: #343a40;">
     <div class="row">
         <div class="col-md-5">
@@ -46,7 +48,7 @@
                 <label class="form-label text-secondary">Gizlilik Derecesi</label>
                 @(Html.Kendo().DropDownList()
                                 .Name("gizlilik")
-                                .BindTo(new[] { new { text = "TASNİF DIŞI", value = "0" }, new { text = "GİZLİ", value = "1" } })
+                                .BindTo(new[] { new { text = "TASNİF DIŞI", value = (int)Enums.GizlilikDerecesi.TasnifDisi }, new { text = "GİZLİ", value = (int)Enums.GizlilikDerecesi.Gizli } })
                                 .DataTextField("text")
                                 .DataValueField("value")
                                 .HtmlAttributes(new { @class = "form-control bg-white" })
@@ -57,7 +59,7 @@
                 <label class="form-label text-secondary">İvedilik</label>
                 @(Html.Kendo().DropDownList()
                                 .Name("ivedilik")
-                                .BindTo(new[] { new { text = "NORMAL", value = "0" }, new { text = "ACİL", value = "1" } })
+                                .BindTo(new[] { new { text = "NORMAL", value = (int)Enums.IvedilikDerecesi.Normal }, new { text = "ACİL", value = (int)Enums.IvedilikDerecesi.Ivedi } })
                                 .DataTextField("text")
                                 .DataValueField("value")
                                 .HtmlAttributes(new { @class = "form-control bg-white" })

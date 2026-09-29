@@ -85,7 +85,7 @@
                    
                     {
                         title: "DOSYALAR",
-                        width: "200px",
+                        width: "160px",
                         template: function (dataItem) {
                             var ekListesi = dataItem.ekler || [];
                             if (ekListesi.length === 0) return "<span class='text-muted small'>Dosya yok</span>";
@@ -113,21 +113,28 @@
                             return html + "</div></div>";
                         }
                     },
-                    { field: "kayitNo", title: "Kayıt No", width: "100px", attributes: { class: "fw-bold" } },
-                    { field: "evrakSayisi", title: "Kurum Sayısı", width: "180px" },
-                    { field: "konu", title: "Evrak Konusu", width: "250px" },
-                    { field: "gonderenMuhatapAdi", title: "Gönderen Makam", width: "200px" },
+                    { field: "kayitNo", title: "Kayıt No", attributes: { class: "fw-bold" } },
+                    { field: "evrakSayisi", title: "Kurum Sayısı" },
+                    {
+                        field: "konu",
+                        title: "Evrak Konusu",
+                        template: "<span class='ebys-grid-text' title='#: konu || \"\" #'>#: konu || \"\" #</span>"
+                    },
+                    {
+                        field: "gonderenMuhatapAdi",
+                        title: "Gönderen Makam",
+                        template: "<span class='ebys-grid-text' title='#: gonderenMuhatapAdi || \"\" #'>#: gonderenMuhatapAdi || \"\" #</span>"
+                    },
                     {
                         field: "evrakTarihi",
                         title: "Evrak Tarihi",
-                        width: "120px",
+                        width: "140px",
                         template: "#= evrakTarihi ? kendo.toString(kendo.parseDate(evrakTarihi), 'dd.MM.yyyy') : '' #"
                     },
                     {
                         field: "suAnKimde",
                         title: "Şu An Kimde",
-                        width: "180px",
-                        template: "<span class='badge bg-info text-dark'>#: suAnKimde #</span>"
+                        template: "<span class='badge bg-info text-dark' title='#: suAnKimde || \"\" #'>#: suAnKimde || \"\" #</span>"
                     }
                 ]
             }).data("kendoGrid");

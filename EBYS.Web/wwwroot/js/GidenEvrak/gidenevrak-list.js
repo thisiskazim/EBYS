@@ -23,6 +23,7 @@
                 noRecords: { template: "<div class='p-5 text-center text-muted'>Kayıtlı giden evrak bulunamadı.</div>" },
                 sortable: true,
                 resizable: true,
+                pageable: { pageSize: 15, refresh: true, buttonCount: 5 },
 
 
                 columns: [ 
@@ -86,7 +87,7 @@
                 },
                     {
                         title: "DOSYALAR",
-                        width: "200px",
+                        width: "160px",
                         template: function (dataItem) {
                             var ekListesi = dataItem.ekler || [];
                             if (ekListesi.length === 0) return "<span class='text-muted small'>Dosya yok</span>";
@@ -116,7 +117,7 @@
                     },
                     {
                         title: "Hareketler",
-                        width: "120px",
+                        width: "150px",
                         attributes: { style: "text-align: center" },
                         template: `<button class='btn btn-outline-info btn-sm' onclick='GidenEvrakListModule.history("#: id #")'>
                                     <i class='fas fa-history'></i> Hareketler
@@ -125,25 +126,22 @@
                     {
                         field: "olusturanKullanici",
                         title: "Oluşturan",
-                        template: "<div class='d-flex align-items-center'>#: olusturanKullanici #</div>",
-                        width: "120px"
+                        template: "<span class='ebys-grid-text' title='#: olusturanKullanici || \"\" #'>#: olusturanKullanici || \"\" #</span>"
                     },
                     {
                         field: "konu",
                         title: "Konu",
-                        width: "200px",
-                        template: "<div>#: konu #</div>"
+                        template: "<span class='ebys-grid-text' title='#: konu || \"\" #'>#: konu || \"\" #</span>"
                     },
                     {
                         field: "fullKonuKodu",
                         title: "Konu Kodu",
-                        width: "200px",
-                        template: "<span class='badge bg-light text-dark border'>#: fullKonuKodu #</span>"
+                        template: "<span class='badge bg-light text-dark border' title='#: fullKonuKodu || \"\" #'>#: fullKonuKodu || \"\" #</span>"
                     },
                     {
                         field: "creat_time",
                         title: "Oluşturma Zamanı",
-                        width: "250px",
+                        width: "170px",
                         template: "#= creat_time ? kendo.toString(kendo.parseDate(creat_time), 'dd.MM.yyyy HH:mm') : '' #"
                     }
                  
