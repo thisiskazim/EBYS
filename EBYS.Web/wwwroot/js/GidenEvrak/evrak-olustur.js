@@ -85,9 +85,17 @@
 
             var action = bilgiler.Id > 0 ? "GidenEvrak/EvrakGuncelle" : "GidenEvrak/EvrakOlustur";
 
-            ApiService.postFormData(action, formData).done(function () {
+            var reqKey = crypto.randomUUID();
+
+            ApiService.postFormData(action, formData, reqKey).done(function () {
                 showNotification("Evrak başarıyla kaydedildi.", "success");
-                setTimeout(function () { window.location.href = "/GidenEvrakAkis/ImzaBekleyenListele"; }, 1000);
+                setTimeout(function () { window.location.href = "/GidenEvrakAkis/ParafBekleyenListele"; }, 500);
+            }).fail(function (xhr) {
+                if (xhr.status === 409) {
+                    showNotification(xhr.responseText || "İşlem sürüyor, lütfen bekleyin...", "warning");
+                } else {
+                    showNotification("Kayıt sırasında bir hata oluştu.", "error");
+                }
             });
         },
 

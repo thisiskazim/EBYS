@@ -30,6 +30,7 @@ using NpgsqlTypes;
 using Serilog;
 using Serilog.Exceptions;
 using Serilog.Sinks.PostgreSQL;
+using StackExchange.Redis;
 using System.Reflection;
 using System.Text;
 
@@ -127,7 +128,8 @@ builder.Services.AddSingleton<IResmiYaziSystemInstructionStrategy, UstYaziSystem
 builder.Services.AddSingleton<IResmiYaziSystemInstructionStrategy, IcYazismaSystemInstructionStrategy>();
 builder.Services.AddHttpClient<IResmiYaziGeneratorService, GeminiResmiYaziService>()
     .ConfigureHttpClient(client => client.Timeout = TimeSpan.FromSeconds(90));
-
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+    ConnectionMultiplexer.Connect("localhost:6379"));
 
 builder.Services.AddValidatorsFromAssemblies(new[] { Assembly.Load("EBYS.Application") });
 

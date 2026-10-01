@@ -34,6 +34,8 @@ services:
     depends_on:
       - ebys-db
 
+
+
   ebys-web:
     build:
       context: .
@@ -49,6 +51,14 @@ services:
       ApiSettings__BaseUrl: http://ebys-api:8080/api/
     depends_on:
       - ebys-api
+
+  redis_cache:
+    image: redis:latest
+    container_name: my-redis
+    ports:
+      - "6379:6379"
+    restart: always
+
 
 volumes:
   postgres_data:

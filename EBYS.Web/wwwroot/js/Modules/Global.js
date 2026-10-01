@@ -24,14 +24,28 @@ var ApiService = {
     },
 
     // 📌 2. Dosya/Evrak Gönderilen FormData İşleri İçin (contentType: false olanlar)
-    postFormData: function (url, formData) {
+    postFormData: function (url, formData, idempotencyKey) {
+
+        var requestHeaders = {};
+        if (idempotencyKey) {
+            requestHeaders['Idempotency-Key'] = idempotencyKey;
+        }
+
+        this._setGlobalLoading(true);
+
         return $.ajax({
             url: _apiBaseUrl + url,
             type: "POST",
             data: formData,
             processData: false,
             contentType: false,
-            error: this._handleError
+            headers: requestHeaders,
+            error: this._handleError,
+            complete: (xhr) => {
+                if (xhr.status !== 409) {
+                    this._setGlobalLoading(false);
+                }
+            } 
         });
     },
 
@@ -53,5 +67,11 @@ var ApiService = {
             msg = err.responseText;
         }
         showNotification(msg, "error");
+    },
+
+    _setGlobalLoading: function (isLoading) {
+        if (typeof kendo !== 'undefined') {
+            kendo.ui.progress($("body"), isLoading);
+        }
     }
 };

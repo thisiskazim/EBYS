@@ -4,6 +4,7 @@ using EBYS.Application.Interfaces.IService;
 using EBYS.Application.Interfaces.IService.IGidenEvrakService;
 using EBYS.Application.Services;
 using EBYS.Domain.Enum;
+using EBYS.WebAPI.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EBYS.WebAPI.Controllers
@@ -14,6 +15,7 @@ namespace EBYS.WebAPI.Controllers
     {
 
         [HttpPost("EvrakOlustur")]
+        [Idempotent]
         public async Task<IActionResult> EvrakOlustur([FromForm] GidenEvrakCreateDTO evrakCreateDTO)
         {
                 await evrakServive.AddAsync(evrakCreateDTO);
